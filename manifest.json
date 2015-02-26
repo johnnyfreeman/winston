@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+
+  "name": "Winston",
+  "description": "A launcher for Salesforce inspired by Alfred",
+  "version": "0.0.1",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/"
+  ]
+}
