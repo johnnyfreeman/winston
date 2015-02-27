@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Winston",
-  "description": "A launcher for Salesforce inspired by Alfred",
+  "description": "A launcher for the web",
   "version": "0.0.1",
 
   "browser_action": {
