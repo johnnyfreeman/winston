@@ -1,0 +1,28 @@
+{
+  "name": "Winston",
+  "version": "0.0.1",
+  "description": "A launcher for the web.",
+  "main": "popup.html",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-react": "^2.0.0",
+    "gulp-stylus": "^2.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnnyfreeman/winston.git"
+  },
+  "keywords": [
+    "launcher"
+  ],
+  "author": "Johnny Freeman",
+  "bugs": {
+    "url": "https://github.com/johnnyfreeman/winston/issues"
+  },
+  "homepage": "https://github.com/johnnyfreeman/winston"
+}

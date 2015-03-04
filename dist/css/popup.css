@@ -1,0 +1,40 @@
+body {
+  color: #333;
+  margin: 1px;
+  padding: 0;
+  width: 400px;
+}
+.resultsList {
+  margin: 0;
+  padding: 0;
+}
+#searchBox {
+  padding: 10px 12px;
+  font-size: 18px;
+  width: 100%;
+}
+#searchBox:focus,
+#searchBox:active {
+  outline: 0;
+  border: 0;
+}
+.result {
+  background-color: #f5f5f5;
+  margin-bottom: 1px;
+  padding: 10px 12px;
+}
+.result .title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.result .description {
+  color: #666;
+  font-size: 12px;
+}
+.selected {
+  background-color: #337ab7;
+  color: #fff;
+}
+.selected .description {
+  color: #c7ddef;
+}

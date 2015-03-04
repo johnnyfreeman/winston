@@ -14,6 +14,10 @@ Taking inspiration from launchers and command line interfaces such as [Alfred](h
 
 Compute simple math equations. Pastes result into previously focused input field or copies result to the clipboard
 
+##### DevTools
+
+To start with, it would be nice to be able to lookup and execute devtool snippets.
+
 ##### Snippets
 
 Save chunks of text to recall on command. Pastes into previously focused input field or copies text to the clipboard
