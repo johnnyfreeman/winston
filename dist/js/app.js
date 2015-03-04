@@ -36,11 +36,20 @@ var App = React.createClass({displayName: "App",
     },
 
     selectNext: function () {
-        this.setState({ selectedIndex: this.state.selectedIndex + 1 });
+        var last = this.state.results.length - 1;
+        var i = this.state.selectedIndex + 1;
+        if (i > last) {
+            i = last;
+        }
+        this.setState({ selectedIndex: i });
     },
 
     selectPrevious: function () {
-        this.setState({ selectedIndex: this.state.selectedIndex - 1 });
+        var i = this.state.selectedIndex - 1;
+        if (i < 0) {
+            i = 0;
+        }
+        this.setState({ selectedIndex: i });
     },
 
     inputChangeHandler: function (e) {
