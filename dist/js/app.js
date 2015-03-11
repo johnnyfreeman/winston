@@ -22,37 +22,38 @@ var App = React.createClass({displayName: "App",
 
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler}, 
-            React.createElement(SearchBox, {changeHandler: this.inputChangeHandler}), 
+            React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers}), 
             React.createElement(ResultsList, {data: this.state.results, selectedIndex: this.state.selectedIndex})
         );
     },
 
     keyDownHandler: function (e) {
-        if (e.which === 40) {
-            this.selectNext();
-        } else if (e.which === 38) {
-            this.selectPrevious();
+        switch (e.which) {
+            case 40:
+                this.selectNext();
+                break;
+            case 38:
+                this.selectPrevious();
+                break;
         }
     },
 
     selectNext: function () {
         var last = this.state.results.length - 1;
-        var i = this.state.selectedIndex + 1;
-        if (i > last) {
-            i = last;
+        var i = this.state.selectedIndex;
+        if (i < last) {
+            this.setState({ selectedIndex: i + 1 });
         }
-        this.setState({ selectedIndex: i });
     },
 
     selectPrevious: function () {
-        var i = this.state.selectedIndex - 1;
-        if (i < 0) {
-            i = 0;
+        var i = this.state.selectedIndex;
+        if (i > 0) {
+            this.setState({ selectedIndex: i - 1 });
         }
-        this.setState({ selectedIndex: i });
     },
 
-    inputChangeHandler: function (e) {
+    triggerInputHandlers: function (e) {
 
         // get list of commands
         var commands = [
@@ -74,5 +75,6 @@ var App = React.createClass({displayName: "App",
 
         // update results list
         this.setState({ results: filteredCommands.slice(0, 5) });
+        this.setState({ selectedIndex: 0 });
     }
 });
