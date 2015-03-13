@@ -8,16 +8,6 @@ var App = React.createClass({displayName: "App",
     },
 
     componentDidMount: function() {
-        // $.ajax({
-        //     url: this.props.url,
-        //     dataType: 'json',
-        //     success: function(data) {
-        //         this.setState({data: data});
-        //     }.bind(this),
-        //     error: function(xhr, status, err) {
-        //         console.error(this.props.url, status, err.toString());
-        //     }.bind(this)
-        // });
     },
 
     render: function() {
@@ -34,6 +24,9 @@ var App = React.createClass({displayName: "App",
                 break;
             case 38:
                 this.selectPrevious();
+                break;
+            case 13:
+                this.state.results[this.state.selectedIndex].handler();
                 break;
         }
     },
@@ -55,26 +48,13 @@ var App = React.createClass({displayName: "App",
 
     triggerInputHandlers: function (e) {
 
-        // get list of commands
-        var commands = [
-            { title: "one", description: "description of one" },
-            { title: "two", description: "description of two" },
-            { title: "three", description: "description of three" },
-            { title: "four", description: "description of four" },
-            { title: "five", description: "description of five" },
-            { title: "six", description: "description of six" },
-            { title: "seven", description: "description of seven" },
-            { title: "eight", description: "description of eight" },
-            { title: "nine", description: "description of nine" },
-            { title: "ten", description: "description of ten" }
-        ];
-
-        // fuzzy search commands
-        var f = new Fuse(commands, { keys: ['title'] });
-        var filteredCommands = f.search(e.target.value);
+        var google = new Google(e);
+        var commands = google.inputHandler();
 
         // update results list
-        this.setState({ results: filteredCommands.slice(0, 5) });
-        this.setState({ selectedIndex: 0 });
+        this.setState({
+            results: commands.slice(0, 5),
+            selectedIndex: 0
+        });
     }
 });

@@ -16,7 +16,7 @@ Compute simple math equations. Pastes result into previously focused input field
 
 ##### DevTools
 
-To start with, it would be nice to be able to lookup and execute devtool snippets.
+To start with, it would be nice to be able to lookup and execute devtools snippets.
 
 ##### Snippets
 

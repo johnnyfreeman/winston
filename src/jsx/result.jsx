@@ -1,10 +1,16 @@
 var Result = React.createClass({
+
+    propTypes: {
+        title: React.PropTypes.string,
+        description: React.PropTypes.string,
+        selected: React.PropTypes.bool
+    },
+
     render: function() {
-        var selected = this.props.selected == "true";
 
         var classes = React.addons.classSet({
             result: true,
-            selected: selected
+            selected: this.props.selected
         });
 
         return <li className={classes}>

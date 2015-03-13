@@ -14,4 +14,10 @@ gulp.task('jsx', function () {
         .pipe(gulp.dest('./dist/js'));
 });
 
-gulp.task('default', ['jsx', 'stylus']);
+// Copy all static js files
+gulp.task('js', function() {
+  return gulp.src('./src/js/**/*.js')
+    .pipe(gulp.dest('./dist/js'));
+});
+
+gulp.task('default', ['js', 'jsx', 'stylus']);
