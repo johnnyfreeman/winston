@@ -20,12 +20,15 @@ var App = React.createClass({
     keyDownHandler: function (e) {
         switch (e.which) {
             case 40:
+                e.preventDefault();
                 this.selectNext();
                 break;
             case 38:
+                e.preventDefault();
                 this.selectPrevious();
                 break;
             case 13:
+                e.preventDefault();
                 this.state.results[this.state.selectedIndex].handler();
                 break;
         }

@@ -15,6 +15,16 @@ Google.prototype.inputHandler = function () {
                 });
             }
         });
+        commands.push({
+            title: "Google: I'm Feeling Lucky",
+            description: "Take me straight to the first result for '" + this.input + "'",
+            input: this.input,
+            handler: function () {
+                chrome.tabs.create({
+                    url: 'https://www.google.com/search?btnI=I&q=' + this.input
+                });
+            }
+        });
     }
     return commands;
 
