@@ -8,11 +8,25 @@ Taking inspiration from launchers and command line interfaces such as [Alfred](h
 * Packages (plugins)
 * Themes (low priority)
 
-### Planned Packages
+### Current Packages
 
 ##### Calculator
 
 Compute simple math equations. Pastes result into previously focused input field or copies result to the clipboard
+
+##### Bookmarks
+
+Search through your bookmarks
+
+##### Google
+
+Option to search Google (as a fallback)
+
+##### YouTube
+
+Type `youtube sneezing panda`, and a new tab will be opened with YouTube's search results for "sneezing panda"
+
+### Planned Packages
 
 ##### DevTools
 
