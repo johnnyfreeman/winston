@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "A launcher for the web.",
   "main": "popup.html",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
     "gulp-react": "^2.0.0",
     "gulp-stylus": "^2.0.1"
   },

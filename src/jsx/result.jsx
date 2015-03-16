@@ -2,6 +2,7 @@ var Result = React.createClass({
 
     propTypes: {
         title: React.PropTypes.string,
+        icon: React.PropTypes.string,
         description: React.PropTypes.string,
         selected: React.PropTypes.bool
     },
@@ -14,10 +15,13 @@ var Result = React.createClass({
         });
 
         return <li className={classes}>
-            <div className="title">
+            <div className="icon">
+                <Icon name={this.props.icon} />
+            </div>
+            <div className="title truncate">
                 {this.props.title}
             </div>
-            <div className="description">
+            <div className="description truncate">
                 {this.props.description}
             </div>
         </li>;

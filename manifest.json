@@ -12,7 +12,9 @@
 
     "permissions": [
         "activeTab",
-        "https://ajax.googleapis.com/"
+        "https://ajax.googleapis.com/",
+        "tabs",
+        "bookmarks"
     ],
     "content_scripts": [{
         "matches": ["<all_urls>"],
@@ -27,5 +29,6 @@
                 "linux": "Ctrl+Shift+W"
             }
         }
-    }
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

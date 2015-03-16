@@ -1,1 +1,1 @@
-console.log('testing from content.js');
+// content.js

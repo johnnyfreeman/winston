@@ -10,7 +10,7 @@ var ResultsList = React.createClass({
 
         return <ul className="resultsList">
             {this.props.data.map(function (result, index) {
-                return <Result key={result.id} title={result.title} description={result.description} selected={index==selectedIndex} />;
+                return <Result key={result.id} icon={result.icon} title={result.title} description={result.description} selected={index==selectedIndex} />;
             })}
         </ul>;
     }

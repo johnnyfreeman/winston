@@ -1,4 +1,76 @@
-var App = React.createClass({
+var Icon = React.createClass({displayName: "Icon",
+
+    propTypes: {
+        name: React.PropTypes.string
+    },
+
+    render: function() {
+        return React.createElement("i", {className: 'fa fa-' + this.props.name});
+    }
+});
+
+var Result = React.createClass({displayName: "Result",
+
+    propTypes: {
+        title: React.PropTypes.string,
+        icon: React.PropTypes.string,
+        description: React.PropTypes.string,
+        selected: React.PropTypes.bool
+    },
+
+    render: function() {
+
+        var classes = React.addons.classSet({
+            result: true,
+            selected: this.props.selected
+        });
+
+        return React.createElement("li", {className: classes}, 
+            React.createElement("div", {className: "icon"}, 
+                React.createElement(Icon, {name: this.props.icon})
+            ), 
+            React.createElement("div", {className: "title truncate"}, 
+                this.props.title
+            ), 
+            React.createElement("div", {className: "description truncate"}, 
+                this.props.description
+            )
+        );
+    }
+});
+
+var ResultsList = React.createClass({displayName: "ResultsList",
+
+    propTypes: {
+        data: React.PropTypes.array,
+        selectedIndex: React.PropTypes.number
+    },
+
+    render: function() {
+        var selectedIndex = this.props.selectedIndex;
+
+        return React.createElement("ul", {className: "resultsList"}, 
+            this.props.data.map(function (result, index) {
+                return React.createElement(Result, {key: result.id, icon: result.icon, title: result.title, description: result.description, selected: index==selectedIndex});
+            })
+        );
+    }
+});
+
+var SearchBox = React.createClass({displayName: "SearchBox",
+
+    // focus on input field after component mounts
+    componentDidMount: function() {
+        this.refs.input.getDOMNode().focus();
+    },
+
+    // render view
+    render: function() {
+        return React.createElement("input", {autoFocus: "true", id: "searchBox", onChange: this.props.changeHandler, placeholder: "How may I assist you?", ref: "input"});
+    }
+});
+
+var App = React.createClass({displayName: "App",
 
     getInitialState: function() {
         return {
@@ -23,10 +95,10 @@ var App = React.createClass({
     },
 
     render: function() {
-        return <div onKeyDown={this.keyDownHandler}>
-            <SearchBox changeHandler={this.triggerInputHandlers} ref="searchBox" />
-            <ResultsList data={this.state.results} selectedIndex={this.state.selectedIndex} />
-        </div>;
+        return React.createElement("div", {onKeyDown: this.keyDownHandler}, 
+            React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, ref: "searchBox"}), 
+            React.createElement(ResultsList, {data: this.state.results, selectedIndex: this.state.selectedIndex})
+        );
     },
 
     keyDownHandler: function (e) {
@@ -105,3 +177,5 @@ var App = React.createClass({
         }).done();
     }
 });
+
+React.render(React.createElement(App, null), document.body);
