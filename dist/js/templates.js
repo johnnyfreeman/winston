@@ -88,7 +88,8 @@ var App = React.createClass({displayName: "App",
             new Google(searchInput),
             new Youtube(searchInput),
             new Calculator(searchInput),
-            new Bookmarks(searchInput)
+            new Bookmarks(searchInput),
+            new Tabs(searchInput)
         ];
 
         Q.longStackSupport = true;
@@ -140,33 +141,23 @@ var App = React.createClass({displayName: "App",
 
     triggerInputHandlers: function (e) {
 
-        // var app = this;
-        //
-        // var commands = [];
-        // commands = new Google(e).inputHandler();
-        // commands = new Youtube(e).inputHandler().concat(commands);
-        // commands = new Calculator(e).inputHandler().concat(commands);
-        // new Bookmarks(e).inputHandler().then(function (bookmarkCommands) {
-        //     commands = bookmarkCommands.concat(commands);
-        // });
-
         // trigger input handler for each package
         var app = this;
         var promise = Q([]);
 
         this.packages.forEach(function (package) {
-            console.log('running: ', package);
+            // console.log('running: ', package);
             promise = promise.then(function(commands) {
-                console.log('commands', commands);
+                // console.log('commands', commands);
                 return package.inputHandler().then(function (packageCommands) {
-                    console.log('package commands', packageCommands);
+                    // console.log('package commands', packageCommands);
                     return packageCommands.concat(commands);
                 });
             });
         });
 
         promise.then(function (commands, two) {
-            console.log('DONE', commands, two);
+            // console.log('DONE', commands, two);
             app.setState({
                 results: commands,
                 selectedIndex: 0

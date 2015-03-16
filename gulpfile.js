@@ -15,6 +15,7 @@ var paths = {
         ],
         js: [
             './src/js/bookmarks.js',
+            './src/js/tabs.js',
             './src/js/calculator.js',
             './src/js/youtube.js',
             './src/js/google.js'//,
