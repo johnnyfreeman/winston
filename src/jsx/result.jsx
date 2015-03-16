@@ -4,7 +4,8 @@ var Result = React.createClass({
         title: React.PropTypes.string,
         icon: React.PropTypes.string,
         description: React.PropTypes.string,
-        selected: React.PropTypes.bool
+        selected: React.PropTypes.bool,
+        action: React.PropTypes.string
     },
 
     render: function() {
@@ -17,6 +18,9 @@ var Result = React.createClass({
         return <li className={classes}>
             <div className="icon">
                 <Icon name={this.props.icon} />
+            </div>
+            <div className="action">
+                {this.props.action}
             </div>
             <div className="title truncate">
                 {this.props.title}

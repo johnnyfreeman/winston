@@ -28,9 +28,10 @@ Bookmarks.prototype.inputHandler = function () {
 };
 
 var BookmarkCommand = function (bookmark) {
-    this.icon = 'bookmark';
+    this.icon = 'star-o';
     this.title = bookmark.title;
-    this.description = bookmark.url;
+    this.description = 'Bookmark: ' + bookmark.url;
+    this.action = 'Open';
 };
 
 BookmarkCommand.prototype.run = function () {
@@ -38,9 +39,10 @@ BookmarkCommand.prototype.run = function () {
 };
 
 var CreateBookmarkCommand = function () {
-    this.icon = 'bookmark';
+    this.icon = 'star-o';
     this.title = 'Bookmark This Page';
-    this.description = 'Create a bookmark for the active tab';
+    this.description = 'Bookmark: Create a bookmark for the active tab';
+    this.action = 'Create';
 };
 
 CreateBookmarkCommand.prototype.run = function () {
@@ -81,10 +83,11 @@ Tabs.prototype.inputHandler = function () {
 };
 
 var TabSearchCommand = function (tab) {
-    this.icon = 'folder';
+    this.icon = 'folder-o';
+    this.action = 'Switch'
     this.tab = tab;
     this.title = this.tab.title;
-    this.description = this.tab.url;
+    this.description = 'Tab: ' + this.tab.url;
 };
 
 TabSearchCommand.prototype.run = function () {
@@ -107,7 +110,8 @@ Calculator.prototype.inputHandler = function () {
         var command = {};
         command.result = math.eval(input);
         command.title = command.result;
-        command.description = "Copy '" + command.title + "' to your clipboard";
+        command.description = "Calculator: Copy '" + command.title + "' to your clipboard";
+        command.action = 'Copy';
         command.icon = 'calculator';
         command.run = function () {
             // copy to clipboard
@@ -132,9 +136,10 @@ Youtube.prototype.inputHandler = function () {
     var commands = [
         {
             query: query,
-            title: "YouTube: Search for '" + query + "'",
-            description: "Search YouTube for '" + query + "'",
+            title: "Search for '" + query + "'",
+            description: "YouTube: Open search results for '" + query + "'",
             icon: 'youtube',
+            action: 'Search',
             run: function () {
                 chrome.tabs.create({
                     url: 'https://www.youtube.com/results?search_query=' + this.query
@@ -172,8 +177,9 @@ var GoogleSearchCommand = function (inputString) {
     this.id = 'GOOGLE1';
     this.input = inputString;
     this.icon = 'google';
+    this.action = 'Search';
     this.title = 'Google "' + this.input + '"';
-    this.description = 'Open Google search results';
+    this.description = 'Google: Open Google search results';
 };
 
 GoogleSearchCommand.prototype.run = function () {
@@ -184,8 +190,9 @@ var GoogleLuckyCommand = function (inputString) {
     this.id = 'GOOGLE2';
     this.input = inputString;
     this.icon = 'google';
+    this.action = 'Open';
     this.title = 'I\'m Feeling Lucky';
-    this.description = 'Open the first result from Google';
+    this.description = 'Google: Open the first result from Google';
 };
 
 GoogleLuckyCommand.prototype.run = function () {

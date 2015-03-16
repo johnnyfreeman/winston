@@ -14,8 +14,9 @@ Pinterest.prototype.inputHandler = function () {
 
         commands.push({
             url: this.url,
-            title: "Pinterest: Pin this page",
-            description: "Pin this page on Pinterest",
+            title: "Pin this page",
+            description: "Pinterest: Pin this page on Pinterest",
+            action: 'Pin',
             icon: 'pinterest',
             run: function () {
                 chrome.tabs.create({

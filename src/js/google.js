@@ -24,8 +24,9 @@ var GoogleSearchCommand = function (inputString) {
     this.id = 'GOOGLE1';
     this.input = inputString;
     this.icon = 'google';
+    this.action = 'Search';
     this.title = 'Google "' + this.input + '"';
-    this.description = 'Open Google search results';
+    this.description = 'Google: Open Google search results';
 };
 
 GoogleSearchCommand.prototype.run = function () {
@@ -36,8 +37,9 @@ var GoogleLuckyCommand = function (inputString) {
     this.id = 'GOOGLE2';
     this.input = inputString;
     this.icon = 'google';
+    this.action = 'Open';
     this.title = 'I\'m Feeling Lucky';
-    this.description = 'Open the first result from Google';
+    this.description = 'Google: Open the first result from Google';
 };
 
 GoogleLuckyCommand.prototype.run = function () {

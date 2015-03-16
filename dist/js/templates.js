@@ -15,7 +15,8 @@ var Result = React.createClass({displayName: "Result",
         title: React.PropTypes.string,
         icon: React.PropTypes.string,
         description: React.PropTypes.string,
-        selected: React.PropTypes.bool
+        selected: React.PropTypes.bool,
+        action: React.PropTypes.string
     },
 
     render: function() {
@@ -28,6 +29,9 @@ var Result = React.createClass({displayName: "Result",
         return React.createElement("li", {className: classes}, 
             React.createElement("div", {className: "icon"}, 
                 React.createElement(Icon, {name: this.props.icon})
+            ), 
+            React.createElement("div", {className: "action"}, 
+                this.props.action
             ), 
             React.createElement("div", {className: "title truncate"}, 
                 this.props.title
@@ -51,7 +55,7 @@ var ResultsList = React.createClass({displayName: "ResultsList",
 
         return React.createElement("ul", {className: "resultsList"}, 
             this.props.data.map(function (result, index) {
-                return React.createElement(Result, {key: result.id, icon: result.icon, title: result.title, description: result.description, selected: index==selectedIndex});
+                return React.createElement(Result, {key: result.id, icon: result.icon, title: result.title, description: result.description, selected: index==selectedIndex, action: result.action});
             })
         );
     }

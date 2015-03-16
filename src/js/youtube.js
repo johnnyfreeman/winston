@@ -9,9 +9,10 @@ Youtube.prototype.inputHandler = function () {
     var commands = [
         {
             query: query,
-            title: "YouTube: Search for '" + query + "'",
-            description: "Search YouTube for '" + query + "'",
+            title: "Search for '" + query + "'",
+            description: "YouTube: Open search results for '" + query + "'",
             icon: 'youtube',
+            action: 'Search',
             run: function () {
                 chrome.tabs.create({
                     url: 'https://www.youtube.com/results?search_query=' + this.query

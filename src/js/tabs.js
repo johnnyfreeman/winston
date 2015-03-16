@@ -27,10 +27,11 @@ Tabs.prototype.inputHandler = function () {
 };
 
 var TabSearchCommand = function (tab) {
-    this.icon = 'folder';
+    this.icon = 'folder-o';
+    this.action = 'Switch'
     this.tab = tab;
     this.title = this.tab.title;
-    this.description = this.tab.url;
+    this.description = 'Tab: ' + this.tab.url;
 };
 
 TabSearchCommand.prototype.run = function () {
