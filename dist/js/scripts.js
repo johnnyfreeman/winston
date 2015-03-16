@@ -3,20 +3,28 @@ var Bookmarks = function (searchInput) {
 };
 
 Bookmarks.prototype.inputHandler = function () {
-    var deferred = Q.defer();
     var input = this.searchInput.value;
 
-    chrome.bookmarks.search(input, function (bookmarks) {
-        var commands = [];
+    return Q([]).then(function (commands) {
+        if (input.indexOf('bookmark') > -1) {
+            commands.push(new CreateBookmarkCommand());
+        }
+        return commands;
+    }).then(function (commands) {
+        var deferred = Q.defer();
 
-        bookmarks.forEach(function (bookmark) {
-            commands.push(new BookmarkCommand(bookmark));
+        chrome.bookmarks.search(input, function (bookmarks) {
+
+            bookmarks.forEach(function (bookmark) {
+                commands.push(new BookmarkCommand(bookmark));
+            });
+
+            deferred.resolve(commands);
         });
 
-        deferred.resolve(commands);
+        return deferred.promise;
     });
 
-    return deferred.promise;
 };
 
 var BookmarkCommand = function (bookmark) {
@@ -27,6 +35,21 @@ var BookmarkCommand = function (bookmark) {
 
 BookmarkCommand.prototype.run = function () {
     chrome.tabs.create({ url: this.description });
+};
+
+var CreateBookmarkCommand = function () {
+    this.icon = 'bookmark';
+    this.title = 'Bookmark This Page';
+    this.description = 'Create a bookmark for the active tab';
+};
+
+CreateBookmarkCommand.prototype.run = function () {
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+        chrome.bookmarks.create({
+            title: tabs[0].title,
+            url: tabs[0].url
+        });
+    });
 };
 
 var Calculator = function (searchInput) {
