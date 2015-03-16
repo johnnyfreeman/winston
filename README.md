@@ -14,6 +14,10 @@ Taking inspiration from launchers and command line interfaces such as [Alfred](h
 
 Compute simple math equations. Pastes result into previously focused input field or copies result to the clipboard
 
+##### Tabs
+
+Search through open tabs (results take priority over Bookmark results)
+
 ##### Bookmarks
 
 Search through your bookmarks
