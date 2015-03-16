@@ -32,6 +32,17 @@ var paths = {
             './bower_components/react/react-with-addons.js',
             './bower_components/fuse.js/src/fuse.js',
             './bower_components/mathjs/dist/math.js'
+        ],
+        css: [
+            './bower_components/fontawesome/css/font-awesome.min.css'
+        ],
+        fonts: [
+            './bower_components/fontawesome/fonts/fontawesome-webfont.eot',
+            './bower_components/fontawesome/fonts/fontawesome-webfont.svg',
+            './bower_components/fontawesome/fonts/fontawesome-webfont.ttf',
+            './bower_components/fontawesome/fonts/fontawesome-webfont.woff',
+            './bower_components/fontawesome/fonts/fontawesome-webfont.woff2',
+            './bower_components/fontawesome/fonts/FontAwesome.otf'
         ]
     }
 };
@@ -59,5 +70,14 @@ gulp.task('vendorjs', function() {
     .pipe(concat('vendor.js'))
     .pipe(gulp.dest('./dist/js'));
 });
+gulp.task('vendorcss', function() {
+  return gulp.src(paths.vendor.css)
+    .pipe(concat('vendor.css'))
+    .pipe(gulp.dest('./dist/css'));
+});
+gulp.task('vendorfonts', function() {
+  return gulp.src(paths.vendor.fonts)
+    .pipe(gulp.dest('./dist/fonts'));
+});
 
-gulp.task('default', ['appjs', 'vendorjs', 'jsx', 'stylus']);
+gulp.task('default', ['appjs', 'vendorjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus']);
