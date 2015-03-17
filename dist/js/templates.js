@@ -102,7 +102,7 @@ var App = React.createClass({displayName: "App",
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler}, 
             React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, ref: "searchBox"}), 
-            React.createElement(ResultsList, {data: this.state.results, selectedIndex: this.state.selectedIndex})
+            React.createElement(ResultsList, {data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
     },
 
@@ -127,14 +127,25 @@ var App = React.createClass({displayName: "App",
         var last = this.state.results.length - 1;
         var i = this.state.selectedIndex;
         if (i < last) {
-            this.setState({ selectedIndex: i + 1 });
+            // update selected index
+            i = i + 1;
+            this.setState({ selectedIndex: i });
+            // update scroll position of resultsList
+            this.refs.resultsList.getDOMNode().childNodes[i].scrollIntoViewIfNeeded(false);
         }
     },
 
     selectPrevious: function () {
         var i = this.state.selectedIndex;
         if (i > 0) {
-            this.setState({ selectedIndex: i - 1 });
+            // update selected index
+            i = i - 1;
+            this.setState({ selectedIndex: i });
+            // update scroll position of resultsList
+            var resultsNode = this.refs.resultsList.getDOMNode();
+            var selectedNode = resultsNode.childNodes[i];
+            if (resultsNode.scrollTop > selectedNode.offsetTop)
+                resultsNode.scrollTop = selectedNode.offsetTop;
         }
     },
 
