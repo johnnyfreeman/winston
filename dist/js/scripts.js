@@ -114,7 +114,7 @@ Calculator.prototype.inputHandler = function () {
         command.action = 'Copy';
         command.icon = 'calculator';
         command.run = function () {
-            // copy to clipboard
+            document.execCommand('copy');
         };
 
         if (input.length > 0) commands.push(command);
