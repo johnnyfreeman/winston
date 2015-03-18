@@ -100,7 +100,7 @@ var App = React.createClass({displayName: "App",
     },
 
     render: function() {
-        return React.createElement("div", {onKeyDown: this.keyDownHandler}, 
+        return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
             React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, ref: "searchBox"}), 
             React.createElement(ResultsList, {data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
@@ -120,6 +120,24 @@ var App = React.createClass({displayName: "App",
                 e.preventDefault();
                 this.runSelected();
                 break;
+        }
+    },
+
+    hoverHandler: function (e) {
+        var closest = function (node, className) {
+            while (node) {
+                if (node.classList.contains('result')) {
+                    return node;
+                } else {
+                    node = node.parentElement;
+                }
+            }
+            return false;
+        };
+        var result = closest(e.target, 'result');
+        if (result) {
+            var i = Array.prototype.indexOf.call(result.parentNode.children, result);
+            this.setState({ selectedIndex: i });
         }
     },
 

@@ -24,7 +24,7 @@ var App = React.createClass({
     },
 
     render: function() {
-        return <div onKeyDown={this.keyDownHandler}>
+        return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
             <SearchBox changeHandler={this.triggerInputHandlers} ref="searchBox" />
             <ResultsList data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;
@@ -44,6 +44,24 @@ var App = React.createClass({
                 e.preventDefault();
                 this.runSelected();
                 break;
+        }
+    },
+
+    hoverHandler: function (e) {
+        var closest = function (node, className) {
+            while (node) {
+                if (node.classList.contains('result')) {
+                    return node;
+                } else {
+                    node = node.parentElement;
+                }
+            }
+            return false;
+        };
+        var result = closest(e.target, 'result');
+        if (result) {
+            var i = Array.prototype.indexOf.call(result.parentNode.children, result);
+            this.setState({ selectedIndex: i });
         }
     },
 
