@@ -141,7 +141,6 @@ Youtube.prototype.inputHandler = function () {
     // determine if input contains any keywords
     var keywordFound = false;
     this.hardKeywords.concat(this.softKeywords).forEach(function (keyword) {
-        console.log(keyword, input.indexOf(keyword));
         if (input.indexOf(keyword) > -1) {
             keywordFound = true;
         }
