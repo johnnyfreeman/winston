@@ -26,7 +26,7 @@ var App = React.createClass({
     render: function() {
         return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
             <SearchBox changeHandler={this.triggerInputHandlers} ref="searchBox" />
-            <ResultsList data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
+            <ResultsList clickHandler={this.runSelected} data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;
     },
 
@@ -92,6 +92,7 @@ var App = React.createClass({
     },
 
     runSelected: function () {
+        console.log('run selected', this.state.selectedIndex);
         var selectedCommand = this.state.results[this.state.selectedIndex];
         return selectedCommand.run();
     },

@@ -53,7 +53,7 @@ var ResultsList = React.createClass({displayName: "ResultsList",
     render: function() {
         var selectedIndex = this.props.selectedIndex;
 
-        return React.createElement("ul", {className: "resultsList"}, 
+        return React.createElement("ul", {className: "resultsList", onClick: this.props.clickHandler}, 
             this.props.data.map(function (result, index) {
                 return React.createElement(Result, {key: result.id, icon: result.icon, title: result.title, description: result.description, selected: index==selectedIndex, action: result.action});
             })
@@ -102,7 +102,7 @@ var App = React.createClass({displayName: "App",
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
             React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, ref: "searchBox"}), 
-            React.createElement(ResultsList, {data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
+            React.createElement(ResultsList, {clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
     },
 
@@ -168,6 +168,7 @@ var App = React.createClass({displayName: "App",
     },
 
     runSelected: function () {
+        console.log('run selected', this.state.selectedIndex);
         var selectedCommand = this.state.results[this.state.selectedIndex];
         return selectedCommand.run();
     },

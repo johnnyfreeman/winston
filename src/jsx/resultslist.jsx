@@ -8,7 +8,7 @@ var ResultsList = React.createClass({
     render: function() {
         var selectedIndex = this.props.selectedIndex;
 
-        return <ul className="resultsList">
+        return <ul className="resultsList" onClick={this.props.clickHandler}>
             {this.props.data.map(function (result, index) {
                 return <Result key={result.id} icon={result.icon} title={result.title} description={result.description} selected={index==selectedIndex} action={result.action} />;
             })}
