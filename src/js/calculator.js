@@ -11,7 +11,7 @@ Calculator.prototype.inputHandler = function () {
     try {
         var command = {};
         command.result = math.eval(input);
-        command.title = command.result;
+        command.title = command.result.toString();
         command.description = "Calculator: Copy '" + command.title + "' to your clipboard";
         command.action = 'Copy';
         command.icon = 'calculator';
