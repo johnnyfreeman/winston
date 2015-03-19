@@ -91,6 +91,7 @@ var App = React.createClass({displayName: "App",
         this.packages = [
             new Google(searchInput),
             new Youtube(searchInput),
+            new Salesforce(searchInput),
             new Bookmarks(searchInput),
             new Tabs(searchInput),
             new Calculator(searchInput)

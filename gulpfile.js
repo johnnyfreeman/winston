@@ -18,6 +18,7 @@ var paths = {
             './src/js/tabs.js',
             './src/js/calculator.js',
             './src/js/youtube.js',
+            './src/js/salesforce.js',
             './src/js/google.js'//,
             // './src/js/command.js'
         ],
@@ -31,6 +32,7 @@ var paths = {
             './bower_components/q/q.js',
             './bower_components/react/react-with-addons.js',
             './bower_components/fuse.js/src/fuse.js',
+            './bower_components/jsforce/build/jsforce.js',
             './bower_components/mathjs/dist/math.js'
         ],
         css: [
