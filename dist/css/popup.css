@@ -5,8 +5,9 @@ body {
   width: 500px;
 }
 #searchBox {
-  padding: 10px 12px;
+  border: 0;
   font-size: 18px;
+  padding: 10px 12px;
   width: 100%;
 }
 #searchBox:focus,

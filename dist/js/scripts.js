@@ -30,12 +30,13 @@ Bookmarks.prototype.inputHandler = function () {
 var BookmarkCommand = function (bookmark) {
     this.icon = 'star-o';
     this.title = bookmark.title;
-    this.description = 'Bookmark: ' + bookmark.url;
+    this.url = bookmark.url;
+    this.description = 'Bookmark: ' + this.url;
     this.action = 'Open';
 };
 
 BookmarkCommand.prototype.run = function () {
-    chrome.tabs.create({ url: this.description });
+    chrome.tabs.create({ url: this.url });
 };
 
 var CreateBookmarkCommand = function () {
