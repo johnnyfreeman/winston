@@ -330,10 +330,12 @@ Salesforce.prototype.inputHandler = function () {
     var deferred = Q.defer();
     var input = this.searchInput.value;
     var commands = [];
-
-    if (this.docLinks.hasOwnProperty(input)) {
-        commands.push(new SalesforceDocCommand(input, this.docLinks[input]));
-    }
+    var sf = this;
+    Object.keys(this.docLinks).forEach(function (key) {
+        if (input.length > 0 && key.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+            commands.push(new SalesforceDocCommand(key, sf.docLinks[key]));
+        }
+    });
 
     deferred.resolve(commands);
     return deferred.promise;
