@@ -6,8 +6,10 @@ Bookmarks.prototype.inputHandler = function () {
     var input = this.searchInput.value;
 
     return Q([]).then(function (commands) {
-        if (input.indexOf('bookmark') > -1) {
-            commands.push(new CreateBookmarkCommand());
+        var cmd = new CreateBookmarkCommand();
+        var title = cmd.title.toLowerCase();
+        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
+            commands.push(cmd);
         }
         return commands;
     }).then(function (commands) {
@@ -51,6 +53,9 @@ CreateBookmarkCommand.prototype.run = function () {
         chrome.bookmarks.create({
             title: tabs[0].title,
             url: tabs[0].url
+        }, function () {
+            // close the extension
+            window.close();
         });
     });
 };
