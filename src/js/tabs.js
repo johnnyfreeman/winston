@@ -24,6 +24,15 @@ Tabs.prototype.inputHandler = function () {
 
 
         return deferred.promise;
+    }).then(function (commands) {
+
+        var cmd = new TabDuplicateCommand();
+        var title = cmd.title.toLowerCase();
+        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
+            commands.push(cmd);
+        }
+
+        return commands;
     });
 
 };
@@ -39,5 +48,18 @@ var TabSearchCommand = function (tab) {
 TabSearchCommand.prototype.run = function () {
     chrome.tabs.update(this.tab.id, {
         active: true
+    });
+};
+
+var TabDuplicateCommand = function () {
+    this.icon = 'folder-o';
+    this.action = 'Duplicate'
+    this.title = 'Duplicate This Tab';
+    this.description = 'Tab: Duplicate the current tab';
+};
+
+TabDuplicateCommand.prototype.run = function () {
+    chrome.tabs.query({active:true}, function (tabs) {
+        chrome.tabs.duplicate(tabs[0].id);
     });
 };
