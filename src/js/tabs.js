@@ -121,6 +121,8 @@ var TabPinCommand = function () {
 
 TabPinCommand.prototype.run = function () {
     chrome.tabs.query({active:true}, function (tabs) {
-        chrome.tabs.update(tabs[0].id, { pinned: true });
+        chrome.tabs.update(tabs[0].id, { pinned: true }, function () {
+            window.close();
+        });
     });
 };
