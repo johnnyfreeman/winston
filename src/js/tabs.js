@@ -26,11 +26,20 @@ Tabs.prototype.inputHandler = function () {
         return deferred.promise;
     }).then(function (commands) {
 
-        var cmd = new TabDuplicateCommand();
-        var title = cmd.title.toLowerCase();
-        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
-            commands.push(cmd);
-        }
+        var cmds = [
+            new TabDuplicateCommand(),
+            new TabCloseCommand(),
+            new TabReloadCommand(),
+            new TabNewCommand(),
+            new TabPinCommand()
+        ];
+
+        cmds.forEach(function (cmd) {
+            var title = cmd.title.toLowerCase();
+            if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
+                commands.push(cmd);
+            }
+        });
 
         return commands;
     });
@@ -61,5 +70,57 @@ var TabDuplicateCommand = function () {
 TabDuplicateCommand.prototype.run = function () {
     chrome.tabs.query({active:true}, function (tabs) {
         chrome.tabs.duplicate(tabs[0].id);
+    });
+};
+
+var TabCloseCommand = function () {
+    this.icon = 'folder-o';
+    this.action = 'Close'
+    this.title = 'Close This Tab';
+    this.description = 'Tab: Close the current tab';
+};
+
+TabCloseCommand.prototype.run = function () {
+    chrome.tabs.query({active:true}, function (tabs) {
+        chrome.tabs.remove(tabs[0].id);
+    });
+};
+
+var TabReloadCommand = function () {
+    this.icon = 'folder-o';
+    this.action = 'Reload'
+    this.title = 'Reload This Tab';
+    this.description = 'Tab: Reload the current tab';
+};
+
+TabReloadCommand.prototype.run = function () {
+    chrome.tabs.query({active:true}, function (tabs) {
+        chrome.tabs.reload(tabs[0].id, function () {
+            window.close();
+        });
+    });
+};
+
+var TabNewCommand = function () {
+    this.icon = 'folder-o';
+    this.action = 'Open'
+    this.title = 'New Tab';
+    this.description = 'Tab: Create new tab';
+};
+
+TabNewCommand.prototype.run = function () {
+    chrome.tabs.create({});
+};
+
+var TabPinCommand = function () {
+    this.icon = 'folder-o';
+    this.action = 'Pin'
+    this.title = 'Pin This Tab';
+    this.description = 'Tab: Pin the current tab';
+};
+
+TabPinCommand.prototype.run = function () {
+    chrome.tabs.query({active:true}, function (tabs) {
+        chrome.tabs.update(tabs[0].id, { pinned: true });
     });
 };
