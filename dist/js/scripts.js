@@ -66,9 +66,11 @@ Tabs.prototype.inputHandler = function () {
         var deferred = Q.defer();
 
         if (input.length > 0) {
-            chrome.tabs.query({title: '*'+input+'*'}, function (tabs) {
+            chrome.tabs.query({}, function (tabs) {
                 tabs.forEach(function (tab) {
-                    commands.push(new TabSearchCommand(tab));
+                    if (tab.title.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+                        commands.push(new TabSearchCommand(tab));
+                    }
                 });
 
                 deferred.resolve(commands);
