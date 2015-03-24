@@ -10,24 +10,31 @@ Youtube.prototype.inputHandler = function () {
     var deferred = Q.defer();
     var input = this.searchInput.value;
     var commands = [];
+    var youtube = this;
 
-    // determine if input contains any keywords
-    var keywordFound = false;
-    this.hardKeywords.concat(this.softKeywords).forEach(function (keyword) {
-        if (input.indexOf(keyword) > -1) {
-            keywordFound = true;
-        }
-    });
+    if (input.length > 0) {
+        this.hardKeywords.concat(this.softKeywords).forEach(function (keyword) {
+            var inputWords = input.trim().split(' ');
+            var query = input;
 
-    var query = input;
-    if (keywordFound) {
-        // stip out hard keywords
-        this.hardKeywords.forEach(function (hardKeyword) {
-            query = query.replace(hardKeyword, '').trim();
+            inputWords.forEach(function (inputWord) {
+                var matchesKeyword = keyword.indexOf(inputWord) > -1;
+                var inputWordIndex = query.indexOf(inputWord);
+
+                // continue to next inputWord if this doesn't match the current keyword
+                if (!matchesKeyword) return;
+
+                // remove hard keywords
+                if (youtube.hardKeywords.indexOf(keyword) > -1) {
+                    query = query.replace(inputWord, '').trim();
+                }
+
+                // replace soft keywords
+                query = query.replace(inputWord, keyword);
+
+                commands.push(new YoutubeSearchCommand(query));
+            });
         });
-
-        // add command
-        commands.push(new YoutubeSearchCommand(query));
     }
 
     deferred.resolve(commands);
