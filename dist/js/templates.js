@@ -169,7 +169,6 @@ var App = React.createClass({displayName: "App",
     },
 
     runSelected: function () {
-        console.log('run selected', this.state.selectedIndex);
         var selectedCommand = this.state.results[this.state.selectedIndex];
         return selectedCommand.run();
     },
