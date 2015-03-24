@@ -90,6 +90,7 @@ var App = React.createClass({displayName: "App",
         // register packages
         this.packages = [
             new Google(searchInput),
+            new History(searchInput),
             new Youtube(searchInput),
             new Salesforce(searchInput),
             new Bookmarks(searchInput),

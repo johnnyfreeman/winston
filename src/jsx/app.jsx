@@ -14,6 +14,7 @@ var App = React.createClass({
         // register packages
         this.packages = [
             new Google(searchInput),
+            new History(searchInput),
             new Youtube(searchInput),
             new Salesforce(searchInput),
             new Bookmarks(searchInput),

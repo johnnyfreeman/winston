@@ -15,7 +15,8 @@
         "https://ajax.googleapis.com/",
         "tabs",
         "bookmarks",
-        "clipboardWrite"
+        "clipboardWrite",
+        "history"
     ],
     "content_scripts": [{
         "matches": ["<all_urls>"],
