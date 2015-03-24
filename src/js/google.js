@@ -22,7 +22,7 @@ Google.prototype.inputHandler = function (searchInput) {
 
 var GoogleSearchCommand = function (inputString) {
     this.id = 'GOOGLE1';
-    this.input = inputString;
+    this.input = inputString.trim();
     this.icon = 'google';
     this.action = 'Search';
     this.title = 'Google "' + this.input + '"';
@@ -35,7 +35,7 @@ GoogleSearchCommand.prototype.run = function () {
 
 var GoogleLuckyCommand = function (inputString) {
     this.id = 'GOOGLE2';
-    this.input = inputString;
+    this.input = inputString.trim();
     this.icon = 'google';
     this.action = 'Open';
     this.title = 'I\'m Feeling Lucky';
