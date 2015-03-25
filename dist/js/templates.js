@@ -89,13 +89,13 @@ var App = React.createClass({displayName: "App",
 
         // register packages
         this.packages = [
-            new Google(searchInput),
-            new History(searchInput),
-            new Youtube(searchInput),
-            new Salesforce(searchInput),
-            new Bookmarks(searchInput),
+            new Calculator(searchInput),
             new Tabs(searchInput),
-            new Calculator(searchInput)
+            new Bookmarks(searchInput),
+            new Salesforce(searchInput),
+            new Youtube(searchInput),
+            new History(searchInput),
+            new Google(searchInput)
         ];
 
         Q.longStackSupport = true;
@@ -103,7 +103,7 @@ var App = React.createClass({displayName: "App",
 
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
-            React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, ref: "searchBox"}), 
+            React.createElement(SearchBox, {changeHandler: this.debounce(this.triggerInputHandlers, 300), ref: "searchBox"}), 
             React.createElement(ResultsList, {clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
     },
@@ -175,32 +175,56 @@ var App = React.createClass({displayName: "App",
     },
 
     triggerInputHandlers: function (e) {
-
-        // trigger input handler for each package
         var app = this;
-        var promise = Q([]);
 
+        // execute all package inputHandlers side by side
+        // and build array of the returned promises
+        var promises = [];
         this.packages.forEach(function (package) {
-            // console.log('running: ', package);
-            promise = promise.then(function(commands) {
-                // console.log('commands', commands);
-                return package.inputHandler().then(function (packageCommands) {
-                    // console.log('package commands', packageCommands);
-                    return packageCommands.concat(commands);
-                });
-            });
+            promises.push(package.inputHandler());
         });
 
-        promise.then(function (commands, two) {
-            // console.log('DONE', commands, two);
+        // when all promises are fulfilled
+        Q.allSettled(promises)
+
+        // combine package commands together
+        .then(function (results) {
+            var commands = [];
+            results.forEach(function (result) {
+                if (result.state === "fulfilled") {
+                    commands = commands.concat(result.value);
+                }
+            });
+            return commands;
+        })
+
+        // update react state
+        .then(function (commands) {
             app.setState({
                 results: commands,
                 selectedIndex: 0
             });
         })
+
+        // error handler
         .fail(function (error) {
-            console.log(error);
+            console.error(error);
         }).done();
+    },
+
+    debounce: function (func, wait, immediate) {
+    	var timeout;
+    	return function() {
+    		var context = this, args = arguments;
+    		var later = function() {
+    			timeout = null;
+    			if (!immediate) func.apply(context, args);
+    		};
+    		var callNow = immediate && !timeout;
+    		clearTimeout(timeout);
+    		timeout = setTimeout(later, wait);
+    		if (callNow) func.apply(context, args);
+    	};
     }
 });
 
