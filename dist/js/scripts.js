@@ -268,7 +268,7 @@ var Youtube = function (searchInput) {
 
     // hard keywords are stripped from the query
     this.hardKeywords = ['video', 'youtube'];
-    this.softKeywords = ['cover', 'movie', 'music', 'trailer', 'tutorial'];
+    this.softKeywords = ['cover', 'movie', 'music', 'trailer', 'tutorial', 'how'];
 };
 
 Youtube.prototype.inputHandler = function () {
@@ -282,7 +282,7 @@ Youtube.prototype.inputHandler = function () {
             var query = input;
 
             inputWords.forEach(function (inputWord, inputWordIndex) {
-                var matchesKeyword = keyword.indexOf(inputWord) > -1;
+                var matchesKeyword = keyword.indexOf(inputWord) === 0;
 
                 // continue to next inputWord if this doesn't match the current keyword
                 if (!matchesKeyword) return;
@@ -295,12 +295,28 @@ Youtube.prototype.inputHandler = function () {
                 // replace soft keywords
                 query = query.replace(inputWord, keyword);
 
-                commands.push(new YoutubeSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
+                if (query.length > 0) {
+                    commands.push(new YoutubeSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
+                } else {
+                    commands.push(new YoutubeHomeCommand());
+                }
             });
         });
     }
 
     return commands;
+};
+
+var YoutubeHomeCommand = function () {
+    this.id = 'YOUTUBEHOME';
+    this.icon = 'youtube';
+    this.action = 'Open';
+    this.title = 'YouTube.com';
+    this.description = 'YouTube: Open YouTube.com';
+};
+
+YoutubeHomeCommand.prototype.run = function () {
+    chrome.tabs.create({ url: 'https://www.youtube.com/' });
 };
 
 var YoutubeSearchCommand = function (query, i) {
