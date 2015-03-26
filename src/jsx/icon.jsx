@@ -5,6 +5,12 @@ var Icon = React.createClass({
     },
 
     render: function() {
-        return <i className={'fa fa-' + this.props.name}></i>;
+        var classes = React.addons.classSet({
+            'fa': true,
+            'fa-spin': this.props.spin == true,
+            'fa-': true
+        });
+
+        return <i className={classes + this.props.name}></i>;
     }
 });

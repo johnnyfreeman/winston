@@ -3,7 +3,8 @@ var App = React.createClass({
     getInitialState: function() {
         return {
             results: [],
-            selectedIndex: 0
+            selectedIndex: 0,
+            busyPackages: {}
         };
     },
 
@@ -27,7 +28,8 @@ var App = React.createClass({
 
     render: function() {
         return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
-            <SearchBox changeHandler={this.debounce(this.triggerInputHandlers, 300)} ref="searchBox" />
+            <Icon name="refresh" spin={Object.keys(this.state.busyPackages).length > 0} />
+            <SearchBox changeHandler={this.debounce(this.triggerInputHandlers, 300)} loading={this.state.loading} ref="searchBox" />
             <ResultsList clickHandler={this.runSelected} data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;
     },
@@ -104,8 +106,23 @@ var App = React.createClass({
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
-        this.packages.forEach(function (package) {
-            promises.push(package.inputHandler());
+        this.packages.forEach(function (package, i) {
+
+            var packages = app.state.busyPackages;
+            packages[i] = package;
+            app.setState({busyPackages: packages});
+            console.log('busyPackages:', packages);
+
+            promises.push(package.inputHandler().then(function (commands) {
+
+                console.log('removing:', i);
+                var packages = app.state.busyPackages;
+                delete packages[i];
+                app.setState({busyPackages: packages});
+                console.log('busyPackages:', packages);
+
+                return commands;
+            }));
         });
 
         // when all promises are fulfilled

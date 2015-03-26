@@ -5,7 +5,13 @@ var Icon = React.createClass({displayName: "Icon",
     },
 
     render: function() {
-        return React.createElement("i", {className: 'fa fa-' + this.props.name});
+        var classes = React.addons.classSet({
+            'fa': true,
+            'fa-spin': this.props.spin == true,
+            'fa-': true
+        });
+
+        return React.createElement("i", {className: classes + this.props.name});
     }
 });
 
@@ -79,7 +85,8 @@ var App = React.createClass({displayName: "App",
     getInitialState: function() {
         return {
             results: [],
-            selectedIndex: 0
+            selectedIndex: 0,
+            busyPackages: {}
         };
     },
 
@@ -103,7 +110,8 @@ var App = React.createClass({displayName: "App",
 
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
-            React.createElement(SearchBox, {changeHandler: this.debounce(this.triggerInputHandlers, 300), ref: "searchBox"}), 
+            React.createElement(Icon, {name: "refresh", spin: Object.keys(this.state.busyPackages).length > 0}), 
+            React.createElement(SearchBox, {changeHandler: this.debounce(this.triggerInputHandlers, 300), loading: this.state.loading, ref: "searchBox"}), 
             React.createElement(ResultsList, {clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
     },
@@ -180,8 +188,23 @@ var App = React.createClass({displayName: "App",
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
-        this.packages.forEach(function (package) {
-            promises.push(package.inputHandler());
+        this.packages.forEach(function (package, i) {
+
+            var packages = app.state.busyPackages;
+            packages[i] = package;
+            app.setState({busyPackages: packages});
+            console.log('busyPackages:', packages);
+
+            promises.push(package.inputHandler().then(function (commands) {
+
+                console.log('removing:', i);
+                var packages = app.state.busyPackages;
+                delete packages[i];
+                app.setState({busyPackages: packages});
+                console.log('busyPackages:', packages);
+
+                return commands;
+            }));
         });
 
         // when all promises are fulfilled
