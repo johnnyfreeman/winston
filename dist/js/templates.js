@@ -103,7 +103,7 @@ var App = React.createClass({displayName: "App",
 
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
-            React.createElement(SearchBox, {changeHandler: this.debounce(this.triggerInputHandlers, 300), ref: "searchBox"}), 
+            React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, ref: "searchBox"}), 
             React.createElement(ResultsList, {clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
     },

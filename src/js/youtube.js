@@ -12,13 +12,12 @@ Youtube.prototype.inputHandler = function () {
     var youtube = this;
 
     if (input.length > 0) {
-        this.hardKeywords.concat(this.softKeywords).forEach(function (keyword) {
+        this.hardKeywords.concat(this.softKeywords).forEach(function (keyword, keywordIndex) {
             var inputWords = input.trim().split(' ');
             var query = input;
 
-            inputWords.forEach(function (inputWord) {
+            inputWords.forEach(function (inputWord, inputWordIndex) {
                 var matchesKeyword = keyword.indexOf(inputWord) > -1;
-                var inputWordIndex = query.indexOf(inputWord);
 
                 // continue to next inputWord if this doesn't match the current keyword
                 if (!matchesKeyword) return;
@@ -31,7 +30,7 @@ Youtube.prototype.inputHandler = function () {
                 // replace soft keywords
                 query = query.replace(inputWord, keyword);
 
-                commands.push(new YoutubeSearchCommand(query));
+                commands.push(new YoutubeSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
             });
         });
     }
@@ -39,8 +38,8 @@ Youtube.prototype.inputHandler = function () {
     return commands;
 };
 
-var YoutubeSearchCommand = function (query) {
-    this.id = 'YOUTUBE1';
+var YoutubeSearchCommand = function (query, i) {
+    this.id = 'YOUTUBE' + i;
     this.query = query;
     this.icon = 'youtube';
     this.action = 'Search';

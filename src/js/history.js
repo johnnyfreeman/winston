@@ -13,8 +13,8 @@ History.prototype.inputHandler = function () {
         } else {
             chrome.history.search({text: input}, function (results) {
 
-                results.forEach(function (result) {
-                    commands.push(new HistoryCommand(result));
+                results.forEach(function (result, i) {
+                    commands.push(new HistoryCommand(result, i));
                 });
 
                 deferred.resolve(commands);
@@ -26,7 +26,8 @@ History.prototype.inputHandler = function () {
 
 };
 
-var HistoryCommand = function (history) {
+var HistoryCommand = function (history, i) {
+    this.id = 'HISTORY' + i;
     this.icon = 'history';
     this.title = history.title || history.url;
     this.url = history.url;

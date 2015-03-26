@@ -212,7 +212,7 @@ Salesforce.prototype.inputHandler = function () {
 };
 
 var SalesforceDocCommand = function (title, url) {
-    // this.id = 'SFDOC1';
+    this.id = 'SFDOC-' + title.replace(' ', '-');
     this.icon = 'cloud';
     this.action = 'Open';
     this.title = title;

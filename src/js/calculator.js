@@ -8,6 +8,7 @@ Calculator.prototype.inputHandler = function () {
 
     try {
         var command = {};
+        command.id = 'CALCULATOR1';
         command.result = math.eval(input);
         command.title = command.result.toString();
         command.description = "Calculator: Copy '" + command.title + "' to your clipboard";

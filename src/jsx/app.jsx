@@ -27,7 +27,7 @@ var App = React.createClass({
 
     render: function() {
         return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
-            <SearchBox changeHandler={this.debounce(this.triggerInputHandlers, 300)} ref="searchBox" />
+            <SearchBox changeHandler={this.triggerInputHandlers} ref="searchBox" />
             <ResultsList clickHandler={this.runSelected} data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;
     },

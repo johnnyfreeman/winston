@@ -17,8 +17,8 @@ Bookmarks.prototype.inputHandler = function () {
 
         chrome.bookmarks.search(input, function (bookmarks) {
 
-            bookmarks.forEach(function (bookmark) {
-                commands.push(new BookmarkCommand(bookmark));
+            bookmarks.forEach(function (bookmark, i) {
+                commands.push(new BookmarkCommand(bookmark, i));
             });
 
             deferred.resolve(commands);
@@ -29,7 +29,8 @@ Bookmarks.prototype.inputHandler = function () {
 
 };
 
-var BookmarkCommand = function (bookmark) {
+var BookmarkCommand = function (bookmark, i) {
+    this.id = 'BOOKMARK' + i;
     this.icon = 'star-o';
     this.title = bookmark.title;
     this.url = bookmark.url;
@@ -75,8 +76,8 @@ History.prototype.inputHandler = function () {
         } else {
             chrome.history.search({text: input}, function (results) {
 
-                results.forEach(function (result) {
-                    commands.push(new HistoryCommand(result));
+                results.forEach(function (result, i) {
+                    commands.push(new HistoryCommand(result, i));
                 });
 
                 deferred.resolve(commands);
@@ -88,7 +89,8 @@ History.prototype.inputHandler = function () {
 
 };
 
-var HistoryCommand = function (history) {
+var HistoryCommand = function (history, i) {
+    this.id = 'HISTORY' + i;
     this.icon = 'history';
     this.title = history.title || history.url;
     this.url = history.url;
@@ -112,9 +114,9 @@ Tabs.prototype.inputHandler = function () {
 
         if (input.length > 0) {
             chrome.tabs.query({}, function (tabs) {
-                tabs.forEach(function (tab) {
+                tabs.forEach(function (tab, i) {
                     if (tab.title.toLowerCase().indexOf(input.toLowerCase()) > -1) {
-                        commands.push(new TabSearchCommand(tab));
+                        commands.push(new TabSearchCommand(tab, i));
                     }
                 });
 
@@ -148,7 +150,8 @@ Tabs.prototype.inputHandler = function () {
 
 };
 
-var TabSearchCommand = function (tab) {
+var TabSearchCommand = function (tab, i) {
+    this.id = 'TABSEARCH' + i;
     this.icon = 'folder-o';
     this.action = 'Switch'
     this.tab = tab;
@@ -163,6 +166,7 @@ TabSearchCommand.prototype.run = function () {
 };
 
 var TabDuplicateCommand = function () {
+    this.id = 'TABDUPLICATE';
     this.icon = 'folder-o';
     this.action = 'Duplicate'
     this.title = 'Duplicate This Tab';
@@ -176,6 +180,7 @@ TabDuplicateCommand.prototype.run = function () {
 };
 
 var TabCloseCommand = function () {
+    this.id = 'TABCLOSE';
     this.icon = 'folder-o';
     this.action = 'Close'
     this.title = 'Close This Tab';
@@ -189,6 +194,7 @@ TabCloseCommand.prototype.run = function () {
 };
 
 var TabReloadCommand = function () {
+    this.id = 'TABRELOAD';
     this.icon = 'folder-o';
     this.action = 'Reload'
     this.title = 'Reload This Tab';
@@ -204,6 +210,7 @@ TabReloadCommand.prototype.run = function () {
 };
 
 var TabNewCommand = function () {
+    this.id = 'TABNEW';
     this.icon = 'folder-o';
     this.action = 'Open'
     this.title = 'New Tab';
@@ -215,6 +222,7 @@ TabNewCommand.prototype.run = function () {
 };
 
 var TabPinCommand = function () {
+    this.id = 'TABPIN';
     this.icon = 'folder-o';
     this.action = 'Pin'
     this.title = 'Pin This Tab';
@@ -239,6 +247,7 @@ Calculator.prototype.inputHandler = function () {
 
     try {
         var command = {};
+        command.id = 'CALCULATOR1';
         command.result = math.eval(input);
         command.title = command.result.toString();
         command.description = "Calculator: Copy '" + command.title + "' to your clipboard";
@@ -268,13 +277,12 @@ Youtube.prototype.inputHandler = function () {
     var youtube = this;
 
     if (input.length > 0) {
-        this.hardKeywords.concat(this.softKeywords).forEach(function (keyword) {
+        this.hardKeywords.concat(this.softKeywords).forEach(function (keyword, keywordIndex) {
             var inputWords = input.trim().split(' ');
             var query = input;
 
-            inputWords.forEach(function (inputWord) {
+            inputWords.forEach(function (inputWord, inputWordIndex) {
                 var matchesKeyword = keyword.indexOf(inputWord) > -1;
-                var inputWordIndex = query.indexOf(inputWord);
 
                 // continue to next inputWord if this doesn't match the current keyword
                 if (!matchesKeyword) return;
@@ -287,7 +295,7 @@ Youtube.prototype.inputHandler = function () {
                 // replace soft keywords
                 query = query.replace(inputWord, keyword);
 
-                commands.push(new YoutubeSearchCommand(query));
+                commands.push(new YoutubeSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
             });
         });
     }
@@ -295,8 +303,8 @@ Youtube.prototype.inputHandler = function () {
     return commands;
 };
 
-var YoutubeSearchCommand = function (query) {
-    this.id = 'YOUTUBE1';
+var YoutubeSearchCommand = function (query, i) {
+    this.id = 'YOUTUBE' + i;
     this.query = query;
     this.icon = 'youtube';
     this.action = 'Search';
@@ -522,7 +530,7 @@ Salesforce.prototype.inputHandler = function () {
 };
 
 var SalesforceDocCommand = function (title, url) {
-    // this.id = 'SFDOC1';
+    this.id = 'SFDOC-' + title.replace(' ', '-');
     this.icon = 'cloud';
     this.action = 'Open';
     this.title = title;

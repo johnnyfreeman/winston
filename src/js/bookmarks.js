@@ -17,8 +17,8 @@ Bookmarks.prototype.inputHandler = function () {
 
         chrome.bookmarks.search(input, function (bookmarks) {
 
-            bookmarks.forEach(function (bookmark) {
-                commands.push(new BookmarkCommand(bookmark));
+            bookmarks.forEach(function (bookmark, i) {
+                commands.push(new BookmarkCommand(bookmark, i));
             });
 
             deferred.resolve(commands);
@@ -29,7 +29,8 @@ Bookmarks.prototype.inputHandler = function () {
 
 };
 
-var BookmarkCommand = function (bookmark) {
+var BookmarkCommand = function (bookmark, i) {
+    this.id = 'BOOKMARK' + i;
     this.icon = 'star-o';
     this.title = bookmark.title;
     this.url = bookmark.url;

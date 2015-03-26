@@ -10,9 +10,9 @@ Tabs.prototype.inputHandler = function () {
 
         if (input.length > 0) {
             chrome.tabs.query({}, function (tabs) {
-                tabs.forEach(function (tab) {
+                tabs.forEach(function (tab, i) {
                     if (tab.title.toLowerCase().indexOf(input.toLowerCase()) > -1) {
-                        commands.push(new TabSearchCommand(tab));
+                        commands.push(new TabSearchCommand(tab, i));
                     }
                 });
 
@@ -46,7 +46,8 @@ Tabs.prototype.inputHandler = function () {
 
 };
 
-var TabSearchCommand = function (tab) {
+var TabSearchCommand = function (tab, i) {
+    this.id = 'TABSEARCH' + i;
     this.icon = 'folder-o';
     this.action = 'Switch'
     this.tab = tab;
@@ -61,6 +62,7 @@ TabSearchCommand.prototype.run = function () {
 };
 
 var TabDuplicateCommand = function () {
+    this.id = 'TABDUPLICATE';
     this.icon = 'folder-o';
     this.action = 'Duplicate'
     this.title = 'Duplicate This Tab';
@@ -74,6 +76,7 @@ TabDuplicateCommand.prototype.run = function () {
 };
 
 var TabCloseCommand = function () {
+    this.id = 'TABCLOSE';
     this.icon = 'folder-o';
     this.action = 'Close'
     this.title = 'Close This Tab';
@@ -87,6 +90,7 @@ TabCloseCommand.prototype.run = function () {
 };
 
 var TabReloadCommand = function () {
+    this.id = 'TABRELOAD';
     this.icon = 'folder-o';
     this.action = 'Reload'
     this.title = 'Reload This Tab';
@@ -102,6 +106,7 @@ TabReloadCommand.prototype.run = function () {
 };
 
 var TabNewCommand = function () {
+    this.id = 'TABNEW';
     this.icon = 'folder-o';
     this.action = 'Open'
     this.title = 'New Tab';
@@ -113,6 +118,7 @@ TabNewCommand.prototype.run = function () {
 };
 
 var TabPinCommand = function () {
+    this.id = 'TABPIN';
     this.icon = 'folder-o';
     this.action = 'Pin'
     this.title = 'Pin This Tab';
