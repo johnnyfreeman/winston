@@ -18,7 +18,7 @@ var App = React.createClass({
             new Bookmarks(searchInput),
             new Salesforce(searchInput),
             new Youtube(searchInput),
-            new History(searchInput),
+            // new History(searchInput),
             new Google(searchInput)
         ];
 
