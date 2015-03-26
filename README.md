@@ -4,7 +4,27 @@ Taking inspiration from launchers and command line interfaces such as [Alfred](h
 
 ### Installation
 
-The best way to install Winston at the moment is by cloning this repo, and loading into Chrome as a unpacked extension.
+The best way to install Winston at the moment is...
+
+1. Clone the GitHub repository.
+
+```
+git clone git@github.com:johnnyfreeman/winston.git
+```
+
+2. Open the URL [chrome://extensions/](chrome://extensions/) in your browser.
+
+3. Check the box for Developer Mode
+
+4. Click the button Load unpacked extension...
+
+5. Select the folder where you cloned the repository.
+
+The extension is now installed.
+
+### Usage
+
+Open Winston by clicking the icon in the toolbar (or `Ctrl` + `Space`), and start typing. See package descriptions for more information about what input each package responds to.
 
 ### Packages
 
