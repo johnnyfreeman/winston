@@ -199,7 +199,6 @@ var Salesforce = function (searchInput) {
 };
 
 Salesforce.prototype.inputHandler = function () {
-    var deferred = Q.defer();
     var input = this.searchInput.value;
     var commands = [];
     var sf = this;
@@ -209,8 +208,7 @@ Salesforce.prototype.inputHandler = function () {
         }
     });
 
-    deferred.resolve(commands);
-    return deferred.promise;
+    return commands;
 };
 
 var SalesforceDocCommand = function (title, url) {

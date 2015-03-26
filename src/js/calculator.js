@@ -3,9 +3,7 @@ var Calculator = function (searchInput) {
 };
 
 Calculator.prototype.inputHandler = function () {
-
     var commands = [];
-    var deferred = Q.defer();
     var input = this.searchInput.value;
 
     try {
@@ -22,7 +20,5 @@ Calculator.prototype.inputHandler = function () {
         if (input.length > 0) commands.push(command);
     } catch(e) {}
 
-    deferred.resolve(commands);
-
-    return deferred.promise;
+    return commands;
 };

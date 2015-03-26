@@ -7,7 +7,6 @@ var Youtube = function (searchInput) {
 };
 
 Youtube.prototype.inputHandler = function () {
-    var deferred = Q.defer();
     var input = this.searchInput.value;
     var commands = [];
     var youtube = this;
@@ -37,8 +36,7 @@ Youtube.prototype.inputHandler = function () {
         });
     }
 
-    deferred.resolve(commands);
-    return deferred.promise;
+    return commands;
 };
 
 var YoutubeSearchCommand = function (query) {

@@ -234,9 +234,7 @@ var Calculator = function (searchInput) {
 };
 
 Calculator.prototype.inputHandler = function () {
-
     var commands = [];
-    var deferred = Q.defer();
     var input = this.searchInput.value;
 
     try {
@@ -253,9 +251,7 @@ Calculator.prototype.inputHandler = function () {
         if (input.length > 0) commands.push(command);
     } catch(e) {}
 
-    deferred.resolve(commands);
-
-    return deferred.promise;
+    return commands;
 };
 
 var Youtube = function (searchInput) {
@@ -267,7 +263,6 @@ var Youtube = function (searchInput) {
 };
 
 Youtube.prototype.inputHandler = function () {
-    var deferred = Q.defer();
     var input = this.searchInput.value;
     var commands = [];
     var youtube = this;
@@ -297,8 +292,7 @@ Youtube.prototype.inputHandler = function () {
         });
     }
 
-    deferred.resolve(commands);
-    return deferred.promise;
+    return commands;
 };
 
 var YoutubeSearchCommand = function (query) {
@@ -515,7 +509,6 @@ var Salesforce = function (searchInput) {
 };
 
 Salesforce.prototype.inputHandler = function () {
-    var deferred = Q.defer();
     var input = this.searchInput.value;
     var commands = [];
     var sf = this;
@@ -525,8 +518,7 @@ Salesforce.prototype.inputHandler = function () {
         }
     });
 
-    deferred.resolve(commands);
-    return deferred.promise;
+    return commands;
 };
 
 var SalesforceDocCommand = function (title, url) {
@@ -547,16 +539,15 @@ var Google = function (searchInput) {
 };
 
 Google.prototype.inputHandler = function (searchInput) {
-    var deferred = Q.defer();
     var input = this.searchInput.value;
+    var commands = [];
 
-    var commands = [
-        new GoogleSearchCommand(input),
-        new GoogleLuckyCommand(input)
-    ];
+    if (input.length > 0) {
+        commands.push(new GoogleSearchCommand(input));
+        commands.push(new GoogleLuckyCommand(input));
+    }
 
-    deferred.resolve(input.length > 0 ? commands : []);
-    return deferred.promise;
+    return commands;
 
     // fuzzy search commands
     // var f = new Fuse(commands, { keys: ['title'] });

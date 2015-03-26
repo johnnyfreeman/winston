@@ -3,16 +3,15 @@ var Google = function (searchInput) {
 };
 
 Google.prototype.inputHandler = function (searchInput) {
-    var deferred = Q.defer();
     var input = this.searchInput.value;
+    var commands = [];
 
-    var commands = [
-        new GoogleSearchCommand(input),
-        new GoogleLuckyCommand(input)
-    ];
+    if (input.length > 0) {
+        commands.push(new GoogleSearchCommand(input));
+        commands.push(new GoogleLuckyCommand(input));
+    }
 
-    deferred.resolve(input.length > 0 ? commands : []);
-    return deferred.promise;
+    return commands;
 
     // fuzzy search commands
     // var f = new Fuse(commands, { keys: ['title'] });

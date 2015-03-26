@@ -105,7 +105,7 @@ var App = React.createClass({
         // and build array of the returned promises
         var promises = [];
         this.packages.forEach(function (package) {
-            promises.push(package.inputHandler());
+            promises.push(Q.when(package.inputHandler()));
         });
 
         // when all promises are fulfilled
