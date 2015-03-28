@@ -64,5 +64,5 @@ var YoutubeSearchCommand = function (query, i) {
 };
 
 YoutubeSearchCommand.prototype.run = function () {
-    chrome.tabs.create({ url: 'https://www.youtube.com/results?search_query=' + this.query });
+    chrome.tabs.create({ url: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(this.query) });
 };

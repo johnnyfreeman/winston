@@ -314,7 +314,7 @@ var YoutubeSearchCommand = function (query, i) {
 };
 
 YoutubeSearchCommand.prototype.run = function () {
-    chrome.tabs.create({ url: 'https://www.youtube.com/results?search_query=' + this.query });
+    chrome.tabs.create({ url: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(this.query) });
 };
 
 var Salesforce = function (searchInput) {
@@ -550,7 +550,7 @@ var Google = function (searchInput) {
 Google.prototype.inputHandler = Promise.method(function (searchInput) {
     var input = this.searchInput.value;
     var commands = [];
-    
+
     if (input.length > 0) {
         commands.push(new GoogleSearchCommand(input));
         commands.push(new GoogleLuckyCommand(input));
@@ -574,7 +574,7 @@ var GoogleSearchCommand = function (inputString) {
 };
 
 GoogleSearchCommand.prototype.run = function () {
-    chrome.tabs.create({ url: 'https://www.google.com/search?q=' + this.input });
+    chrome.tabs.create({ url: 'https://www.google.com/search?q=' + encodeURIComponent(this.input) });
 };
 
 var GoogleLuckyCommand = function (inputString) {
@@ -587,5 +587,5 @@ var GoogleLuckyCommand = function (inputString) {
 };
 
 GoogleLuckyCommand.prototype.run = function () {
-    chrome.tabs.create({ url: 'https://www.google.com/search?btnI=I&q=' + this.input });
+    chrome.tabs.create({ url: 'https://www.google.com/search?btnI=I&q=' + encodeURIComponent(this.input) });
 };
