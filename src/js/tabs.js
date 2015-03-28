@@ -4,10 +4,24 @@ var Tabs = function (searchInput) {
 
 Tabs.prototype.inputHandler = function () {
     var input = this.searchInput.value;
+    var commands = [];
 
-    return Q([]).then(function (commands) {
-        var deferred = Q.defer();
+    var cmds = [
+        new TabDuplicateCommand(),
+        new TabCloseCommand(),
+        new TabReloadCommand(),
+        new TabNewCommand(),
+        new TabPinCommand()
+    ];
 
+    cmds.forEach(function (cmd) {
+        var title = cmd.title.toLowerCase();
+        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
+            commands.push(cmd);
+        }
+    });
+
+    return new Promise(function (resolve, reject) {
         if (input.length > 0) {
             chrome.tabs.query({}, function (tabs) {
                 tabs.forEach(function (tab, i) {
@@ -16,34 +30,12 @@ Tabs.prototype.inputHandler = function () {
                     }
                 });
 
-                deferred.resolve(commands);
+                resolve(commands);
             });
         } else {
-            deferred.resolve(commands);
+            resolve(commands);
         }
-
-
-        return deferred.promise;
-    }).then(function (commands) {
-
-        var cmds = [
-            new TabDuplicateCommand(),
-            new TabCloseCommand(),
-            new TabReloadCommand(),
-            new TabNewCommand(),
-            new TabPinCommand()
-        ];
-
-        cmds.forEach(function (cmd) {
-            var title = cmd.title.toLowerCase();
-            if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
-                commands.push(cmd);
-            }
-        });
-
-        return commands;
     });
-
 };
 
 var TabSearchCommand = function (tab, i) {

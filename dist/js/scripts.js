@@ -4,29 +4,24 @@ var Bookmarks = function (searchInput) {
 
 Bookmarks.prototype.inputHandler = function () {
     var input = this.searchInput.value;
+    var commands = [];
 
-    return Q([]).then(function (commands) {
-        var cmd = new CreateBookmarkCommand();
-        var title = cmd.title.toLowerCase();
-        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
-            commands.push(cmd);
-        }
-        return commands;
-    }).then(function (commands) {
-        var deferred = Q.defer();
+    // create command
+    var cmd = new CreateBookmarkCommand();
+    var title = cmd.title.toLowerCase();
+    if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
+        commands.push(cmd);
+    }
 
+    return new Promise(function (resolve, reject) {
         chrome.bookmarks.search(input, function (bookmarks) {
-
             bookmarks.forEach(function (bookmark, i) {
                 commands.push(new BookmarkCommand(bookmark, i));
             });
 
-            deferred.resolve(commands);
+            resolve(commands);
         });
-
-        return deferred.promise;
     });
-
 };
 
 var BookmarkCommand = function (bookmark, i) {
@@ -67,12 +62,11 @@ var History = function (searchInput) {
 
 History.prototype.inputHandler = function () {
     var input = this.searchInput.value;
+    var commands = [];
 
-    return Q([]).then(function (commands) {
-        var deferred = Q.defer();
-
+    return new Promise(function (resolve, reject) {
         if (input.length == 0) {
-            deferred.resolve(commands);
+            resolve(commands);
         } else {
             chrome.history.search({text: input}, function (results) {
 
@@ -80,13 +74,10 @@ History.prototype.inputHandler = function () {
                     commands.push(new HistoryCommand(result, i));
                 });
 
-                deferred.resolve(commands);
+                resolve(commands);
             });
         }
-
-        return deferred.promise;
     });
-
 };
 
 var HistoryCommand = function (history, i) {
@@ -108,10 +99,24 @@ var Tabs = function (searchInput) {
 
 Tabs.prototype.inputHandler = function () {
     var input = this.searchInput.value;
+    var commands = [];
 
-    return Q([]).then(function (commands) {
-        var deferred = Q.defer();
+    var cmds = [
+        new TabDuplicateCommand(),
+        new TabCloseCommand(),
+        new TabReloadCommand(),
+        new TabNewCommand(),
+        new TabPinCommand()
+    ];
 
+    cmds.forEach(function (cmd) {
+        var title = cmd.title.toLowerCase();
+        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
+            commands.push(cmd);
+        }
+    });
+
+    return new Promise(function (resolve, reject) {
         if (input.length > 0) {
             chrome.tabs.query({}, function (tabs) {
                 tabs.forEach(function (tab, i) {
@@ -120,34 +125,12 @@ Tabs.prototype.inputHandler = function () {
                     }
                 });
 
-                deferred.resolve(commands);
+                resolve(commands);
             });
         } else {
-            deferred.resolve(commands);
+            resolve(commands);
         }
-
-
-        return deferred.promise;
-    }).then(function (commands) {
-
-        var cmds = [
-            new TabDuplicateCommand(),
-            new TabCloseCommand(),
-            new TabReloadCommand(),
-            new TabNewCommand(),
-            new TabPinCommand()
-        ];
-
-        cmds.forEach(function (cmd) {
-            var title = cmd.title.toLowerCase();
-            if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
-                commands.push(cmd);
-            }
-        });
-
-        return commands;
     });
-
 };
 
 var TabSearchCommand = function (tab, i) {
@@ -562,10 +545,10 @@ var Google = function (searchInput) {
     this.searchInput = searchInput;
 };
 
-Google.prototype.inputHandler = function (searchInput) {
+Google.prototype.inputHandler = Promise.method(function (searchInput) {
     var input = this.searchInput.value;
     var commands = [];
-
+    
     if (input.length > 0) {
         commands.push(new GoogleSearchCommand(input));
         commands.push(new GoogleLuckyCommand(input));
@@ -576,7 +559,7 @@ Google.prototype.inputHandler = function (searchInput) {
     // fuzzy search commands
     // var f = new Fuse(commands, { keys: ['title'] });
     // var filteredCommands = f.search(input);
-};
+});
 
 
 var GoogleSearchCommand = function (inputString) {

@@ -4,12 +4,11 @@ var History = function (searchInput) {
 
 History.prototype.inputHandler = function () {
     var input = this.searchInput.value;
+    var commands = [];
 
-    return Q([]).then(function (commands) {
-        var deferred = Q.defer();
-
+    return new Promise(function (resolve, reject) {
         if (input.length == 0) {
-            deferred.resolve(commands);
+            resolve(commands);
         } else {
             chrome.history.search({text: input}, function (results) {
 
@@ -17,13 +16,10 @@ History.prototype.inputHandler = function () {
                     commands.push(new HistoryCommand(result, i));
                 });
 
-                deferred.resolve(commands);
+                resolve(commands);
             });
         }
-
-        return deferred.promise;
     });
-
 };
 
 var HistoryCommand = function (history, i) {

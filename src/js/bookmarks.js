@@ -4,29 +4,24 @@ var Bookmarks = function (searchInput) {
 
 Bookmarks.prototype.inputHandler = function () {
     var input = this.searchInput.value;
+    var commands = [];
 
-    return Q([]).then(function (commands) {
-        var cmd = new CreateBookmarkCommand();
-        var title = cmd.title.toLowerCase();
-        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
-            commands.push(cmd);
-        }
-        return commands;
-    }).then(function (commands) {
-        var deferred = Q.defer();
+    // create command
+    var cmd = new CreateBookmarkCommand();
+    var title = cmd.title.toLowerCase();
+    if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
+        commands.push(cmd);
+    }
 
+    return new Promise(function (resolve, reject) {
         chrome.bookmarks.search(input, function (bookmarks) {
-
             bookmarks.forEach(function (bookmark, i) {
                 commands.push(new BookmarkCommand(bookmark, i));
             });
 
-            deferred.resolve(commands);
+            resolve(commands);
         });
-
-        return deferred.promise;
     });
-
 };
 
 var BookmarkCommand = function (bookmark, i) {

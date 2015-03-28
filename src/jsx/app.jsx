@@ -21,8 +21,6 @@ var App = React.createClass({
             // new History(searchInput),
             new Google(searchInput)
         ];
-
-        Q.longStackSupport = true;
     },
 
     render: function() {
@@ -105,18 +103,18 @@ var App = React.createClass({
         // and build array of the returned promises
         var promises = [];
         this.packages.forEach(function (package) {
-            promises.push(Q.when(package.inputHandler()));
+            promises.push(package.inputHandler());
         });
 
         // when all promises are fulfilled
-        Q.allSettled(promises)
+        Promise.settle(promises)
 
         // combine package commands together
         .then(function (results) {
             var commands = [];
             results.forEach(function (result) {
-                if (result.state === "fulfilled") {
-                    commands = commands.concat(result.value);
+                if (result.isFulfilled()) {
+                    commands = commands.concat(result.value());
                 }
             });
             return commands;
@@ -131,9 +129,9 @@ var App = React.createClass({
         })
 
         // error handler
-        .fail(function (error) {
+        .catch(function (error) {
             console.error(error);
-        }).done();
+        });
     },
 
     debounce: function (func, wait, immediate) {

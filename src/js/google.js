@@ -2,10 +2,10 @@ var Google = function (searchInput) {
     this.searchInput = searchInput;
 };
 
-Google.prototype.inputHandler = function (searchInput) {
+Google.prototype.inputHandler = Promise.method(function (searchInput) {
     var input = this.searchInput.value;
     var commands = [];
-
+    
     if (input.length > 0) {
         commands.push(new GoogleSearchCommand(input));
         commands.push(new GoogleLuckyCommand(input));
@@ -16,7 +16,7 @@ Google.prototype.inputHandler = function (searchInput) {
     // fuzzy search commands
     // var f = new Fuse(commands, { keys: ['title'] });
     // var filteredCommands = f.search(input);
-};
+});
 
 
 var GoogleSearchCommand = function (inputString) {

@@ -30,7 +30,7 @@ var paths = {
     },
     vendor: {
         js: [
-            './bower_components/q/q.js',
+            './bower_components/bluebird/js/browser/bluebird.js',
             './bower_components/react/react-with-addons.js',
             './bower_components/fuse.js/src/fuse.js',
             './bower_components/jsforce/build/jsforce.js',
