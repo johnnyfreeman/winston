@@ -2,16 +2,14 @@
 
 var packages = ['bookmarks', 'calculator', 'google', 'history', 'pinterest', 'salesforce', 'tabs', 'youtube'];
 
-function save_options() {
-    var elements = document.getElementsByClassName('option');
-    var options = {};
-    Array.prototype.forEach.call(elements, function (el) {
-        var name = el.name;
-        options[name] = el.checked;
-    });
-
-    chrome.storage.local.set(options, function () {
-        console.log('saved');
+function saveOption(e) {
+    var el = e.target;
+    var name = el.name;
+    var value = el.checked;
+    option = {};
+    option[name] = value;
+    chrome.storage.local.set(option, function () {
+        console.log('saved:', el);
     });
 }
 
@@ -28,5 +26,6 @@ function restore_options() {
     });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',
-    save_options);
+Array.prototype.forEach.call(document.getElementsByClassName('option'), function (option) {
+    option.addEventListener('change', saveOption);
+});
