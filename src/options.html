@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Test Extension Options</title>
+    <style>
+        body {
+            background-color: #fafafa;
+            padding: 1px 10px 10px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        .align-right {
+            text-align: right;
+        }
+        .align-center {
+            text-align: center;
+        }
+
+        .checkbox-column {
+            width: 14px;
+        }
+
+        .package-column {}
+
+        .priority-column {
+            width: 43px;
+        }
+
+        table
+
+        td, th {
+            padding:6px 8px;
+        }
+
+        .even {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Packages</h3>
+
+    <p>For the best performance, only enable the packages you care about. </p>
+
+    <table width="100%">
+        <!-- <thead>
+            <tr class="row odd">
+                <th class="checkbox-column">
+                    <input name="checkall" type="checkbox" disabled="disabled">
+                </th>
+                <th class="package-column">Package</th>
+            </tr>
+        </thead> -->
+        <tbody>
+            <tr class="row even">
+                <td class="checkbox-column">
+                    <input class="option" name="bookmarks" type="checkbox" value="Bookmarks">
+                </td>
+                <td class="package-column">
+                    <label>Bookmarks</label>
+                </td>
+            </tr>
+            <tr class="row odd">
+                <td class="checkbox-column">
+                    <input class="option" name="calculator" type="checkbox" value="Calculator">
+                </td>
+                <td class="package-column">
+                    <label>Calculator</label>
+                </td>
+            </tr>
+            <tr class="row even">
+                <td class="checkbox-column">
+                    <input class="option" name="google" type="checkbox" value="Google">
+                </td>
+                <td class="package-column">
+                    <label>Google</label>
+                </td>
+            </tr>
+            <tr class="row odd">
+                <td class="checkbox-column">
+                    <input class="option" name="history" type="checkbox" value="History">
+                </td>
+                <td class="package-column">
+                    <label>History (slow)</label>
+                </td>
+            </tr>
+            <tr class="row even">
+                <td class="checkbox-column">
+                    <input class="option" name="pinterest" type="checkbox" value="Pinterest">
+                </td>
+                <td class="package-column">
+                    <label>Pinterest</label>
+                </td>
+            </tr>
+            <tr class="row odd">
+                <td class="checkbox-column">
+                    <input class="option" name="salesforce" type="checkbox" value="Salesforce">
+                </td>
+                <td class="package-column">
+                    <label>Salesforce</label>
+                </td>
+            </tr>
+            <tr class="row even">
+                <td class="checkbox-column">
+                    <input class="option" name="tabs" type="checkbox" value="Tabs">
+                </td>
+                <td class="package-column">
+                    <label>Tabs</label>
+                </td>
+            </tr>
+            <tr class="row odd">
+                <td class="checkbox-column">
+                    <input class="option" name="youtube" type="checkbox" value="Youtube">
+                </td>
+                <td class="package-column">
+                    <label>Youtube</label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><button id="save">Save</button></p>
+
+    <script src="/dist/js/options.js"></script>
+</body>
+
+</html>

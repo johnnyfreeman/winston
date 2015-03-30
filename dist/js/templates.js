@@ -84,19 +84,29 @@ var App = React.createClass({displayName: "App",
     },
 
     componentDidMount: function() {
-
+        var app = this;
         var searchInput = this.refs.searchBox.getDOMNode();
 
         // register packages
-        this.packages = [
-            new Calculator(searchInput),
-            new Tabs(searchInput),
-            new Bookmarks(searchInput),
-            new Salesforce(searchInput),
-            new Youtube(searchInput),
-            // new History(searchInput),
-            new Google(searchInput)
-        ];
+        this.packages = [];
+        var packages = ['calculator', 'tabs', 'bookmarks', 'pinterest', 'salesforce', 'youtube', 'history', 'google'];
+        var optionPackageMap = {
+            'bookmarks': Bookmarks,
+            'calculator': Calculator,
+            'google': Google,
+            'history': History,
+            'pinterest': Pinterest,
+            'salesforce': Salesforce,
+            'tabs': Tabs,
+            'youtube': Youtube
+        };
+        chrome.storage.local.get(packages, function(options) {
+            packages.forEach(function (name) {
+                if (options[name] == true) {
+                    app.packages.push(new optionPackageMap[name](searchInput));
+                }
+            });
+        });
     },
 
     render: function() {

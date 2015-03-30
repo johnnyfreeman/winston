@@ -19,6 +19,7 @@ var paths = {
             './src/js/tabs.js',
             './src/js/calculator.js',
             './src/js/youtube.js',
+            './src/js/pinterest.js',
             './src/js/salesforce.js',
             './src/js/google.js'//,
             // './src/js/command.js'
@@ -73,6 +74,10 @@ gulp.task('vendorjs', function() {
     .pipe(concat('vendor.js'))
     .pipe(gulp.dest('./dist/js'));
 });
+gulp.task('optionsjs', function() {
+  return gulp.src('./src/js/options.js')
+    .pipe(gulp.dest('./dist/js'));
+});
 gulp.task('vendorcss', function() {
   return gulp.src(paths.vendor.css)
     .pipe(concat('vendor.css'))
@@ -83,4 +88,4 @@ gulp.task('vendorfonts', function() {
     .pipe(gulp.dest('./dist/fonts'));
 });
 
-gulp.task('default', ['appjs', 'vendorjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus']);
+gulp.task('default', ['appjs', 'vendorjs', 'optionsjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus']);
