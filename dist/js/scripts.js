@@ -92,27 +92,28 @@ CreateBookmarkCommand.prototype.run = function () {
 };
 
 var History = function (searchInput) {
+    var history = this;
     this.searchInput = searchInput;
+    this.items = [];
+
+    chrome.history.search({text: ''}, function (historyItems) {
+        history.items = historyItems;
+    });
 };
 
 History.prototype.inputHandler = function () {
     var input = this.searchInput.value;
     var commands = [];
 
-    return new Promise(function (resolve, reject) {
-        if (input.length == 0) {
-            resolve(commands);
-        } else {
-            chrome.history.search({text: input}, function (results) {
+    if (input.length > 0) {
+        this.items.forEach(function (item, i) {
+            if (item.title.indexOf(input) > -1) {
+                commands.push(new HistoryCommand(item, i));
+            }
+        });
+    }
 
-                results.forEach(function (result, i) {
-                    commands.push(new HistoryCommand(result, i));
-                });
-
-                resolve(commands);
-            });
-        }
-    });
+    return commands;
 };
 
 var HistoryCommand = function (history, i) {

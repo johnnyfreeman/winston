@@ -56,7 +56,7 @@ Currently only offers links to documentation articles. Eventually the ability to
 
 ##### History
 
-Currently disabled until performance is improved.
+Search through browser history and open url in a new tab.
 
 ### Planned Packages
 
