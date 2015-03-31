@@ -12,7 +12,7 @@ var App = React.createClass({
         var searchInput = this.refs.searchBox.getDOMNode();
 
         // register packages
-        this.packages = [];
+        this.packages = [new Core(searchInput)];
         var packages = ['calculator', 'tabs', 'bookmarks', 'pinterest', 'salesforce', 'youtube', 'history', 'google'];
         var optionPackageMap = {
             'bookmarks': Bookmarks,

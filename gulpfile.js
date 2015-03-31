@@ -14,6 +14,7 @@ var paths = {
             './src/jsx/popup.jsx'
         ],
         js: [
+            './src/js/core.js',
             './src/js/bookmarks.js',
             './src/js/history.js',
             './src/js/tabs.js',
