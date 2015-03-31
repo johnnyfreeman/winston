@@ -1,5 +1,5 @@
 // Saves options to chrome.storage.sync.
-
+var forEach = Array.prototype.forEach;
 var packages = ['bookmarks', 'calculator', 'google', 'history', 'pinterest', 'salesforce', 'tabs', 'youtube'];
 
 function saveOption(e) {
@@ -19,13 +19,13 @@ function restore_options() {
     var elements = document.getElementsByClassName('option');
     // Use default value color = 'red' and likesColor = true.
     chrome.storage.local.get(packages, function(options) {
-        Array.prototype.forEach.call(elements, function (el) {
+        forEach.call(elements, function (el) {
             var name = el.name;
             el.checked = options[name];
         });
     });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
-Array.prototype.forEach.call(document.getElementsByClassName('option'), function (option) {
+forEach.call(document.getElementsByClassName('option'), function (option) {
     option.addEventListener('change', saveOption);
 });
