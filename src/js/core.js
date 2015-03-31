@@ -22,7 +22,7 @@ Core.prototype.inputHandler = function () {
             icon: 'cog',
             title: 'Setup',
             description: 'Open options page and enable packages',
-            action: 'Setup',
+            action: 'Setup Winston',
             run: function () {
                 var extId = chrome.runtime.id;
                 chrome.tabs.create({ url: 'chrome://extensions?options=' + extId });

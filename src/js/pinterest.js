@@ -1,5 +1,10 @@
 var Pinterest = function (searchInput) {
+    var pinterest = this;
     this.searchInput = searchInput;
+
+    chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+        pinterest.url = tabs[0].url;
+    });
 };
 
 Pinterest.prototype.inputHandler = function () {
@@ -8,15 +13,11 @@ Pinterest.prototype.inputHandler = function () {
     var input = this.searchInput.value;
 
     if (input.indexOf('pin') === 0) {
-        chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
-            console.log(tabs[0].url);
-        });
-
         commands.push({
             url: this.url,
             title: "Pin this page",
-            description: "Pinterest: Pin this page on Pinterest",
-            action: 'Pin',
+            description: this.url,
+            action: 'Pin Page',
             icon: 'pinterest',
             run: function () {
                 chrome.tabs.create({
@@ -26,8 +27,5 @@ Pinterest.prototype.inputHandler = function () {
         });
     }
 
-
-
-    deferred.resolve(input.length > 0 ? this.commands : []);
-    return deferred.promise;
+    return commands;
 };

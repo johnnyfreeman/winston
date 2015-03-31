@@ -22,7 +22,7 @@ Core.prototype.inputHandler = function () {
             icon: 'cog',
             title: 'Setup',
             description: 'Open options page and enable packages',
-            action: 'Setup',
+            action: 'Setup Winston',
             run: function () {
                 var extId = chrome.runtime.id;
                 chrome.tabs.create({ url: 'chrome://extensions?options=' + extId });
@@ -64,8 +64,8 @@ var BookmarkCommand = function (bookmark, i) {
     this.icon = 'star-o';
     this.title = bookmark.title;
     this.url = bookmark.url;
-    this.description = 'Bookmark: ' + this.url;
-    this.action = 'Open';
+    this.description = this.url;
+    this.action = 'Open Bookmark';
 };
 
 BookmarkCommand.prototype.run = function () {
@@ -75,8 +75,8 @@ BookmarkCommand.prototype.run = function () {
 var CreateBookmarkCommand = function () {
     this.icon = 'star-o';
     this.title = 'Bookmark This Page';
-    this.description = 'Bookmark: Create a bookmark for the active tab';
-    this.action = 'Create';
+    this.description = 'Create a bookmark for the active tab';
+    this.action = 'Create Bookmark';
 };
 
 CreateBookmarkCommand.prototype.run = function () {
@@ -121,8 +121,8 @@ var HistoryCommand = function (history, i) {
     this.icon = 'history';
     this.title = history.title || history.url;
     this.url = history.url;
-    this.description = 'History: ' + this.url;
-    this.action = 'Open';
+    this.description = this.url;
+    this.action = 'Open History';
 };
 
 HistoryCommand.prototype.run = function () {
@@ -172,10 +172,10 @@ Tabs.prototype.inputHandler = function () {
 var TabSearchCommand = function (tab, i) {
     this.id = 'TABSEARCH' + i;
     this.icon = 'folder-o';
-    this.action = 'Switch'
+    this.action = 'Switch To Tab'
     this.tab = tab;
     this.title = this.tab.title;
-    this.description = 'Tab: ' + this.tab.url;
+    this.description = this.tab.url;
 };
 
 TabSearchCommand.prototype.run = function () {
@@ -187,9 +187,9 @@ TabSearchCommand.prototype.run = function () {
 var TabDuplicateCommand = function () {
     this.id = 'TABDUPLICATE';
     this.icon = 'folder-o';
-    this.action = 'Duplicate'
+    this.action = 'Duplicate Tab'
     this.title = 'Duplicate This Tab';
-    this.description = 'Tab: Duplicate the current tab';
+    this.description = 'Duplicate the current tab';
 };
 
 TabDuplicateCommand.prototype.run = function () {
@@ -201,9 +201,9 @@ TabDuplicateCommand.prototype.run = function () {
 var TabCloseCommand = function () {
     this.id = 'TABCLOSE';
     this.icon = 'folder-o';
-    this.action = 'Close'
+    this.action = 'Close Tab'
     this.title = 'Close This Tab';
-    this.description = 'Tab: Close the current tab';
+    this.description = 'Close the current tab';
 };
 
 TabCloseCommand.prototype.run = function () {
@@ -215,9 +215,9 @@ TabCloseCommand.prototype.run = function () {
 var TabReloadCommand = function () {
     this.id = 'TABRELOAD';
     this.icon = 'folder-o';
-    this.action = 'Reload'
+    this.action = 'Reload Tab'
     this.title = 'Reload This Tab';
-    this.description = 'Tab: Reload the current tab';
+    this.description = 'Reload the current tab';
 };
 
 TabReloadCommand.prototype.run = function () {
@@ -231,9 +231,9 @@ TabReloadCommand.prototype.run = function () {
 var TabNewCommand = function () {
     this.id = 'TABNEW';
     this.icon = 'folder-o';
-    this.action = 'Open'
+    this.action = 'New Tab'
     this.title = 'New Tab';
-    this.description = 'Tab: Create new tab';
+    this.description = 'Create new tab';
 };
 
 TabNewCommand.prototype.run = function () {
@@ -243,9 +243,9 @@ TabNewCommand.prototype.run = function () {
 var TabPinCommand = function () {
     this.id = 'TABPIN';
     this.icon = 'folder-o';
-    this.action = 'Pin'
+    this.action = 'Pin Tab'
     this.title = 'Pin This Tab';
-    this.description = 'Tab: Pin the current tab';
+    this.description = 'Pin the current tab';
 };
 
 TabPinCommand.prototype.run = function () {
@@ -271,8 +271,8 @@ Calculator.prototype.inputHandler = function () {
             commands.push({
                 id: 'CALCULATOR1',
                 title: result,
-                description: "Calculator: Copy '" + result + "' to your clipboard",
-                action: 'Copy',
+                description: "Copy '" + result + "' to your clipboard",
+                action: 'Copy To Clipboard',
                 icon: 'calculator',
                 run: function () {
                     document.execCommand('copy');
@@ -331,7 +331,7 @@ Youtube.prototype.inputHandler = function () {
 var YoutubeHomeCommand = function () {
     this.id = 'YOUTUBEHOME';
     this.icon = 'youtube';
-    this.action = 'Open';
+    this.action = 'Open Site';
     this.title = 'YouTube.com';
     this.description = 'YouTube: Open YouTube.com';
 };
@@ -344,7 +344,7 @@ var YoutubeSearchCommand = function (query, i) {
     this.id = 'YOUTUBE' + i;
     this.query = query;
     this.icon = 'youtube';
-    this.action = 'Search';
+    this.action = 'Search YouTube';
     this.title = 'YouTube "' + this.query + '"';
     this.description = 'YouTube: Open YouTube search results';
 };
@@ -354,7 +354,12 @@ YoutubeSearchCommand.prototype.run = function () {
 };
 
 var Pinterest = function (searchInput) {
+    var pinterest = this;
     this.searchInput = searchInput;
+
+    chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+        pinterest.url = tabs[0].url;
+    });
 };
 
 Pinterest.prototype.inputHandler = function () {
@@ -363,15 +368,11 @@ Pinterest.prototype.inputHandler = function () {
     var input = this.searchInput.value;
 
     if (input.indexOf('pin') === 0) {
-        chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
-            console.log(tabs[0].url);
-        });
-
         commands.push({
             url: this.url,
             title: "Pin this page",
-            description: "Pinterest: Pin this page on Pinterest",
-            action: 'Pin',
+            description: this.url,
+            action: 'Pin Page',
             icon: 'pinterest',
             run: function () {
                 chrome.tabs.create({
@@ -381,10 +382,7 @@ Pinterest.prototype.inputHandler = function () {
         });
     }
 
-
-
-    deferred.resolve(input.length > 0 ? this.commands : []);
-    return deferred.promise;
+    return commands;
 };
 
 var Salesforce = function (searchInput) {
@@ -603,10 +601,10 @@ Salesforce.prototype.inputHandler = function () {
 var SalesforceDocCommand = function (title, url) {
     this.id = 'SFDOC-' + title.replace(' ', '-');
     this.icon = 'cloud';
-    this.action = 'Open';
+    this.action = 'Open Documentation';
     this.title = title;
     this.url = url;
-    this.description = 'Salesforce: Open documentation';
+    this.description = 'Open Salesforce documentation';
 };
 
 SalesforceDocCommand.prototype.run = function () {
@@ -638,9 +636,9 @@ var GoogleSearchCommand = function (inputString) {
     this.id = 'GOOGLE1';
     this.input = inputString.trim();
     this.icon = 'google';
-    this.action = 'Search';
+    this.action = 'Search Google';
     this.title = 'Google "' + this.input + '"';
-    this.description = 'Google: Open Google search results';
+    this.description = 'Open Google search results';
 };
 
 GoogleSearchCommand.prototype.run = function () {
@@ -651,9 +649,9 @@ var GoogleLuckyCommand = function (inputString) {
     this.id = 'GOOGLE2';
     this.input = inputString.trim();
     this.icon = 'google';
-    this.action = 'Open';
+    this.action = 'Get Lucky';
     this.title = 'I\'m Feeling Lucky';
-    this.description = 'Google: Open the first result from Google';
+    this.description = 'Open the first result from Google';
 };
 
 GoogleLuckyCommand.prototype.run = function () {

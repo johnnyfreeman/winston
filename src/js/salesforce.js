@@ -214,10 +214,10 @@ Salesforce.prototype.inputHandler = function () {
 var SalesforceDocCommand = function (title, url) {
     this.id = 'SFDOC-' + title.replace(' ', '-');
     this.icon = 'cloud';
-    this.action = 'Open';
+    this.action = 'Open Documentation';
     this.title = title;
     this.url = url;
-    this.description = 'Salesforce: Open documentation';
+    this.description = 'Open Salesforce documentation';
 };
 
 SalesforceDocCommand.prototype.run = function () {

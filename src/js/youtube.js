@@ -45,7 +45,7 @@ Youtube.prototype.inputHandler = function () {
 var YoutubeHomeCommand = function () {
     this.id = 'YOUTUBEHOME';
     this.icon = 'youtube';
-    this.action = 'Open';
+    this.action = 'Open Site';
     this.title = 'YouTube.com';
     this.description = 'YouTube: Open YouTube.com';
 };
@@ -58,7 +58,7 @@ var YoutubeSearchCommand = function (query, i) {
     this.id = 'YOUTUBE' + i;
     this.query = query;
     this.icon = 'youtube';
-    this.action = 'Search';
+    this.action = 'Search YouTube';
     this.title = 'YouTube "' + this.query + '"';
     this.description = 'YouTube: Open YouTube search results';
 };

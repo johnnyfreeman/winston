@@ -41,10 +41,10 @@ Tabs.prototype.inputHandler = function () {
 var TabSearchCommand = function (tab, i) {
     this.id = 'TABSEARCH' + i;
     this.icon = 'folder-o';
-    this.action = 'Switch'
+    this.action = 'Switch To Tab'
     this.tab = tab;
     this.title = this.tab.title;
-    this.description = 'Tab: ' + this.tab.url;
+    this.description = this.tab.url;
 };
 
 TabSearchCommand.prototype.run = function () {
@@ -56,9 +56,9 @@ TabSearchCommand.prototype.run = function () {
 var TabDuplicateCommand = function () {
     this.id = 'TABDUPLICATE';
     this.icon = 'folder-o';
-    this.action = 'Duplicate'
+    this.action = 'Duplicate Tab'
     this.title = 'Duplicate This Tab';
-    this.description = 'Tab: Duplicate the current tab';
+    this.description = 'Duplicate the current tab';
 };
 
 TabDuplicateCommand.prototype.run = function () {
@@ -70,9 +70,9 @@ TabDuplicateCommand.prototype.run = function () {
 var TabCloseCommand = function () {
     this.id = 'TABCLOSE';
     this.icon = 'folder-o';
-    this.action = 'Close'
+    this.action = 'Close Tab'
     this.title = 'Close This Tab';
-    this.description = 'Tab: Close the current tab';
+    this.description = 'Close the current tab';
 };
 
 TabCloseCommand.prototype.run = function () {
@@ -84,9 +84,9 @@ TabCloseCommand.prototype.run = function () {
 var TabReloadCommand = function () {
     this.id = 'TABRELOAD';
     this.icon = 'folder-o';
-    this.action = 'Reload'
+    this.action = 'Reload Tab'
     this.title = 'Reload This Tab';
-    this.description = 'Tab: Reload the current tab';
+    this.description = 'Reload the current tab';
 };
 
 TabReloadCommand.prototype.run = function () {
@@ -100,9 +100,9 @@ TabReloadCommand.prototype.run = function () {
 var TabNewCommand = function () {
     this.id = 'TABNEW';
     this.icon = 'folder-o';
-    this.action = 'Open'
+    this.action = 'New Tab'
     this.title = 'New Tab';
-    this.description = 'Tab: Create new tab';
+    this.description = 'Create new tab';
 };
 
 TabNewCommand.prototype.run = function () {
@@ -112,9 +112,9 @@ TabNewCommand.prototype.run = function () {
 var TabPinCommand = function () {
     this.id = 'TABPIN';
     this.icon = 'folder-o';
-    this.action = 'Pin'
+    this.action = 'Pin Tab'
     this.title = 'Pin This Tab';
-    this.description = 'Tab: Pin the current tab';
+    this.description = 'Pin the current tab';
 };
 
 TabPinCommand.prototype.run = function () {

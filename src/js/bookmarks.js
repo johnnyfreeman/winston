@@ -29,8 +29,8 @@ var BookmarkCommand = function (bookmark, i) {
     this.icon = 'star-o';
     this.title = bookmark.title;
     this.url = bookmark.url;
-    this.description = 'Bookmark: ' + this.url;
-    this.action = 'Open';
+    this.description = this.url;
+    this.action = 'Open Bookmark';
 };
 
 BookmarkCommand.prototype.run = function () {
@@ -40,8 +40,8 @@ BookmarkCommand.prototype.run = function () {
 var CreateBookmarkCommand = function () {
     this.icon = 'star-o';
     this.title = 'Bookmark This Page';
-    this.description = 'Bookmark: Create a bookmark for the active tab';
-    this.action = 'Create';
+    this.description = 'Create a bookmark for the active tab';
+    this.action = 'Create Bookmark';
 };
 
 CreateBookmarkCommand.prototype.run = function () {

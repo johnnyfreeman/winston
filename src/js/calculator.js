@@ -13,8 +13,8 @@ Calculator.prototype.inputHandler = function () {
             commands.push({
                 id: 'CALCULATOR1',
                 title: result,
-                description: "Calculator: Copy '" + result + "' to your clipboard",
-                action: 'Copy',
+                description: "Copy '" + result + "' to your clipboard",
+                action: 'Copy To Clipboard',
                 icon: 'calculator',
                 run: function () {
                     document.execCommand('copy');

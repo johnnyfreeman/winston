@@ -28,8 +28,8 @@ var HistoryCommand = function (history, i) {
     this.icon = 'history';
     this.title = history.title || history.url;
     this.url = history.url;
-    this.description = 'History: ' + this.url;
-    this.action = 'Open';
+    this.description = this.url;
+    this.action = 'Open History';
 };
 
 HistoryCommand.prototype.run = function () {
