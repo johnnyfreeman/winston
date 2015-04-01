@@ -11,23 +11,13 @@ var App = React.createClass({
         var app = this;
         var searchInput = this.refs.searchBox.getDOMNode();
 
-        // register packages
-        this.packages = [new Core(searchInput)];
-        var packages = ['calculator', 'tabs', 'bookmarks', 'pinterest', 'salesforce', 'youtube', 'history', 'google'];
-        var optionPackageMap = {
-            'bookmarks': Bookmarks,
-            'calculator': Calculator,
-            'google': Google,
-            'history': History,
-            'pinterest': Pinterest,
-            'salesforce': Salesforce,
-            'tabs': Tabs,
-            'youtube': Youtube
-        };
+        // enable packages
+        var packages = ['Calculator', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'History', 'Google'];
+
         chrome.storage.local.get(packages, function(options) {
             packages.forEach(function (name) {
                 if (options[name] == true) {
-                    app.packages.push(new optionPackageMap[name](searchInput));
+                    Winston.Package.enable(name, searchInput);
                 }
             });
         });
@@ -112,8 +102,10 @@ var App = React.createClass({
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
-        this.packages.forEach(function (package) {
-            promises.push(package.inputHandler());
+        var enabledPackages = Winston.Package.enabledPackages;
+        var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
+        enabledPackageNames.forEach(function (name) {
+            promises.push(enabledPackages[name].inputHandler(e));
         });
 
         // when all promises are fulfilled

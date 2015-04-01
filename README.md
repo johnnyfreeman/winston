@@ -1,16 +1,12 @@
 # Winston
 
-Taking inspiration from launchers and command line interfaces such as [Alfred](http://www.alfredapp.com/) and those embedded in [Atom](https://atom.io/) and [Sublime Text](http://www.sublimetext.com/), Winston is your personal valet for the web.
+Winston is your personal valet for the web. Taking inspiration from launchers and GCLIs such as [Alfred](http://www.alfredapp.com/) and those embedded in [Atom](https://atom.io/) and [Sublime Text](http://www.sublimetext.com/).
 
 ### Installation
 
 The best way to install Winston at the moment is...
 
-1. Clone the GitHub repository.
-
-```
-git clone git@github.com:johnnyfreeman/winston.git
-```
+1. Clone (`git clone git@github.com:johnnyfreeman/winston.git`), or [download](https://github.com/johnnyfreeman/winston/archive/master.zip) and unzip Winston.
 
 2. Open the URL [chrome://extensions/](chrome://extensions/) in your browser.
 
@@ -18,17 +14,23 @@ git clone git@github.com:johnnyfreeman/winston.git
 
 4. Click the button Load unpacked extension...
 
-5. Select the folder where you cloned the repository.
+5. Select the [winston/extension/](https://github.com/johnnyfreeman/winston/tree/master/extension) directory.
 
-The extension is now installed.
+The extension is now installed. Open Winston by clicking the icon in the toolbar (or `Ctrl` + `Space`), type `help` and press `Enter`.
 
 ### Usage
 
-Open Winston by clicking the icon in the toolbar (or `Ctrl` + `Space`), and start typing. See package descriptions for more information about what input each package responds to.
+Type anything into Winston. Enabled packages will respond to your input with possible commands you might be trying to execute. See package descriptions for more information about what input each package responds to.
 
 ### Packages
 
-Packages are groups of code that respond to input with possible commands you might be trying to execute.
+##### Core
+
+* `help`: Open help
+* `settings`: Open Winston settings
+* `enable [packageName]`: Enable a package
+* `disable [packageName]`: Disable a package
+* `debug`: Open Winston in it's own tab
 
 ##### Calculator
 
