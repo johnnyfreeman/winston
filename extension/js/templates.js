@@ -86,6 +86,7 @@ var App = React.createClass({displayName: "App",
     componentDidMount: function() {
         var app = this;
         var searchInput = this.refs.searchBox.getDOMNode();
+        this.inputHandlers = null;
 
         // enable packages
         var packages = ['Calculator', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'History', 'Google'];
@@ -175,6 +176,11 @@ var App = React.createClass({displayName: "App",
     triggerInputHandlers: function (e) {
         var app = this;
 
+        // cancel current execution chain
+        if (this.inputHandlers !== null) {
+            this.inputHandlers.cancel();
+        }
+
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
@@ -185,7 +191,10 @@ var App = React.createClass({displayName: "App",
         });
 
         // when all promises are fulfilled
-        Promise.settle(promises)
+        this.inputHandlers = Promise.settle(promises)
+
+        // mark as cancellable
+        .cancellable()
 
         // combine package commands together
         .then(function (results) {
@@ -208,7 +217,9 @@ var App = React.createClass({displayName: "App",
 
         // error handler
         .catch(function (error) {
-            console.error(error);
+            if (error.name !== 'CancellationError') {
+                console.error(error);
+            }
         });
     },
 
