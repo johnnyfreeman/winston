@@ -1,7 +1,5 @@
 (function (Winston) {
 
-
-
     var Bookmarks = function () {
         var package = this;
         this.bookmarkTreeNodes = [];
@@ -32,7 +30,6 @@
     Bookmarks.prototype.inputHandler = function (e) {
         var input = e.target.value;
         var commands = [];
-        var urlChecker = this.urlChecker;
 
         // create command
         var cmd = new CreateBookmarkCommand();
