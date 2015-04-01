@@ -86,7 +86,7 @@ var App = React.createClass({displayName: "App",
         return {
             results: [],
             selectedIndex: 0,
-            busyPackages: {}
+            loading: false
         };
     },
 
@@ -109,7 +109,7 @@ var App = React.createClass({displayName: "App",
 
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
-            React.createElement(Icon, {name: "refresh", spin: Object.keys(this.state.busyPackages).length > 0}), 
+            React.createElement(Icon, {name: "refresh", spin: this.state.loading}), 
             React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, loading: this.state.loading, ref: "searchBox"}), 
             React.createElement(ResultsList, {clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
@@ -189,20 +189,16 @@ var App = React.createClass({displayName: "App",
             this.inputHandlers.cancel();
         }
 
+        // loading
+        app.setState({loading: true});
+
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
         var enabledPackages = Winston.Package.enabledPackages;
         var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
         enabledPackageNames.forEach(function (name, i) {
-            var packages = app.state.busyPackages;
-            packages[i] = package;
-            app.setState({busyPackages: packages});
-            promises.push(enabledPackages[name].inputHandler(e).tap(function () {
-                var packages = app.state.busyPackages;
-                delete packages[i];
-                app.setState({busyPackages: packages});
-            }));
+            promises.push(enabledPackages[name].inputHandler(e));
         });
 
         // when all promises are fulfilled
@@ -226,7 +222,8 @@ var App = React.createClass({displayName: "App",
         .then(function (commands) {
             app.setState({
                 results: commands,
-                selectedIndex: 0
+                selectedIndex: 0,
+                loading: false
             });
         })
 

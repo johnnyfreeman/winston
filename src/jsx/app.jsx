@@ -4,7 +4,7 @@ var App = React.createClass({
         return {
             results: [],
             selectedIndex: 0,
-            busyPackages: {}
+            loading: false
         };
     },
 
@@ -27,7 +27,7 @@ var App = React.createClass({
 
     render: function() {
         return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
-            <Icon name="refresh" spin={Object.keys(this.state.busyPackages).length > 0} />
+            <Icon name="refresh" spin={this.state.loading} />
             <SearchBox changeHandler={this.triggerInputHandlers} loading={this.state.loading} ref="searchBox" />
             <ResultsList clickHandler={this.runSelected} data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;
@@ -107,20 +107,16 @@ var App = React.createClass({
             this.inputHandlers.cancel();
         }
 
+        // loading
+        app.setState({loading: true});
+
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
         var enabledPackages = Winston.Package.enabledPackages;
         var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
         enabledPackageNames.forEach(function (name, i) {
-            var packages = app.state.busyPackages;
-            packages[i] = package;
-            app.setState({busyPackages: packages});
-            promises.push(enabledPackages[name].inputHandler(e).tap(function () {
-                var packages = app.state.busyPackages;
-                delete packages[i];
-                app.setState({busyPackages: packages});
-            }));
+            promises.push(enabledPackages[name].inputHandler(e));
         });
 
         // when all promises are fulfilled
@@ -144,7 +140,8 @@ var App = React.createClass({
         .then(function (commands) {
             app.setState({
                 results: commands,
-                selectedIndex: 0
+                selectedIndex: 0,
+                loading: false
             });
         })
 
