@@ -9,27 +9,26 @@ var App = React.createClass({
     },
 
     componentDidMount: function() {
-
+        var app = this;
         var searchInput = this.refs.searchBox.getDOMNode();
+        this.inputHandlers = null;
 
-        // register packages
-        this.packages = [
-            new Calculator(searchInput),
-            new Tabs(searchInput),
-            new Bookmarks(searchInput),
-            new Salesforce(searchInput),
-            new Youtube(searchInput),
-            new History(searchInput),
-            new Google(searchInput)
-        ];
+        // enable packages
+        var packages = ['Calculator', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'History', 'Google'];
 
-        Q.longStackSupport = true;
+        chrome.storage.local.get(packages, function(options) {
+            packages.forEach(function (name) {
+                if (options[name] == true) {
+                    Winston.Package.enable(name, searchInput);
+                }
+            });
+        });
     },
 
     render: function() {
         return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
             <Icon name="refresh" spin={Object.keys(this.state.busyPackages).length > 0} />
-            <SearchBox changeHandler={this.debounce(this.triggerInputHandlers, 300)} loading={this.state.loading} ref="searchBox" />
+            <SearchBox changeHandler={this.triggerInputHandlers} loading={this.state.loading} ref="searchBox" />
             <ResultsList clickHandler={this.runSelected} data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;
     },
@@ -103,37 +102,39 @@ var App = React.createClass({
     triggerInputHandlers: function (e) {
         var app = this;
 
+        // cancel current execution chain
+        if (this.inputHandlers !== null) {
+            this.inputHandlers.cancel();
+        }
+
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
-        this.packages.forEach(function (package, i) {
-
+        var enabledPackages = Winston.Package.enabledPackages;
+        var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
+        enabledPackageNames.forEach(function (name, i) {
             var packages = app.state.busyPackages;
             packages[i] = package;
             app.setState({busyPackages: packages});
-            console.log('busyPackages:', packages);
-
-            promises.push(package.inputHandler().then(function (commands) {
-
-                console.log('removing:', i);
+            promises.push(enabledPackages[name].inputHandler(e).tap(function () {
                 var packages = app.state.busyPackages;
                 delete packages[i];
                 app.setState({busyPackages: packages});
-                console.log('busyPackages:', packages);
-
-                return commands;
             }));
         });
 
         // when all promises are fulfilled
-        Q.allSettled(promises)
+        this.inputHandlers = Promise.settle(promises)
+
+        // mark as cancellable
+        .cancellable()
 
         // combine package commands together
         .then(function (results) {
             var commands = [];
             results.forEach(function (result) {
-                if (result.state === "fulfilled") {
-                    commands = commands.concat(result.value);
+                if (result.isFulfilled()) {
+                    commands = commands.concat(result.value());
                 }
             });
             return commands;
@@ -148,9 +149,11 @@ var App = React.createClass({
         })
 
         // error handler
-        .fail(function (error) {
-            console.error(error);
-        }).done();
+        .catch(function (error) {
+            if (error.name !== 'CancellationError') {
+                console.error(error);
+            }
+        });
     },
 
     debounce: function (func, wait, immediate) {

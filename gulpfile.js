@@ -14,23 +14,32 @@ var paths = {
             './src/jsx/popup.jsx'
         ],
         js: [
-            './src/js/bookmarks.js',
-            './src/js/history.js',
-            './src/js/tabs.js',
-            './src/js/calculator.js',
-            './src/js/youtube.js',
-            './src/js/salesforce.js',
-            './src/js/google.js'//,
-            // './src/js/command.js'
+            './src/js/winston.js',
+            './src/js/package.js',
+            './src/js/pkg/core.js',
+            './src/js/pkg/longwait.js',
+            './src/js/pkg/bookmarks.js',
+            './src/js/pkg/history.js',
+            './src/js/pkg/tabs.js',
+            './src/js/pkg/calculator.js',
+            './src/js/pkg/youtube.js',
+            './src/js/pkg/pinterest.js',
+            './src/js/pkg/salesforce.js',
+            './src/js/pkg/google.js'
         ],
-        img: [],
+        img: [
+            './src/img/**/*.png'
+        ],
         styl: [
             './src/styl/**/*.styl'
+        ],
+        html: [
+            './src/*.html'
         ]
     },
     vendor: {
         js: [
-            './bower_components/q/q.js',
+            './bower_components/bluebird/js/browser/bluebird.js',
             './bower_components/react/react-with-addons.js',
             './bower_components/fuse.js/src/fuse.js',
             './bower_components/jsforce/build/jsforce.js',
@@ -53,34 +62,52 @@ var paths = {
 gulp.task('stylus', function () {
   gulp.src(paths.app.styl)
     .pipe(stylus())
-    .pipe(gulp.dest('./dist/css'));
+    .pipe(gulp.dest('./extension/css'));
 });
 
 gulp.task('jsx', function () {
     return gulp.src(paths.app.jsx)
         .pipe(react({harmony: true}))
         .pipe(concat('templates.js'))
-        .pipe(gulp.dest('./dist/js'));
+        .pipe(gulp.dest('./extension/js'));
 });
 
 gulp.task('appjs', function() {
   return gulp.src(paths.app.js)
     .pipe(concat('scripts.js'))
-    .pipe(gulp.dest('./dist/js'));
+    .pipe(gulp.dest('./extension/js'));
 });
+
 gulp.task('vendorjs', function() {
   return gulp.src(paths.vendor.js)
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('./dist/js'));
+    .pipe(gulp.dest('./extension/js'));
 });
+
+gulp.task('statichtml', function() {
+  return gulp.src(paths.app.html)
+    .pipe(gulp.dest('./extension'));
+});
+
+gulp.task('staticjs', function() {
+  return gulp.src(['./src/js/options.js','./src/js/popup.js','./src/js/content.js'])
+    .pipe(gulp.dest('./extension/js'));
+});
+
+gulp.task('appimg', function() {
+  return gulp.src(paths.app.img)
+    .pipe(gulp.dest('./extension/img'));
+});
+
 gulp.task('vendorcss', function() {
   return gulp.src(paths.vendor.css)
     .pipe(concat('vendor.css'))
-    .pipe(gulp.dest('./dist/css'));
-});
-gulp.task('vendorfonts', function() {
-  return gulp.src(paths.vendor.fonts)
-    .pipe(gulp.dest('./dist/fonts'));
+    .pipe(gulp.dest('./extension/css'));
 });
 
-gulp.task('default', ['appjs', 'vendorjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus']);
+gulp.task('vendorfonts', function() {
+  return gulp.src(paths.vendor.fonts)
+    .pipe(gulp.dest('./extension/fonts'));
+});
+
+gulp.task('default', ['appjs', 'vendorjs', 'staticjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus', 'appimg', 'statichtml']);

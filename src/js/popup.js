@@ -1,0 +1,1 @@
+var winston = new Winston();

@@ -1,34 +1,64 @@
 # Winston
 
-Taking inspiration from launchers and command line interfaces such as [Alfred](http://www.alfredapp.com/) and those embedded in [Atom](https://atom.io/) and [Sublime Text](http://www.sublimetext.com/), Winston is your personal valet for the web.
+Winston is your personal valet for the web. Taking inspiration from launchers and GCLIs such as [Alfred](http://www.alfredapp.com/) and those embedded in [Atom](https://atom.io/) and [Sublime Text](http://www.sublimetext.com/).
 
-### Features
+### Installation
 
-* Fuzzy Commands
-* Packages (plugins)
-* Themes (low priority)
+The best way to install Winston at the moment is...
 
-### Current Packages
+1. Clone (`git clone git@github.com:johnnyfreeman/winston.git`), or [download](https://github.com/johnnyfreeman/winston/archive/master.zip) and unzip Winston.
+
+2. Open the URL [chrome://extensions/](chrome://extensions/) in your browser.
+
+3. Check the box for Developer Mode
+
+4. Click the button Load unpacked extension...
+
+5. Select the [winston/extension/](https://github.com/johnnyfreeman/winston/tree/master/extension) directory.
+
+The extension is now installed. Open Winston by clicking the icon in the toolbar (or `Ctrl` + `Space`), type `help` and press `Enter`.
+
+### Usage
+
+Type anything into Winston. Enabled packages will respond to your input with possible commands you might be trying to execute. See package descriptions for more information about what input each package responds to.
+
+### Packages
+
+##### Core
+
+* `help`: Open help
+* `settings`: Open Winston settings
+* `enable [packageName]`: Enable a package
+* `disable [packageName]`: Disable a package
+* `debug`: Open Winston in it's own tab
 
 ##### Calculator
 
-Compute simple math equations. Pastes result into previously focused input field or copies result to the clipboard
+Evaluates user input as a mathmatical expression. See [math.js](http://mathjs.org/) for examples.
 
 ##### Tabs
 
-Search through open tabs (results take priority over Bookmark results)
+Search open tabs, duplicate a tab, open new tab, close tab, or pin tab.
 
 ##### Bookmarks
 
-Search through your bookmarks
+Search through your bookmarks or create new bookmark.
 
 ##### Google
 
-Option to search Google (as a fallback)
+As a fallback, open Google results for user input. Offers an "I'm feeling lucky" command as well.
 
 ##### YouTube
 
-Type `youtube sneezing panda`, and a new tab will be opened with YouTube's search results for "sneezing panda"
+Listens to certain keywords in user input and offers to open search results for YouTube.
+
+##### Salesforce
+
+Currently only offers links to documentation articles. Eventually the ability to search metadata from your org.
+
+##### History
+
+Search through browser history and open url in a new tab.
 
 ### Planned Packages
 
@@ -43,12 +73,3 @@ Save chunks of text to recall on command. Pastes into previously focused input f
 ##### Current Page Links
 
 Follow any link on current page.
-
-##### Salesforce
-
-Utilize SF apis to increase productivity.
-
-* find {query}
-* list {objects}
-* new {object}
-* setup
