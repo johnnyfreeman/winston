@@ -81,11 +81,13 @@ var Winston = function () {
             // enable package command
             if (inputWords.length === 1 && 'enable'.indexOf(inputWords[0].toLowerCase()) === 0) {
                 Object.keys(Winston.Package.registeredPackages).forEach(function (name) {
-                    commands.push(new EnablePackage(name));
+                    if (typeof Winston.Package.enabledPackages[name] === 'undefined') {
+                        commands.push(new EnablePackage(name));
+                    }
                 });
             } else if (inputWords.length > 1 && 'enable'.indexOf(inputWords[0].toLowerCase()) === 0) {
                 Object.keys(Winston.Package.registeredPackages).forEach(function (name) {
-                    if (name.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1) {
+                    if (name.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && typeof Winston.Package.enabledPackages[name] === 'undefined') {
                         commands.push(new EnablePackage(name));
                     }
                 });
@@ -95,11 +97,13 @@ var Winston = function () {
             // disable package command
             if (inputWords.length === 1 && 'disable'.indexOf(inputWords[0].toLowerCase()) === 0) {
                 Object.keys(Winston.Package.registeredPackages).forEach(function (name) {
-                    commands.push(new DisablePackage(name));
+                    if (typeof Winston.Package.enabledPackages[name] !== 'undefined') {
+                        commands.push(new DisablePackage(name));
+                    }
                 });
             } else if (inputWords.length > 1 && 'disable'.indexOf(inputWords[0].toLowerCase()) === 0) {
                 Object.keys(Winston.Package.registeredPackages).forEach(function (name) {
-                    if (name.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1) {
+                    if (name.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && typeof Winston.Package.enabledPackages[name] !== 'undefined') {
                         commands.push(new DisablePackage(name));
                     }
                 });
