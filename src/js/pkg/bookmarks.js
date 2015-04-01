@@ -1,9 +1,38 @@
 (function (Winston) {
-    var Bookmarks = function () {};
+
+
+
+    var Bookmarks = function () {
+        var package = this;
+        this.bookmarkTreeNodes = [];
+
+        var traverse = function (nodes) {
+            var title, url, children;
+
+            for(var i = 0; i < nodes.length; i++) {
+                title = nodes[i].title || '';
+                url = nodes[i].url || '';
+                children = nodes[i].children || [];
+
+                if (url.indexOf('javascript:') !== 0 && url.length > 0) {
+                    package.bookmarkTreeNodes.push(nodes[i]);
+                }
+
+                if(children.length > 0) {
+                    traverse(children);
+                }
+            }
+        }
+
+        chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
+            traverse(bookmarkTreeNodes);
+        });
+    };
 
     Bookmarks.prototype.inputHandler = function (e) {
         var input = e.target.value;
         var commands = [];
+        var urlChecker = this.urlChecker;
 
         // create command
         var cmd = new CreateBookmarkCommand();
@@ -12,15 +41,13 @@
             commands.push(cmd);
         }
 
-        return new Promise(function (resolve, reject) {
-            chrome.bookmarks.search(input, function (bookmarks) {
-                bookmarks.forEach(function (bookmark, i) {
-                    commands.push(new BookmarkCommand(bookmark, i));
-                });
-
-                resolve(commands);
-            });
+        this.bookmarkTreeNodes.forEach(function (node, i) {
+            if (node.title.toLowerCase().indexOf(input.toLowerCase()) > -1 && node.url.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+                commands.push(new BookmarkCommand(node, i));
+            }
         });
+
+        return commands;
     };
 
     var BookmarkCommand = function (bookmark, i) {
