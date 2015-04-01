@@ -5,7 +5,13 @@ var Icon = React.createClass({displayName: "Icon",
     },
 
     render: function() {
-        return React.createElement("i", {className: 'fa fa-' + this.props.name});
+        var classes = React.addons.classSet({
+            'fa': true,
+            'fa-spin': this.props.spin == true,
+            'fa-': true
+        });
+
+        return React.createElement("i", {className: classes + this.props.name});
     }
 });
 
@@ -79,7 +85,8 @@ var App = React.createClass({displayName: "App",
     getInitialState: function() {
         return {
             results: [],
-            selectedIndex: 0
+            selectedIndex: 0,
+            loading: false
         };
     },
 
@@ -102,7 +109,8 @@ var App = React.createClass({displayName: "App",
 
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
-            React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, ref: "searchBox"}), 
+            React.createElement(Icon, {name: "refresh", spin: this.state.loading}), 
+            React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, loading: this.state.loading, ref: "searchBox"}), 
             React.createElement(ResultsList, {clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );
     },
@@ -181,12 +189,15 @@ var App = React.createClass({displayName: "App",
             this.inputHandlers.cancel();
         }
 
+        // loading
+        app.setState({loading: true});
+
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
         var enabledPackages = Winston.Package.enabledPackages;
         var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
-        enabledPackageNames.forEach(function (name) {
+        enabledPackageNames.forEach(function (name, i) {
             promises.push(enabledPackages[name].inputHandler(e));
         });
 
@@ -211,7 +222,8 @@ var App = React.createClass({displayName: "App",
         .then(function (commands) {
             app.setState({
                 results: commands,
-                selectedIndex: 0
+                selectedIndex: 0,
+                loading: false
             });
         })
 
