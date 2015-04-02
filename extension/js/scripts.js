@@ -205,18 +205,20 @@ var Winston = function () {
         var input = e.target.value;
         var commands = [];
 
-        // create command
-        var cmd = new CreateBookmarkCommand();
-        var title = cmd.title.toLowerCase();
-        if (input.length > 0 && title.indexOf(input.toLowerCase()) == 0) {
-            commands.push(cmd);
-        }
-
-        this.bookmarkTreeNodes.forEach(function (node, i) {
-            if (node.title.toLowerCase().indexOf(input.toLowerCase()) > -1 && node.url.toLowerCase().indexOf(input.toLowerCase()) > -1) {
-                commands.push(new BookmarkCommand(node, i));
+        if (input.length > 0) {
+            // create command
+            var cmd = new CreateBookmarkCommand();
+            var title = cmd.title.toLowerCase();
+            if (title.indexOf(input.toLowerCase()) == 0) {
+                commands.push(cmd);
             }
-        });
+
+            this.bookmarkTreeNodes.forEach(function (node, i) {
+                if (node.title.toLowerCase().indexOf(input.toLowerCase()) > -1 && node.url.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+                    commands.push(new BookmarkCommand(node, i));
+                }
+            });
+        }
 
         return commands;
     };
