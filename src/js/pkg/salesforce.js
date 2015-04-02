@@ -125,7 +125,7 @@
         this.docLinks['ApexPages Class'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_ApexPages.htm';
         this.docLinks['Approval Class'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_Approval.htm';
         this.docLinks['Blob Class'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_Blob.htm';
-        this.docLinks['Boolean Class'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_Boolean.htm';
+        this.docLinks['Boolean Class'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_boolean.htm';
         this.docLinks['BusinessHours Class'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_class_system_BusinessHours.htm';
         this.docLinks['Cases Class'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_class_system_Cases.htm';
         this.docLinks['Comparable Interface'] = 'https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_comparable.htm';
