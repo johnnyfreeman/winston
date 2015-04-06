@@ -3,5 +3,5 @@ var Winston = function () {
     this.registeredPackages = {};
     this.bootedPackages = {};
 
-    React.render(this.appComponent, document.body);
+    React.render(this.appComponent, document.getElementById('container'));
 };
