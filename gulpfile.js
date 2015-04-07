@@ -42,7 +42,7 @@ var paths = {
             './bower_components/bluebird/js/browser/bluebird.js',
             './bower_components/react/react-with-addons.js',
             './bower_components/fuse.js/src/fuse.js',
-            './bower_components/jsforce/build/jsforce.js',
+            './bower_components/reqwest/reqwest.js',
             './bower_components/mathjs/dist/math.js'
         ],
         css: [

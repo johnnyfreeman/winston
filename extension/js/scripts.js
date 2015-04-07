@@ -3,7 +3,7 @@ var Winston = function () {
     this.registeredPackages = {};
     this.bootedPackages = {};
 
-    React.render(this.appComponent, document.body);
+    React.render(this.appComponent, document.getElementById('container'));
 };
 
 (function () {
@@ -746,28 +746,153 @@ var Winston = function () {
 
 
     var Salesforce = function () {
-        jsforce.browser.init({
-            clientId: '3MVG9xOCXq4ID1uGbuCfSNW3olnFLJL8Sf2xPkbsYsYqPJrvDAoOE5U_CjIjP3Wv9wsALOpqX9nTPRmcQtPIi',
-            redirectUri: 'https://login.salesforce.com/services/oauth2/success'
-        });
+        var sf = this;
+        this.sobjects = [];
 
-        jsforce.browser.on('connect', function(conn) {
-            conn.query('SELECT Id, Name FROM Account', function(err, res) {
-            if (err) { return console.error(err); }
-                console.log(res);
+        var clientId = '3MVG9xOCXq4ID1uGbuCfSNW3olnFLJL8Sf2xPkbsYsYqPJrvDAoOE5U_CjIjP3Wv9wsALOpqX9nTPRmcQtPIi';
+        var clientSecret = '1271466885282334292';
+        var redirectUri = chrome.identity.getRedirectURL('provider_cb');
+
+        chrome.identity.launchWebAuthFlow({
+            url: 'https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri,
+            interactive: true
+        }, function(redirect_url) {
+            console.log('redirect_url=', redirect_url);
+            var token;
+            var parser = document.createElement('a');
+            parser.href = redirect_url;
+            parser.search.substr(1).split('&').forEach(function (attribute) {
+                var pair = attribute.split('=');
+                if (pair[0] === 'code') {
+                    token = pair[1];
+                }
+            });
+
+            // https://login.salesforce.com/services/oauth2/token
+
+            console.log('token=', decodeURIComponent(token));
+
+            reqwest({
+                url: 'https://login.salesforce.com/services/oauth2/token',
+                method: 'post',
+                type: 'json',
+                data: {
+                    code: decodeURIComponent(token),
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    redirect_uri: redirectUri
+                },
+                success: function (res) {
+                    console.log('res=', res);
+                    sf.instanceUrl = res.instance_url;
+                    var auth = res.token_type + ' ' + res.access_token;
+
+                    reqwest({
+                        url: sf.instanceUrl + '/services/data',
+                        method: 'get',
+                        type: 'json',
+                        success: function (versions) {
+                            console.log('versions=', versions);
+                            // use latest version
+                            var i = versions.length - 1;
+                            var url = versions[i].url;
+
+                            reqwest({
+                                url: sf.instanceUrl + url + '/sobjects',
+                                method: 'get',
+                                type: 'json',
+                                headers: {
+                                    Authorization: auth
+                                },
+                                success: function (response) {
+                                    console.log('response=', response);
+                                    sf.sobjects = response.sobjects;
+
+                                    // reqwest({
+                                    //     url: sf.instanceUrl + '/services/data/v33.0/tooling/query',
+                                    //     method: 'get',
+                                    //     type: 'json',
+                                    //     data: {
+                                    //         q: 'SELECT Id From CustomObject Where DeveloperName = \'Issue\''
+                                    //     },
+                                    //     headers: {
+                                    //         Authorization: auth
+                                    //     },
+                                    //     success: function (results) {
+                                    //         console.log('results=', results);
+                                    //     }
+                                    // });
+                                }
+                            });
+                        }
+                    });
+                }
             });
         });
-
-        // jsforce.browser.login();
     };
 
     Salesforce.prototype.inputHandler = function (e) {
+        var sf = this;
         var input = e.target.value;
         var commands = [];
-        
+
+        // documentation
         Object.keys(docs).forEach(function (key) {
             if (input.length > 0 && key.toLowerCase().indexOf(input.toLowerCase()) > -1) {
                 commands.push(new SalesforceDocCommand(key, docs[key]));
+            }
+        });
+
+        this.sobjects.forEach(function (sobject) {
+
+            var viewTitle = 'View ' + sobject.label + ' Object';
+            var listTitle = 'List ' + sobject.label + ' Records';
+            var newTitle = 'New ' + sobject.label + ' Record';
+
+            if (viewTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable && !sobject.custom) {
+                console.log(sobject.label, sobject);
+                commands.push({
+                    icon: 'cloud',
+                    action: 'View Object',
+                    title: viewTitle,
+                    description: 'View ' + sobject.label + ' object properties',
+                    run: function () {
+                        var url;
+                        if (sobject.custom) {
+                            url = sf.instanceUrl + '/' + sobject.id + '?setupid=CustomObjects';
+                        } else {
+                            url = sf.instanceUrl + '/ui/setup/Setup?setupid=' + sobject.name;
+                        }
+                        chrome.tabs.create({ url: url });
+                    }
+                });
+            }
+
+            if (listTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
+                commands.push({
+                    icon: 'cloud',
+                    action: 'List Records',
+                    title: listTitle,
+                    description: 'List ' + sobject.label + ' records',
+                    run: function () {
+                        var url = sf.instanceUrl + '/' + sobject.keyPrefix;
+                        chrome.tabs.create({ url: url });
+                    }
+                });
+            }
+
+            if (newTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
+                commands.push({
+                    icon: 'cloud',
+                    action: 'New Record',
+                    title: newTitle,
+                    description: 'New ' + sobject.label + ' record',
+                    run: function () {
+                        var url = sf.instanceUrl + '/' + sobject.keyPrefix + '/e';
+                        chrome.tabs.create({ url: url });
+                    }
+                });
             }
         });
 
@@ -775,6 +900,19 @@ var Winston = function () {
     };
 
     var SalesforceDocCommand = function (title, url) {
+        this.id = 'SFDOC-' + title.replace(' ', '-');
+        this.icon = 'cloud';
+        this.action = 'Open Documentation';
+        this.title = title;
+        this.url = url;
+        this.description = 'Open Salesforce documentation';
+    };
+
+    SalesforceDocCommand.prototype.run = function () {
+        chrome.tabs.create({ url: this.url });
+    };
+
+    var SalesforceViewObjectCommand = function (title, url) {
         this.id = 'SFDOC-' + title.replace(' ', '-');
         this.icon = 'cloud';
         this.action = 'Open Documentation';
