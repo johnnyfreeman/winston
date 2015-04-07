@@ -1,6 +1,9 @@
 * {
   box-sizing: border-box;
 }
+html {
+  font-family: sans-serif;
+}
 body {
   color: #333;
   margin: 1px;
