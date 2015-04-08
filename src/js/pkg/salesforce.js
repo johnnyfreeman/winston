@@ -182,94 +182,117 @@
 
     var Salesforce = function () {
         var sf = this;
+
+        // get sobjects from storage
         this.sobjects = [];
+        Winston.Storage.get('sf-sobjects').then(function (options) {
+            sf.sobjects = options['sf-sobjects'];
+        });
+
+        // get instance url from storage
+        this.instanceUrl = '';
+        Winston.Storage.get('sf-instanceUrl').then(function (instanceUrl) {
+            sf.instanceUrl = instanceUrl;
+        });
+    };
+
+    Salesforce.prototype.optionChangeHandler = function (e) {
+        // save option value in storage
+        Winston.Storage.set(e.target.name, e.target.checked);
 
         var clientId = '3MVG9xOCXq4ID1uGbuCfSNW3olnFLJL8Sf2xPkbsYsYqPJrvDAoOE5U_CjIjP3Wv9wsALOpqX9nTPRmcQtPIi';
         var clientSecret = '1271466885282334292';
         var redirectUri = chrome.identity.getRedirectURL('provider_cb');
 
-        chrome.identity.launchWebAuthFlow({
-            url: 'https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri,
-            interactive: true
-        }, function(redirect_url) {
-            console.log('redirect_url=', redirect_url);
-            var token;
-            var parser = document.createElement('a');
-            parser.href = redirect_url;
-            parser.search.substr(1).split('&').forEach(function (attribute) {
-                var pair = attribute.split('=');
-                if (pair[0] === 'code') {
-                    token = pair[1];
-                }
+        if (e.target.checked) {
+            chrome.identity.launchWebAuthFlow({
+                url: 'https://test.salesforce.com/services/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri,
+                interactive: true
+            }, function(redirect_url) {
+                console.log('redirect_url=', redirect_url);
+                var token;
+                var parser = document.createElement('a');
+                parser.href = redirect_url;
+                parser.search.substr(1).split('&').forEach(function (attribute) {
+                    var pair = attribute.split('=');
+                    if (pair[0] === 'code') {
+                        token = pair[1];
+                    }
+                });
+
+                // https://test.salesforce.com/services/oauth2/token
+
+                console.log('token=', decodeURIComponent(token));
+
+                reqwest({
+                    url: 'https://test.salesforce.com/services/oauth2/token',
+                    method: 'post',
+                    type: 'json',
+                    data: {
+                        code: decodeURIComponent(token),
+                        grant_type: 'authorization_code',
+                        client_id: clientId,
+                        client_secret: clientSecret,
+                        redirect_uri: redirectUri
+                    },
+                    success: function (res) {
+                        console.log('res=', res);
+                        var auth = res.token_type + ' ' + res.access_token;
+                        var instanceUrl = res.instance_url;
+                        Winston.Storage.set('sf-instanceUrl', instanceUrl);
+
+                        reqwest({
+                            url: instanceUrl + '/services/data',
+                            method: 'get',
+                            type: 'json',
+                            success: function (versions) {
+                                console.log('versions=', versions);
+                                // use latest version
+                                var i = versions.length - 1;
+                                var url = versions[i].url;
+
+                                reqwest({
+                                    url: instanceUrl + url + '/sobjects',
+                                    method: 'get',
+                                    type: 'json',
+                                    // data: {
+                                    //     q: 'select Id, DeveloperName, NamespacePrefix From CustomObject'
+                                    // },
+                                    headers: {
+                                        Authorization: auth
+                                    },
+                                    success: function (response) {
+                                        console.log('response=', response);
+                                        Winston.Storage.set('sf-sobjects', response.sobjects);
+
+                                        // reqwest({
+                                        //     url: instanceUrl + '/services/data/v33.0/tooling/query',
+                                        //     method: 'get',
+                                        //     type: 'json',
+                                        //     data: {
+                                        //         q: 'SELECT Id From CustomObject Where DeveloperName = \'Issue\''
+                                        //     },
+                                        //     headers: {
+                                        //         Authorization: auth
+                                        //     },
+                                        //     success: function (results) {
+                                        //         console.log('results=', results);
+                                        //     }
+                                        // });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             });
-
-            // https://login.salesforce.com/services/oauth2/token
-
-            console.log('token=', decodeURIComponent(token));
-
-            reqwest({
-                url: 'https://login.salesforce.com/services/oauth2/token',
-                method: 'post',
-                type: 'json',
-                data: {
-                    code: decodeURIComponent(token),
-                    grant_type: 'authorization_code',
-                    client_id: clientId,
-                    client_secret: clientSecret,
-                    redirect_uri: redirectUri
-                },
-                success: function (res) {
-                    console.log('res=', res);
-                    sf.instanceUrl = res.instance_url;
-                    var auth = res.token_type + ' ' + res.access_token;
-
-                    reqwest({
-                        url: sf.instanceUrl + '/services/data',
-                        method: 'get',
-                        type: 'json',
-                        success: function (versions) {
-                            console.log('versions=', versions);
-                            // use latest version
-                            var i = versions.length - 1;
-                            var url = versions[i].url;
-
-                            reqwest({
-                                url: sf.instanceUrl + url + '/sobjects',
-                                method: 'get',
-                                type: 'json',
-                                headers: {
-                                    Authorization: auth
-                                },
-                                success: function (response) {
-                                    console.log('response=', response);
-                                    sf.sobjects = response.sobjects;
-
-                                    // reqwest({
-                                    //     url: sf.instanceUrl + '/services/data/v33.0/tooling/query',
-                                    //     method: 'get',
-                                    //     type: 'json',
-                                    //     data: {
-                                    //         q: 'SELECT Id From CustomObject Where DeveloperName = \'Issue\''
-                                    //     },
-                                    //     headers: {
-                                    //         Authorization: auth
-                                    //     },
-                                    //     success: function (results) {
-                                    //         console.log('results=', results);
-                                    //     }
-                                    // });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        });
+        }
     };
 
     Salesforce.prototype.inputHandler = function (e) {
         var sf = this;
         var input = e.target.value;
+        var inputWords = input.trim().split(' ');
         var commands = [];
 
         // documentation
@@ -279,57 +302,63 @@
             }
         });
 
-        this.sobjects.forEach(function (sobject) {
+        if (inputWords.length > 1 && ['view', 'list', 'new'].indexOf(inputWords[0]) > -1) {
+            for (var i = 0; i < this.sobjects.length; i++) {
+                var sobject = this.sobjects[i];
 
-            var viewTitle = 'View ' + sobject.label + ' Object';
-            var listTitle = 'List ' + sobject.label + ' Records';
-            var newTitle = 'New ' + sobject.label + ' Record';
+                var viewTitle = 'View ' + sobject.label + ' Object';
+                var listTitle = 'List ' + sobject.label + ' Records';
+                var newTitle = 'New ' + sobject.label + ' Record';
 
-            if (viewTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable && !sobject.custom) {
-                console.log(sobject.label, sobject);
-                commands.push({
-                    icon: 'cloud',
-                    action: 'View Object',
-                    title: viewTitle,
-                    description: 'View ' + sobject.label + ' object properties',
-                    run: function () {
-                        var url;
-                        if (sobject.custom) {
-                            url = sf.instanceUrl + '/' + sobject.id + '?setupid=CustomObjects';
-                        } else {
-                            url = sf.instanceUrl + '/ui/setup/Setup?setupid=' + sobject.name;
+                if (inputWords[0].toLowerCase() === 'view' && viewTitle.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable && !sobject.custom) {
+                    commands.push({
+                        sobject: sobject,
+                        icon: 'cloud',
+                        action: 'View Object',
+                        title: viewTitle,
+                        description: 'View ' + sobject.label + ' object properties',
+                        run: function () {
+                            var url;
+                            if (this.sobject.custom) {
+                                url = sf.instanceUrl + '/' + this.sobject.id + '?setupid=CustomObjects';
+                            } else {
+                                url = sf.instanceUrl + '/ui/setup/Setup?setupid=' + this.sobject.name;
+                            }
+                            chrome.tabs.create({ url: url });
                         }
-                        chrome.tabs.create({ url: url });
-                    }
-                });
-            }
+                    });
+                }
 
-            if (listTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
-                commands.push({
-                    icon: 'cloud',
-                    action: 'List Records',
-                    title: listTitle,
-                    description: 'List ' + sobject.label + ' records',
-                    run: function () {
-                        var url = sf.instanceUrl + '/' + sobject.keyPrefix;
-                        chrome.tabs.create({ url: url });
-                    }
-                });
-            }
+                if (inputWords[0].toLowerCase() === 'list' && listTitle.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
 
-            if (newTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
-                commands.push({
-                    icon: 'cloud',
-                    action: 'New Record',
-                    title: newTitle,
-                    description: 'New ' + sobject.label + ' record',
-                    run: function () {
-                        var url = sf.instanceUrl + '/' + sobject.keyPrefix + '/e';
-                        chrome.tabs.create({ url: url });
-                    }
-                });
+                    commands.push({
+                        sobject: sobject,
+                        icon: 'cloud',
+                        action: 'List Records',
+                        title: listTitle,
+                        description: 'List ' + sobject.label + ' records',
+                        run: function () {
+                            var url = sf.instanceUrl + '/' + this.sobject.keyPrefix;
+                            chrome.tabs.create({ url: url });
+                        }
+                    });
+                }
+
+                if (inputWords[0].toLowerCase() === 'new' && newTitle.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
+                    commands.push({
+                        sobject: sobject,
+                        icon: 'cloud',
+                        action: 'New Record',
+                        title: newTitle,
+                        description: 'New ' + sobject.label + ' record',
+                        run: function () {
+                            var url = sf.instanceUrl + '/' + this.sobject.keyPrefix + '/e';
+                            chrome.tabs.create({ url: url });
+                        }
+                    });
+                }
             }
-        });
+        }
 
         return commands;
     };

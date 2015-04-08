@@ -1,10 +1,14 @@
 (function (Winston) {
     var Google = function () {};
 
+    Google.prototype.optionChangeHandler = function (e) {
+        return Winston.Storage.set(e.target.name, e.target.checked);
+    };
+
     Google.prototype.inputHandler = function (e) {
         var input = e.target.value;
         var commands = [];
-        
+
         if (input.length > 0) {
             commands.push(new GoogleSearchCommand(input));
             commands.push(new GoogleLuckyCommand(input));

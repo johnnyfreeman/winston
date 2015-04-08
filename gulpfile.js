@@ -16,6 +16,7 @@ var paths = {
         js: [
             './src/js/winston.js',
             './src/js/package.js',
+            './src/js/storage.js',
             './src/js/pkg/core.js',
             './src/js/pkg/longwait.js',
             './src/js/pkg/bookmarks.js',

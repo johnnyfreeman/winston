@@ -1,14 +1,7 @@
 var forEach = Array.prototype.forEach;
 
 function saveOption(e) {
-    var el = e.target;
-    var name = el.name;
-    var value = el.checked;
-    option = {};
-    option[name] = value;
-    chrome.storage.local.set(option, function () {
-        console.log('saved:', el);
-    });
+    return Winston.Package.instantiate(e.target.name).optionChangeHandler(e);
 }
 
 forEach.call(document.getElementsByClassName('option'), function (option) {
@@ -18,7 +11,7 @@ forEach.call(document.getElementsByClassName('option'), function (option) {
 function restore_options() {
     var elements = document.getElementsByClassName('option');
 
-    chrome.storage.local.get(null, function(options) {
+    Winston.Storage.getAll().then(function (options) {
         forEach.call(elements, function (el) {
             var name = el.name;
             el.checked = options[name];

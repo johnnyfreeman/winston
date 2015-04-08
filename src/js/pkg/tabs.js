@@ -2,6 +2,10 @@
 
     var Tabs = function () {};
 
+    Tabs.prototype.optionChangeHandler = function (e) {
+        return Winston.Storage.set(e.target.name, e.target.checked);
+    };
+
     Tabs.prototype.inputHandler = function (e) {
         var input = e.target.value;
         var commands = [];

@@ -5,6 +5,10 @@
         this.softKeywords = ['cover', 'movie', 'music', 'trailer', 'tutorial', 'how'];
     };
 
+    Youtube.prototype.optionChangeHandler = function (e) {
+        return Winston.Storage.set(e.target.name, e.target.checked);
+    };
+
     Youtube.prototype.inputHandler = function (e) {
         var input = e.target.value;
         var commands = [];

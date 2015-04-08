@@ -9,33 +9,8 @@
             padding: 1px 10px 10px;
         }
 
-        th {
-            text-align: left;
-        }
-
-        .align-right {
-            text-align: right;
-        }
-        .align-center {
-            text-align: center;
-        }
-
-        .checkbox-column {
-            width: 14px;
-        }
-
-        .package-column {}
-
-        .priority-column {
-            width: 43px;
-        }
-
-        td, th {
-            padding:6px 8px;
-        }
-
-        .even {
-            background-color: #f4f4f4;
+        .button {
+            float: right;
         }
     </style>
 </head>
@@ -45,85 +20,58 @@
 
     <p>For the best performance, only enable the packages you care about. </p>
 
-    <table width="100%">
-        <!-- <thead>
-            <tr class="row odd">
-                <th class="checkbox-column">
-                    <input name="checkall" type="checkbox" disabled="disabled">
-                </th>
-                <th class="package-column">Package</th>
-            </tr>
-        </thead> -->
-        <tbody>
-            <tr class="row even">
-                <td class="checkbox-column">
-                    <input class="option" name="Bookmarks" type="checkbox" value="Bookmarks">
-                </td>
-                <td class="package-column">
-                    <label>Bookmarks</label>
-                </td>
-            </tr>
-            <tr class="row odd">
-                <td class="checkbox-column">
-                    <input class="option" name="Calculator" type="checkbox" value="Calculator">
-                </td>
-                <td class="package-column">
-                    <label>Calculator</label>
-                </td>
-            </tr>
-            <tr class="row even">
-                <td class="checkbox-column">
-                    <input class="option" name="Google" type="checkbox" value="Google">
-                </td>
-                <td class="package-column">
-                    <label>Google</label>
-                </td>
-            </tr>
-            <tr class="row odd">
-                <td class="checkbox-column">
-                    <input class="option" name="History" type="checkbox" value="History">
-                </td>
-                <td class="package-column">
-                    <label>History</label>
-                </td>
-            </tr>
-            <tr class="row even">
-                <td class="checkbox-column">
-                    <input class="option" name="Pinterest" type="checkbox" value="Pinterest">
-                </td>
-                <td class="package-column">
-                    <label>Pinterest</label>
-                </td>
-            </tr>
-            <tr class="row odd">
-                <td class="checkbox-column">
-                    <input class="option" name="Salesforce" type="checkbox" value="Salesforce">
-                </td>
-                <td class="package-column">
-                    <label>Salesforce</label>
-                </td>
-            </tr>
-            <tr class="row even">
-                <td class="checkbox-column">
-                    <input class="option" name="Tabs" type="checkbox" value="Tabs">
-                </td>
-                <td class="package-column">
-                    <label>Tabs</label>
-                </td>
-            </tr>
-            <tr class="row odd">
-                <td class="checkbox-column">
-                    <input class="option" name="YouTube" type="checkbox" value="YouTube">
-                </td>
-                <td class="package-column">
-                    <label>Youtube</label>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <p>
+        <label>
+            <input class="option" name="Bookmarks" type="checkbox" value="Bookmarks"> Bookmarks
+        </label>
+    </p>
 
-    <!-- <p><button id="save">Save</button></p> -->
+    <p>
+        <label>
+            <input class="option" name="Calculator" type="checkbox" value="Calculator"> Calculator
+        </label>
+    </p>
 
+    <p>
+        <label>
+            <input class="option" name="Google" type="checkbox" value="Google"> Google
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input class="option" name="History" type="checkbox" value="History"> History
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input class="option" name="Pinterest" type="checkbox" value="Pinterest"> Pinterest
+        </label>
+    </p>
+
+    <p>
+        <!-- <button class="button" id="connectSalesforce">Connect to Salesforce</button> -->
+        <label>
+            <input class="option" name="Salesforce" type="checkbox" value="Salesforce"> Salesforce
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input class="option" name="Tabs" type="checkbox" value="Tabs"> Tabs
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input class="option" name="YouTube" type="checkbox" value="YouTube"> YouTube
+        </label>
+    </p>
+
+    <script src="/js/vendor.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="/js/templates.js"></script>
     <script src="/js/options.js"></script>
 </body>
 

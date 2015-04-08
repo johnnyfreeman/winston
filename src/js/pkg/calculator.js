@@ -1,6 +1,10 @@
 (function (Winston) {
     var Calculator = function () {};
 
+    Calculator.prototype.optionChangeHandler = function (e) {
+        return Winston.Storage.set(e.target.name, e.target.checked);
+    };
+
     Calculator.prototype.inputHandler = function (e) {
         var commands = [];
         var input = e.target.value;
