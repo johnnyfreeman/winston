@@ -4,7 +4,7 @@ Winston is your personal valet for the web. Taking inspiration from launchers an
 
 ### Installation
 
-The best way to install Winston at the moment is...
+The best way to install Winston is directly from the [Chrome Web Store](https://chrome.google.com/webstore/detail/winston/kkojmlcbloeljojhbmkkjgbjkafgcjom). Alternatively, you can clone the repo locally and manually install in Chrome:
 
 1. Clone (`git clone git@github.com:johnnyfreeman/winston.git`), or [download](https://github.com/johnnyfreeman/winston/archive/master.zip) and unzip Winston.
 
