@@ -52,6 +52,23 @@ As a fallback, open Google results for user input. Offers an "I'm feeling lucky"
 
 Listens to certain keywords in user input and offers to open search results for YouTube.
 
+* `youtube`: Open youtube.com
+
+The following keywords will open YouTube's search results for "sneezing panda". Notice those keywords will be removed from the search query.
+
+* `youtube sneezing panda`
+* `sneezing panda video`
+
+Other (soft) keywords will trigger the youtube package (without using the keywords above) and will remain part of the search query.
+
+* `tomorrowland trailer`: Open YouTube's search results for "tomorrowland trailer"
+* `interstellar movie`: Open YouTube's search results for "interstellar movie"
+* `john mayer daughters cover`: Open YouTube's search results for "john mayer daughters cover"
+* `john mayer music`: Open YouTube's search results for "john mayer music"
+* `javascript tutorial`: Open YouTube's search results for "javascript tutorial"
+* `how to dance`: Open YouTube's search results for "how to dance"
+
+
 ##### Salesforce
 
 Provides links to documentation articles. After enabling the Salesforce package in [options](chrome://extensions/?options=kkojmlcbloeljojhbmkkjgbjkafgcjom) you will be prompted to enter your sandbox credentials so that Winston can provide you links to jump around common areas.
