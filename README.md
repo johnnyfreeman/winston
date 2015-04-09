@@ -54,7 +54,11 @@ Listens to certain keywords in user input and offers to open search results for 
 
 ##### Salesforce
 
-Currently only offers links to documentation articles. Eventually the ability to search metadata from your org.
+Provides links to documentation articles. After enabling the Salesforce package in [options](chrome://extensions/?options=kkojmlcbloeljojhbmkkjgbjkafgcjom) you will be prompted to enter your sandbox credentials so that Winston can provide you links to jump around common areas.
+
+* `view [sobject] object`: Open properties for an sObject
+* `list [sobject] records`: List records for sObject
+* `new [sobject] record`: New sObject record
 
 ##### History
 
