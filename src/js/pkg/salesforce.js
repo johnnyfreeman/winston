@@ -310,7 +310,7 @@
                 var listTitle = 'List ' + sobject.label + ' Records';
                 var newTitle = 'New ' + sobject.label + ' Record';
 
-                if (inputWords[0].toLowerCase() === 'view' && viewTitle.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable && !sobject.custom) {
+                if (viewTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable && !sobject.custom) {
                     commands.push({
                         sobject: sobject,
                         icon: 'cloud',
@@ -329,7 +329,7 @@
                     });
                 }
 
-                if (inputWords[0].toLowerCase() === 'list' && listTitle.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
+                if (listTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
 
                     commands.push({
                         sobject: sobject,
@@ -338,13 +338,13 @@
                         title: listTitle,
                         description: 'List ' + sobject.label + ' records',
                         run: function () {
-                            var url = sf.instanceUrl + '/' + this.sobject.keyPrefix;
+                            var url = sf.instanceUrl + '/' + this.sobject.keyPrefix + '/o';
                             chrome.tabs.create({ url: url });
                         }
                     });
                 }
 
-                if (inputWords[0].toLowerCase() === 'new' && newTitle.toLowerCase().indexOf(inputWords[1].toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
+                if (newTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) {
                     commands.push({
                         sobject: sobject,
                         icon: 'cloud',
