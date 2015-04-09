@@ -56,9 +56,9 @@ Listens to certain keywords in user input and offers to open search results for 
 
 Provides links to documentation articles. After enabling the Salesforce package in [options](chrome://extensions/?options=kkojmlcbloeljojhbmkkjgbjkafgcjom) you will be prompted to enter your sandbox credentials so that Winston can provide you links to jump around common areas.
 
-* `view [sobject] object`: Open properties for an sObject
-* `list [sobject] records`: List records for sObject
-* `new [sobject] record`: New sObject record
+* `view [sobject] object`: Open properties for a standard object
+* `list [sobject] records`: List records for a standard or custom object
+* `new [sobject] record`: New standard or custom object record
 
 ##### History
 
