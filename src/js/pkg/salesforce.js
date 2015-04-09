@@ -185,8 +185,8 @@
 
         // get sobjects from storage
         this.sobjects = [];
-        Winston.Storage.get('sf-sobjects').then(function (options) {
-            sf.sobjects = options['sf-sobjects'];
+        Winston.Storage.get('sf-sobjects').then(function (sobjects) {
+            sf.sobjects = sobjects;
         });
 
         // get instance url from storage

@@ -56,7 +56,9 @@ var Winston = function () {
 
     Storage.get = function (key) {
         return new Promise(function (resolve, reject) {
-            chrome.storage.local.get(key, resolve);
+            chrome.storage.local.get(key, function (options) {
+                resolve(options[key]);
+            });
         });
     };
 
@@ -824,8 +826,8 @@ var Winston = function () {
 
         // get sobjects from storage
         this.sobjects = [];
-        Winston.Storage.get('sf-sobjects').then(function (options) {
-            sf.sobjects = options['sf-sobjects'];
+        Winston.Storage.get('sf-sobjects').then(function (sobjects) {
+            sf.sobjects = sobjects;
         });
 
         // get instance url from storage

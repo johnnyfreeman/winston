@@ -11,7 +11,9 @@
 
     Storage.get = function (key) {
         return new Promise(function (resolve, reject) {
-            chrome.storage.local.get(key, resolve);
+            chrome.storage.local.get(key, function (options) {
+                resolve(options[key]);
+            });
         });
     };
 
