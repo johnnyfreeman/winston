@@ -20,7 +20,7 @@ var paths = {
             './src/js/pkg/core.js',
             './src/js/pkg/longwait.js',
             './src/js/pkg/bookmarks.js',
-            './src/js/pkg/history.js',
+            './src/js/pkg/history/history.js',
             './src/js/pkg/tabs.js',
             './src/js/pkg/calculator.js',
             './src/js/pkg/youtube.js',
@@ -95,6 +95,12 @@ gulp.task('staticjs', function() {
     .pipe(gulp.dest('./extension/js'));
 });
 
+gulp.task('eventsjs', function() {
+  return gulp.src(['./src/js/winston.js', './src/js/storage.js', './src/js/pkg/history/events.js'])
+    .pipe(concat('events.js'))
+    .pipe(gulp.dest('./extension/js'));
+});
+
 gulp.task('appimg', function() {
   return gulp.src(paths.app.img)
     .pipe(gulp.dest('./extension/img'));
@@ -111,4 +117,4 @@ gulp.task('vendorfonts', function() {
     .pipe(gulp.dest('./extension/fonts'));
 });
 
-gulp.task('default', ['appjs', 'vendorjs', 'staticjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus', 'appimg', 'statichtml']);
+gulp.task('default', ['appjs', 'vendorjs', 'staticjs', 'eventsjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus', 'appimg', 'statichtml']);

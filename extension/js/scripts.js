@@ -315,17 +315,27 @@ var Winston = function () {
 })(Winston);
 
 (function (Winston) {
+    var storageKey = 'historyItems';
+
     var History = function () {
         var history = this;
         this.items = [];
 
-        chrome.history.search({text: ''}, function (historyItems) {
+        Winston.Storage.get(storageKey).then(function (historyItems) {
             history.items = historyItems;
         });
     };
 
     History.prototype.optionChangeHandler = function (e) {
-        return Winston.Storage.set(e.target.name, e.target.checked);
+        Winston.Storage.set(e.target.name, e.target.checked);
+
+        if (e.target.checked) {
+            chrome.history.search({text: ''}, function (newHistoryItems) {
+                return Winston.Storage.set(storageKey, newHistoryItems);
+            }); // limits to 100
+        } else {
+            Winston.Storage.set(storageKey, []);
+        }
     };
 
     History.prototype.inputHandler = function (e) {
@@ -334,7 +344,7 @@ var Winston = function () {
 
         if (input.length > 0) {
             this.items.forEach(function (item, i) {
-                if (item.title.indexOf(input) > -1) {
+                if (item.title.toLowerCase().indexOf(input.toLowerCase()) > -1 || item.url.toLowerCase().indexOf(input.toLowerCase()) > -1) {
                     commands.push(new HistoryCommand(item, i));
                 }
             });
