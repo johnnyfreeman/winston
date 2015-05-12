@@ -989,7 +989,7 @@ var Winston = function () {
                         title: listTitle,
                         description: 'List ' + sobject.label + ' records',
                         run: function () {
-                            var url = sf.instanceUrl + '/' + this.sobject.keyPrefix + '/o';
+                            var url = sf.instanceUrl + '/' + this.sobject.keyPrefix;
                             chrome.tabs.create({ url: url });
                         }
                     });
