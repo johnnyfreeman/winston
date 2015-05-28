@@ -5,7 +5,7 @@
 
     "name": "Winston",
     "description": "A launcher for the web",
-    "version": "0.0.4",
+    "version": "0.0.5",
 
     "browser_action": {
         "default_icon": "img/icon48.png",
