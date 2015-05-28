@@ -26,6 +26,7 @@ var paths = {
             './src/js/pkg/youtube.js',
             './src/js/pkg/pinterest.js',
             './src/js/pkg/salesforce.js',
+            './src/js/pkg/stackoverflow.js',
             './src/js/pkg/google.js'
         ],
         img: [
