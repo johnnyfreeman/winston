@@ -77,6 +77,22 @@ Provides links to documentation articles. After enabling the Salesforce package 
 * `list [sobject] records`: List records for a standard or custom object
 * `new [sobject] record`: New standard or custom object record
 
+##### StackOverflow
+
+Listens to certain keywords in user input and offers to open search results for StackOverflow.
+
+* `stackoverflow`: Open stackoverflow.com
+
+The following keywords will open StackOverflow's search results for "foo bar". Notice those keywords will be removed from the search query.
+
+* `stackoverflow foo bar`
+
+Other (soft) keywords will trigger the youtube package (without using the keywords above) and will remain part of the search query.
+
+* `foo bar issue`: Open StackOverflow's search results for "foo bar issue"
+* `foo bar exception`: Open StackOverflow's search results for "foo bar exception"
+* `foo bar error`: Open StackOverflow's search results for "foo bar error"
+
 ##### History
 
 Search through browser history and open url in a new tab.
