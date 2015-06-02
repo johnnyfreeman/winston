@@ -32,6 +32,10 @@
                     commands.push(new HistoryCommand(item, i));
                 }
             });
+
+            if ('history'.indexOf(input.toLowerCase()) === 0) {
+                commands.push(new AllHistoryCommand());
+            }
         }
 
         return commands;
@@ -47,6 +51,19 @@
     };
 
     HistoryCommand.prototype.run = function () {
+        chrome.tabs.create({ url: this.url });
+    };
+
+    var AllHistoryCommand = function () {
+        this.id = 'ALLHISTORY';
+        this.icon = 'history';
+        this.title = 'Open History';
+        this.url = 'chrome://history';
+        this.description = 'Open all history in new tab';
+        this.action = 'Open History';
+    };
+
+    AllHistoryCommand.prototype.run = function () {
         chrome.tabs.create({ url: this.url });
     };
 
