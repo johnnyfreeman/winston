@@ -270,7 +270,7 @@ var Winston = function () {
             }
 
             this.bookmarkTreeNodes.forEach(function (node, i) {
-                if (node.title.toLowerCase().indexOf(input.toLowerCase()) > -1 && node.url.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+                if (node.title.toLowerCase().indexOf(input.toLowerCase()) > -1 || node.url.toLowerCase().indexOf(input.toLowerCase()) > -1) {
                     commands.push(new BookmarkCommand(node, i));
                 }
             });
