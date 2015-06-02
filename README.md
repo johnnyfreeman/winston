@@ -95,7 +95,7 @@ Other (soft) keywords will trigger the youtube package (without using the keywor
 
 ##### History
 
-Search through browser history and open url in a new tab.
+Search through most recent 100 items in browser history and open url in a new tab. Also, open all history in a new tab by typing "history".
 
 ### Planned Packages
 
@@ -107,6 +107,6 @@ To start with, it would be nice to be able to lookup and execute devtools snippe
 
 Save chunks of text to recall on command. Pastes into previously focused input field or copies text to the clipboard
 
-##### Current Page Links
+##### Links
 
-Follow any link on current page.
+Follow any link in current tab.
