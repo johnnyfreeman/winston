@@ -209,7 +209,7 @@
                 url: 'https://test.salesforce.com/services/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri,
                 interactive: true
             }, function(redirect_url) {
-                console.log('redirect_url=', redirect_url);
+
                 var token;
                 var parser = document.createElement('a');
                 parser.href = redirect_url;
@@ -219,10 +219,6 @@
                         token = pair[1];
                     }
                 });
-
-                // https://test.salesforce.com/services/oauth2/token
-
-                console.log('token=', decodeURIComponent(token));
 
                 reqwest({
                     url: 'https://test.salesforce.com/services/oauth2/token',
@@ -236,7 +232,7 @@
                         redirect_uri: redirectUri
                     },
                     success: function (res) {
-                        console.log('res=', res);
+
                         var auth = res.token_type + ' ' + res.access_token;
                         var instanceUrl = res.instance_url;
                         Winston.Storage.set('sf-instanceUrl', instanceUrl);
@@ -246,7 +242,7 @@
                             method: 'get',
                             type: 'json',
                             success: function (versions) {
-                                console.log('versions=', versions);
+
                                 // use latest version
                                 var i = versions.length - 1;
                                 var url = versions[i].url;
@@ -262,23 +258,35 @@
                                         Authorization: auth
                                     },
                                     success: function (response) {
-                                        console.log('response=', response);
-                                        Winston.Storage.set('sf-sobjects', response.sobjects);
+                                        reqwest({
+                                            url: instanceUrl + url + '/tooling/query',
+                                            method: 'get',
+                                            type: 'json',
+                                            data: {
+                                                q: 'SELECT Id, DeveloperName, NamespacePrefix From CustomObject'
+                                            },
+                                            headers: {
+                                                Authorization: auth
+                                            },
+                                            success: function (result) {
+                                                var customObjects = {};
+                                                for (var i = 0; i < result.records.length; i++) {
+                                                    var key = result.records[i].DeveloperName;
+                                                    if (result.records[i].NamespacePrefix) {
+                                                        key = result.records[i].NamespacePrefix + '__' + key;
+                                                    }
+                                                    customObjects[key] = result.records[i].Id;
+                                                }
+                                                console.log(customObjects);
+                                                for (var i = 0; i < response.sobjects.length; i++) {
+                                                    var key = response.sobjects[i].name.replace('__c', '');
+                                                    response.sobjects[i].id = customObjects[key];
+                                                }
 
-                                        // reqwest({
-                                        //     url: instanceUrl + '/services/data/v33.0/tooling/query',
-                                        //     method: 'get',
-                                        //     type: 'json',
-                                        //     data: {
-                                        //         q: 'SELECT Id From CustomObject Where DeveloperName = \'Issue\''
-                                        //     },
-                                        //     headers: {
-                                        //         Authorization: auth
-                                        //     },
-                                        //     success: function (results) {
-                                        //         console.log('results=', results);
-                                        //     }
-                                        // });
+                                                Winston.Storage.set('sf-sobjects', response.sobjects);
+                                                console.log(response.sobjects);
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -310,7 +318,7 @@
                 var listTitle = 'List ' + sobject.label + ' Records';
                 var newTitle = 'New ' + sobject.label + ' Record';
 
-                if (viewTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable && !sobject.custom) {
+                if (viewTitle.toLowerCase().indexOf(input.toLowerCase()) > -1 && sobject.layoutable && sobject.createable && sobject.deletable) { // && !sobject.custom
                     commands.push({
                         sobject: sobject,
                         icon: 'cloud',
@@ -319,6 +327,7 @@
                         description: 'View ' + sobject.label + ' object properties',
                         run: function () {
                             var url;
+                            console.log(this.sobject);
                             if (this.sobject.custom) {
                                 url = sf.instanceUrl + '/' + this.sobject.id + '?setupid=CustomObjects';
                             } else {

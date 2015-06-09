@@ -73,7 +73,7 @@ Other (soft) keywords will trigger the youtube package (without using the keywor
 
 Provides links to documentation articles. After enabling the Salesforce package in [options](chrome://extensions/?options=kkojmlcbloeljojhbmkkjgbjkafgcjom) you will be prompted to enter your sandbox credentials so that Winston can provide you links to jump around common areas.
 
-* `view [sobject] object`: Open properties for a standard object
+* `view [sobject] object`: Open properties for a standard object or custom object
 * `list [sobject] records`: List records for a standard or custom object
 * `new [sobject] record`: New standard or custom object record
 
