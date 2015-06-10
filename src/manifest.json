@@ -1,0 +1,56 @@
+{
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsGqigXRk7xtLLQljHwI3LkW/p0fcBaGsZnSXKrUFpeD+OdZ+wOQFKZChReqMPNO7g2Ho3RCCcbNJTcyOEkWMpNALSQSL4USKNmm5zUh8B8ScjrpDNUp19lIC4U9r53T4w4LN+cany0x8B8OmNLvHL6LvIiZt2jkAh80zUpkhDqeYUojZSuRSb37JZlAMsrSpY0E2E7wlaPvcVlasyORUGGQdblMH1d8oeac4zUxwxAy+DOqn7LD+6a3jdzFukVd5NT/vEHvr+fs0QPaLCqPl+11s4dbgRN88HF/dRhSoj6mQYBaRhVlJzkjOM1bA/OcK0VTzp5Wr0GYk55Vau7jyEwIDAQAB",
+
+    "manifest_version": 2,
+
+    "name": "Winston",
+    "description": "A launcher for the web",
+    "version": "0.0.6",
+
+    "browser_action": {
+        "default_icon": "img/icon48.png",
+        "default_popup": "popup.html"
+    },
+    "icons": {
+        "16": "img/icon16.png",
+        "48": "img/icon48.png",
+        "128": "img/icon128.png"
+    },
+
+    "permissions": [
+        "activeTab",
+        "https://ajax.googleapis.com/",
+        "https://*.force.com/*",
+        "https://*.salesforce.com/*",
+        "https://*.cloudforce.com/*",
+        "identity",
+        "tabs",
+        "bookmarks",
+        "clipboardWrite",
+        "history",
+        "storage"
+    ],
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["js/content.js"]
+    }],
+    "background": {
+        "scripts": ["js/events.js"],
+        "persistent": false
+      },
+    "options_ui": {
+        "page": "options.html",
+        "chrome_style": true
+    },
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "windows": "Ctrl+Space",
+                "mac": "MacCtrl+Space",
+                "chromeos": "Ctrl+Space",
+                "linux": "Ctrl+Space"
+            }
+        }
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

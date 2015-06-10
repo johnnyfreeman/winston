@@ -35,8 +35,9 @@ var paths = {
         styl: [
             './src/styl/**/*.styl'
         ],
-        html: [
-            './src/*.html'
+        static: [
+            './src/*.html',
+            './src/manifest.json'
         ]
     },
     vendor: {
@@ -86,8 +87,8 @@ gulp.task('vendorjs', function() {
     .pipe(gulp.dest('./extension/js'));
 });
 
-gulp.task('statichtml', function() {
-  return gulp.src(paths.app.html)
+gulp.task('static', function() {
+  return gulp.src(paths.app.static)
     .pipe(gulp.dest('./extension'));
 });
 
@@ -118,4 +119,4 @@ gulp.task('vendorfonts', function() {
     .pipe(gulp.dest('./extension/fonts'));
 });
 
-gulp.task('default', ['appjs', 'vendorjs', 'staticjs', 'eventsjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus', 'appimg', 'statichtml']);
+gulp.task('default', ['appjs', 'vendorjs', 'staticjs', 'eventsjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus', 'appimg', 'static']);
