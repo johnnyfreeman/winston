@@ -158,18 +158,33 @@ var Winston = function () {
             }
 
             // for debugging purposes
-            if ('debug'.indexOf(input) > -1) {
-                commands.push({
-                    id: 'COREDEBUG',
-                    icon: 'bug',
-                    title: 'Debug',
-                    description: 'Open Winston in it\'s own tab for debugging',
-                    action: 'Get Help',
-                    run: function () {
-                        var extId = chrome.runtime.id;
-                        chrome.tabs.create({ url: 'chrome-extension://' + extId + '/popup.html' });
-                    }
-                });
+            if ('debug'.indexOf(input) === 0) {
+                if (inputWords.length < 2 || 'popup'.indexOf(inputWords[1]) > -1) {
+                    commands.push({
+                        id: 'COREDEBUGPOPUP',
+                        icon: 'bug',
+                        title: 'Debug popup.html',
+                        description: 'Open ./popup.html in it\'s own tab for debugging',
+                        action: 'Debug Popup',
+                        run: function () {
+                            var extId = chrome.runtime.id;
+                            chrome.tabs.create({ url: 'chrome-extension://' + extId + '/popup.html' });
+                        }
+                    });
+                }
+                if (inputWords.length < 2 || 'options'.indexOf(inputWords[1]) > -1) {
+                    commands.push({
+                        id: 'COREDEBUGOPTIONS',
+                        icon: 'bug',
+                        title: 'Debug options.html',
+                        description: 'Open ./options.html in it\'s own tab for debugging',
+                        action: 'Debug Options',
+                        run: function () {
+                            var extId = chrome.runtime.id;
+                            chrome.tabs.create({ url: 'chrome-extension://' + extId + '/options.html' });
+                        }
+                    });
+                }
             }
         }
 

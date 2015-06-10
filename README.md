@@ -30,7 +30,7 @@ Type anything into Winston. Enabled packages will respond to your input with pos
 * `settings`: Open Winston settings
 * `enable [packageName]`: Enable a package
 * `disable [packageName]`: Disable a package
-* `debug`: Open Winston in it's own tab
+* `debug [fileName]`: Open any .html file in it's own tab for debugging purposes
 
 ##### Calculator
 
