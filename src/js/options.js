@@ -20,3 +20,17 @@ function restore_options() {
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
+
+var fetchData = document.getElementById('fetchData');
+var subdomain = document.getElementById('subdomain');
+var getAccessToken = document.getElementById('getAccessToken');
+
+getAccessToken.addEventListener('click', function (e) {
+    console.log(e);
+    console.log(fetchData);
+    Winston.Package.instantiate('Salesforce').getAccessToken(subdomain.value);
+});
+
+fetchData.addEventListener('click', function (e) {
+    Winston.Package.instantiate('Salesforce').fetchData();
+});

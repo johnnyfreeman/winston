@@ -874,7 +874,7 @@ var Winston = function () {
 
         // get instance url from storage
         this.instanceUrl = '';
-        Winston.Storage.get('sf-instanceUrl').then(function (instanceUrl) {
+        Winston.Storage.get('sf-instance-url').then(function (instanceUrl) {
             sf.instanceUrl = instanceUrl;
         });
     };
@@ -882,102 +882,127 @@ var Winston = function () {
     Salesforce.prototype.optionChangeHandler = function (e) {
         // save option value in storage
         Winston.Storage.set(e.target.name, e.target.checked);
+    };
 
+    Salesforce.prototype.getAccessToken = function (subdomain) {
+
+        var domain = 'https://' + subdomain + '.salesforce.com';
         var clientId = '3MVG9xOCXq4ID1uGbuCfSNW3olnFLJL8Sf2xPkbsYsYqPJrvDAoOE5U_CjIjP3Wv9wsALOpqX9nTPRmcQtPIi';
         var clientSecret = '1271466885282334292';
         var redirectUri = chrome.identity.getRedirectURL('provider_cb');
 
-        if (e.target.checked) {
-            chrome.identity.launchWebAuthFlow({
-                url: 'https://test.salesforce.com/services/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri,
-                interactive: true
-            }, function(redirect_url) {
+        chrome.identity.launchWebAuthFlow({
+            url: domain + '/services/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri,
+            interactive: true
+        }, function(redirect_url) {
 
-                var token;
-                var parser = document.createElement('a');
-                parser.href = redirect_url;
-                parser.search.substr(1).split('&').forEach(function (attribute) {
-                    var pair = attribute.split('=');
-                    if (pair[0] === 'code') {
-                        token = pair[1];
-                    }
-                });
-
-                reqwest({
-                    url: 'https://test.salesforce.com/services/oauth2/token',
-                    method: 'post',
-                    type: 'json',
-                    data: {
-                        code: decodeURIComponent(token),
-                        grant_type: 'authorization_code',
-                        client_id: clientId,
-                        client_secret: clientSecret,
-                        redirect_uri: redirectUri
-                    },
-                    success: function (res) {
-
-                        var auth = res.token_type + ' ' + res.access_token;
-                        var instanceUrl = res.instance_url;
-                        Winston.Storage.set('sf-instanceUrl', instanceUrl);
-
-                        reqwest({
-                            url: instanceUrl + '/services/data',
-                            method: 'get',
-                            type: 'json',
-                            success: function (versions) {
-
-                                // use latest version
-                                var i = versions.length - 1;
-                                var url = versions[i].url;
-
-                                reqwest({
-                                    url: instanceUrl + url + '/sobjects',
-                                    method: 'get',
-                                    type: 'json',
-                                    // data: {
-                                    //     q: 'select Id, DeveloperName, NamespacePrefix From CustomObject'
-                                    // },
-                                    headers: {
-                                        Authorization: auth
-                                    },
-                                    success: function (response) {
-                                        reqwest({
-                                            url: instanceUrl + url + '/tooling/query',
-                                            method: 'get',
-                                            type: 'json',
-                                            data: {
-                                                q: 'SELECT Id, DeveloperName, NamespacePrefix From CustomObject'
-                                            },
-                                            headers: {
-                                                Authorization: auth
-                                            },
-                                            success: function (result) {
-                                                var customObjects = {};
-                                                for (var i = 0; i < result.records.length; i++) {
-                                                    var key = result.records[i].DeveloperName;
-                                                    if (result.records[i].NamespacePrefix) {
-                                                        key = result.records[i].NamespacePrefix + '__' + key;
-                                                    }
-                                                    customObjects[key] = result.records[i].Id;
-                                                }
-                                                console.log(customObjects);
-                                                for (var i = 0; i < response.sobjects.length; i++) {
-                                                    var key = response.sobjects[i].name.replace('__c', '');
-                                                    response.sobjects[i].id = customObjects[key];
-                                                }
-
-                                                Winston.Storage.set('sf-sobjects', response.sobjects);
-                                                console.log(response.sobjects);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+            // get authorization code
+            var authCode;
+            var parser = document.createElement('a');
+            parser.href = redirect_url;
+            parser.search.substr(1).split('&').forEach(function (attribute) {
+                var pair = attribute.split('=');
+                if (pair[0] === 'code') {
+                    authCode = pair[1];
+                }
             });
-        }
+
+            reqwest({
+                url: domain + '/services/oauth2/token',
+                method: 'post',
+                type: 'json',
+                data: {
+                code: decodeURIComponent(authCode),
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    redirect_uri: redirectUri
+                },
+                success: function (res) {
+                    Promise.settle([
+                        Winston.Storage.set('sf-instance-url', res.instance_url),
+                        Winston.Storage.set('sf-access-token', res.token_type + ' ' + res.access_token)
+                    ]).then(function () { alert('Success!'); });
+                }
+            });
+        });
+    };
+
+    Salesforce.prototype.fetchData = function (e) {
+
+        // save option value in storage
+        Promise.settle([
+            Winston.Storage.get('sf-instance-url'),
+            Winston.Storage.get('sf-access-token'),
+        ]).then(function (promises) {
+
+            var sfConfig = [];
+
+            promises.forEach(function (promise) {
+                if (promise.isFulfilled()) {
+                    sfConfig.push(promise.value());
+                }
+            });
+            
+            var instanceUrl = sfConfig[0];
+            var accessToken = sfConfig[1];
+
+            reqwest({
+                url: instanceUrl + '/services/data',
+                method: 'get',
+                type: 'json',
+                success: function (versions) {
+
+                    // use latest version
+                    var i = versions.length - 1;
+                    var url = versions[i].url;
+
+                    reqwest({
+                        url: instanceUrl + url + '/sobjects',
+                        method: 'get',
+                        type: 'json',
+                        // data: {
+                        //     q: 'select Id, DeveloperName, NamespacePrefix From CustomObject'
+                        // },
+                        headers: {
+                            Authorization: accessToken
+                        },
+                        success: function (response) {
+                            reqwest({
+                                url: instanceUrl + url + '/tooling/query',
+                                method: 'get',
+                                type: 'json',
+                                data: {
+                                    q: 'SELECT Id, DeveloperName, NamespacePrefix From CustomObject'
+                                },
+                                headers: {
+                                    Authorization: accessToken
+                                },
+                                success: function (result) {
+                                    var customObjects = {};
+                                    for (var i = 0; i < result.records.length; i++) {
+                                        var key = result.records[i].DeveloperName;
+                                        if (result.records[i].NamespacePrefix) {
+                                            key = result.records[i].NamespacePrefix + '__' + key;
+                                        }
+                                        customObjects[key] = result.records[i].Id;
+                                    }
+
+                                    for (var i = 0; i < response.sobjects.length; i++) {
+                                        var key = response.sobjects[i].name.replace('__c', '');
+                                        response.sobjects[i].id = customObjects[key];
+                                    }
+
+                                    Winston.Storage.set('sf-sobjects', response.sobjects).then(function () {
+                                        alert('Done.');
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
     };
 
     Salesforce.prototype.inputHandler = function (e) {
@@ -1054,6 +1079,8 @@ var Winston = function () {
 
         return commands;
     };
+
+
 
     var SalesforceDocCommand = function (title, url) {
         this.id = 'SFDOC-' + title.replace(' ', '-');

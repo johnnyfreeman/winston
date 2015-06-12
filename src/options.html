@@ -9,7 +9,7 @@
             padding: 1px 10px 10px;
         }
 
-        .button {
+        .float-right {
             float: right;
         }
     </style>
@@ -51,10 +51,23 @@
     </p>
 
     <p>
-        <!-- <button class="button" id="connectSalesforce">Connect to Salesforce</button> -->
         <label>
             <input class="option" name="Salesforce" type="checkbox" value="Salesforce"> Salesforce
         </label>
+        <ol>
+            <li>
+                <select name="subdomain" id="subdomain">
+                    <option value="login">Production</option>
+                    <option value="test">Sandbox</option>
+                </select>
+            </li>
+            <li>
+                <button id="getAccessToken">Get Access Token</button>
+            </li>
+            <li>
+                <button id="fetchData">Fetch Data</button>
+            </li>
+        </ol>
     </p>
 
     <p>
