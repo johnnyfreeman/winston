@@ -344,13 +344,22 @@ var Winston = function () {
     History.prototype.optionChangeHandler = function (e) {
         Winston.Storage.set(e.target.name, e.target.checked);
 
-        if (e.target.checked) {
-            chrome.history.search({text: ''}, function (newHistoryItems) {
-                return Winston.Storage.set(storageKey, newHistoryItems);
-            }); // limits to 100
+        if (!e.target.checked) {
+            Winston.fetchData();
         } else {
             Winston.Storage.set(storageKey, []);
         }
+    };
+
+    History.fetchData = function () {
+        Winston.Storage.get('history-items-count').then(function (count) {
+            chrome.history.search({
+                text: '',
+                maxResults: parseInt(count)
+            }, function (newHistoryItems) {
+                return Winston.Storage.set(storageKey, newHistoryItems);
+            });
+        });
     };
 
     History.prototype.inputHandler = function (e) {

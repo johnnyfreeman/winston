@@ -25,6 +25,10 @@
             text-overflow: ellipsis;
             vertical-align: -5px;
         }
+
+        #historyItemsCount {
+            width: 50px;
+        }
     </style>
 </head>
 
@@ -53,8 +57,16 @@
 
     <p>
         <label>
-            <input class="option" name="History" type="checkbox" value="History"> History (most recent 100)
+            <input class="option" name="History" type="checkbox" value="History"> History
         </label>
+        <ol>
+            <li>
+                Most Recent: <input type="number" id="historyItemsCount" name="history-items-count" value="0">
+            </li>
+            <li>
+                <button id="fetchHistoryData">Fetch History</button>
+            </li>
+        </ol>
     </p>
 
     <p>

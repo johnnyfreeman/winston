@@ -21,29 +21,44 @@ function restore_options() {
 
 document.addEventListener('DOMContentLoaded', restore_options);
 
-var fetchData = document.getElementById('fetchData');
-var subdomain = document.getElementById('subdomain');
-var getAccessToken = document.getElementById('getAccessToken');
+var fetchDataEl = document.getElementById('fetchData');
+var fetchHistoryDataEl = document.getElementById('fetchHistoryData');
+var subdomainEl = document.getElementById('subdomain');
+var getAccessTokenEl = document.getElementById('getAccessToken');
+var accessTokenEl = document.getElementById('accessToken');
+var historyItemsCountEl = document.getElementById('historyItemsCount');
 
-getAccessToken.addEventListener('click', function (e) {
-    Winston.Package.registeredPackages['Salesforce'].getAccessToken(subdomain.value);
+getAccessTokenEl.addEventListener('click', function (e) {
+    Winston.Package.registeredPackages['Salesforce'].getAccessToken(subdomainEl.value);
 });
 
-fetchData.addEventListener('click', function (e) {
+fetchDataEl.addEventListener('click', function (e) {
     Winston.Package.registeredPackages['Salesforce'].fetchData();
 });
 
-subdomain.addEventListener('change', function (e) {
+fetchHistoryDataEl.addEventListener('click', function (e) {
+    Winston.Package.registeredPackages['History'].fetchData();
+});
+
+subdomainEl.addEventListener('change', function (e) {
     Winston.Storage.set('sf-subdomain', e.target.value);
+});
+
+historyItemsCountEl.addEventListener('change', function (e) {
+    Winston.Storage.set('history-items-count', e.target.value);
 });
 
 document.addEventListener('DOMContentLoaded', function (e) {
     Winston.Storage.get('sf-subdomain').then(function (val) {
-        subdomain.value = val;
+        subdomainEl.value = val;
     });
 
     Winston.Storage.get('sf-access-token').then(function (accessToken) {
-        document.getElementById('accessToken').textContent = accessToken;
-        document.getElementById('accessToken').title = accessToken;
+        accessTokenEl.textContent = accessToken;
+        accessTokenEl.title = accessToken;
+    });
+
+    Winston.Storage.get('history-items-count').then(function (count) {
+        historyItemsCountEl.value = count;
     });
 });

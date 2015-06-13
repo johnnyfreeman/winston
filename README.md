@@ -95,7 +95,7 @@ Other (soft) keywords will trigger the youtube package (without using the keywor
 
 ##### History
 
-Search through most recent 100 items in browser history and open url in a new tab. Also, open all history in a new tab by typing "history".
+Search through most recent _X_ number items in browser history and open url in a new tab. Also, open all history in a new tab by typing "history". After enabling the history package, update the number of history items to keep stored in browser storage, then click Fetch History.
 
 ### Planned Packages
 
