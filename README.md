@@ -71,7 +71,7 @@ Other (soft) keywords will trigger the youtube package (without using the keywor
 
 ##### Salesforce
 
-Provides links to documentation articles. After enabling the Salesforce package in [options](chrome://extensions/?options=kkojmlcbloeljojhbmkkjgbjkafgcjom) you will be prompted to enter your sandbox credentials so that Winston can provide you links to jump around common areas.
+Provides links to documentation articles and to common areas in your Salesforce org. After enabling the Salesforce package in [options](chrome://extensions/?options=kkojmlcbloeljojhbmkkjgbjkafgcjom) you will need to get an access token for the salesforce org you want to connect to, then click the Fetch Data button.
 
 * `view [sobject] object`: Open properties for a standard object or custom object
 * `list [sobject] records`: List records for a standard or custom object
