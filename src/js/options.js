@@ -26,9 +26,24 @@ var subdomain = document.getElementById('subdomain');
 var getAccessToken = document.getElementById('getAccessToken');
 
 getAccessToken.addEventListener('click', function (e) {
-    Winston.Package.instantiate('Salesforce').getAccessToken(subdomain.value);
+    Winston.Package.registeredPackages['Salesforce'].getAccessToken(subdomain.value);
 });
 
 fetchData.addEventListener('click', function (e) {
-    Winston.Package.instantiate('Salesforce').fetchData();
+    Winston.Package.registeredPackages['Salesforce'].fetchData();
+});
+
+subdomain.addEventListener('change', function (e) {
+    Winston.Storage.set('sf-subdomain', e.target.value);
+});
+
+document.addEventListener('DOMContentLoaded', function (e) {
+    Winston.Storage.get('sf-subdomain').then(function (val) {
+        subdomain.value = val;
+    });
+
+    Winston.Storage.get('sf-access-token').then(function (accessToken) {
+        document.getElementById('accessToken').textContent = accessToken;
+        document.getElementById('accessToken').title = accessToken;
+    });
 });

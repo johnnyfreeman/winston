@@ -196,12 +196,12 @@
         });
     };
 
-    Salesforce.prototype.optionChangeHandler = function (e) {
+    Salesforce.optionChangeHandler = function (e) {
         // save option value in storage
         Winston.Storage.set(e.target.name, e.target.checked);
     };
 
-    Salesforce.prototype.getAccessToken = function (subdomain) {
+    Salesforce.getAccessToken = function (subdomain) {
 
         var domain = 'https://' + subdomain + '.salesforce.com';
         var clientId = '3MVG9xOCXq4ID1uGbuCfSNW3olnFLJL8Sf2xPkbsYsYqPJrvDAoOE5U_CjIjP3Wv9wsALOpqX9nTPRmcQtPIi';
@@ -239,13 +239,17 @@
                     Promise.settle([
                         Winston.Storage.set('sf-instance-url', res.instance_url),
                         Winston.Storage.set('sf-access-token', res.token_type + ' ' + res.access_token)
-                    ]).then(function () { alert('Success!'); });
+                    ]).then(function () {
+                        alert('Success!');
+                        document.getElementById('accessToken').textContent = res.token_type + ' ' + res.access_token;
+                        document.getElementById('accessToken').title = res.token_type + ' ' + res.access_token;
+                    });
                 }
             });
         });
     };
 
-    Salesforce.prototype.fetchData = function (e) {
+    Salesforce.fetchData = function (e) {
 
         // save option value in storage
         Promise.settle([
@@ -253,19 +257,12 @@
             Winston.Storage.get('sf-access-token'),
         ]).then(function (promises) {
 
-            var sfConfig = [];
-
-            promises.forEach(function (promise) {
-                if (promise.isFulfilled()) {
-                    sfConfig.push(promise.value());
-                }
-            });
-            
-            var instanceUrl = sfConfig[0];
-            var accessToken = sfConfig[1];
+            var config = {};
+            config.instanceUrl = promises[0].value();
+            config.accessToken = promises[1].value();
 
             reqwest({
-                url: instanceUrl + '/services/data',
+                url: config.instanceUrl + '/services/data',
                 method: 'get',
                 type: 'json',
                 success: function (versions) {
@@ -275,25 +272,25 @@
                     var url = versions[i].url;
 
                     reqwest({
-                        url: instanceUrl + url + '/sobjects',
+                        url: config.instanceUrl + url + '/sobjects',
                         method: 'get',
                         type: 'json',
                         // data: {
                         //     q: 'select Id, DeveloperName, NamespacePrefix From CustomObject'
                         // },
                         headers: {
-                            Authorization: accessToken
+                            Authorization: config.accessToken
                         },
                         success: function (response) {
                             reqwest({
-                                url: instanceUrl + url + '/tooling/query',
+                                url: config.instanceUrl + url + '/tooling/query',
                                 method: 'get',
                                 type: 'json',
                                 data: {
                                     q: 'SELECT Id, DeveloperName, NamespacePrefix From CustomObject'
                                 },
                                 headers: {
-                                    Authorization: accessToken
+                                    Authorization: config.accessToken
                                 },
                                 success: function (result) {
                                     var customObjects = {};

@@ -12,6 +12,19 @@
         .float-right {
             float: right;
         }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        #accessToken {
+            display: inline-block;
+            max-width: 160px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: -5px;
+        }
     </style>
 </head>
 
@@ -62,7 +75,8 @@
                 </select>
             </li>
             <li>
-                <button id="getAccessToken">Get Access Token</button>
+                <button id="getAccessToken">Get Access Token</button>&nbsp;
+                <span id="accessToken"></span>
             </li>
             <li>
                 <button id="fetchData">Fetch Data</button>
