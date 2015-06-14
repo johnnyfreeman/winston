@@ -927,14 +927,17 @@ var Winston = function () {
                     client_secret: clientSecret,
                     redirect_uri: redirectUri
                 },
+                error: function (err) {
+                    console.log(err);
+                },
                 success: function (res) {
                     Promise.settle([
                         Winston.Storage.set('sf-instance-url', res.instance_url),
                         Winston.Storage.set('sf-access-token', res.token_type + ' ' + res.access_token)
                     ]).then(function () {
-                        alert('Success!');
                         document.getElementById('accessToken').textContent = res.token_type + ' ' + res.access_token;
                         document.getElementById('accessToken').title = res.token_type + ' ' + res.access_token;
+                        alert('Success!');
                     });
                 }
             });
@@ -957,6 +960,9 @@ var Winston = function () {
                 url: config.instanceUrl + '/services/data',
                 method: 'get',
                 type: 'json',
+                error: function (err) {
+                    console.log(err);
+                },
                 success: function (versions) {
 
                     // use latest version
@@ -972,6 +978,20 @@ var Winston = function () {
                         // },
                         headers: {
                             Authorization: config.accessToken
+                        },
+                        error: function (err) {
+                            if (err.status === 401) {
+                                chrome.identity.removeCachedAuthToken({
+                                    token: config.accessToken
+                                }, function () {
+                                    Winston.Storage.set('sf-access-token', '');
+                                    document.getElementById('accessToken').textContent = '';
+                                    document.getElementById('accessToken').title = '';
+                                    alert('Unauthorized. Access Token removed from cache.');
+                                });
+                            } else {
+                                console.log(err);
+                            }
                         },
                         success: function (response) {
                             reqwest({
