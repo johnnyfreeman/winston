@@ -196,7 +196,7 @@
         });
     };
 
-    Salesforce.optionChangeHandler = function (e) {
+    Salesforce.prototype.optionChangeHandler = function (e) {
         // save option value in storage
         Winston.Storage.set(e.target.name, e.target.checked);
     };

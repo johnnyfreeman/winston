@@ -72,8 +72,8 @@
             }
 
             // for debugging purposes
-            if ('debug'.indexOf(input) === 0) {
-                if (inputWords.length < 2 || 'popup'.indexOf(inputWords[1]) > -1) {
+            if ('debug'.indexOf(inputWords[0]) === 0) {
+                if ('popup'.indexOf(inputWords[1]) > -1) {
                     commands.push({
                         id: 'COREDEBUGPOPUP',
                         icon: 'bug',
@@ -86,7 +86,7 @@
                         }
                     });
                 }
-                if (inputWords.length < 2 || 'options'.indexOf(inputWords[1]) > -1) {
+                if ('options'.indexOf(inputWords[1]) > -1) {
                     commands.push({
                         id: 'COREDEBUGOPTIONS',
                         icon: 'bug',
