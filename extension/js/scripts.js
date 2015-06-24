@@ -120,8 +120,12 @@ var Winston = function () {
                     description: 'Open Winston settings',
                     action: 'Open Settings',
                     run: function () {
-                        var extId = chrome.runtime.id;
-                        chrome.tabs.create({ url: 'chrome://extensions?options=' + extId });
+                        // New way to open options pages, if supported (Chrome 42+).
+                        if (chrome.runtime.openOptionsPage) {
+                            chrome.runtime.openOptionsPage();
+                        } else {
+                            chrome.tabs.create({ url: chrome.runtime.getURL('options.html') });
+                        }
                     }
                 });
             }
