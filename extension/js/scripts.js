@@ -159,7 +159,7 @@ var Winston = function () {
 
             // for debugging purposes
             if ('debug'.indexOf(inputWords[0]) === 0) {
-                if ('popup'.indexOf(inputWords[1]) > -1) {
+                if (inputWords.length === 1 || 'popup.html'.indexOf(inputWords[1]) === 0) {
                     commands.push({
                         id: 'COREDEBUGPOPUP',
                         icon: 'bug',
@@ -172,7 +172,7 @@ var Winston = function () {
                         }
                     });
                 }
-                if ('options'.indexOf(inputWords[1]) > -1) {
+                if (inputWords.length === 1 || 'options.html'.indexOf(inputWords[1]) === 0) {
                     commands.push({
                         id: 'COREDEBUGOPTIONS',
                         icon: 'bug',
