@@ -98,7 +98,7 @@ gulp.task('staticjs', function() {
 });
 
 gulp.task('eventsjs', function() {
-  return gulp.src(['./src/js/winston.js', './src/js/storage.js', './src/js/pkg/history/events.js'])
+  return gulp.src(['./src/js/winston.js', './src/js/storage.js', './src/js/pkg/history/events.js', './src/js/pkg/clipboard/events.js'])
     .pipe(concat('events.js'))
     .pipe(gulp.dest('./extension/js'));
 });

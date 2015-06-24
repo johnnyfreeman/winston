@@ -26,7 +26,8 @@
         "identity",
         "tabs",
         "bookmarks",
-        "clipboardWrite",
+        "clipboardRead",
+        "contextMenus",
         "history",
         "storage"
     ],
@@ -35,7 +36,7 @@
         "js": ["js/content.js"]
     }],
     "background": {
-        "scripts": ["js/events.js"],
+        "page": "background.html",
         "persistent": false
       },
     "options_ui": {

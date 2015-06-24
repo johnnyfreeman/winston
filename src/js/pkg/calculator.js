@@ -20,7 +20,10 @@
                     action: 'Copy To Clipboard',
                     icon: 'calculator',
                     run: function () {
-                        document.execCommand('copy');
+                        chrome.runtime.getBackgroundPage(function (bgPage) {
+                            bgPage.copyToClipboard(result);
+                        });
+                        window.close();
                     }
                 });
             }
