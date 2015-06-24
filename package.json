@@ -1,6 +1,6 @@
 {
   "name": "Winston",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A launcher for the web.",
   "main": "popup.html",
   "dependencies": {},
