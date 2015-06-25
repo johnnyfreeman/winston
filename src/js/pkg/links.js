@@ -18,17 +18,21 @@
         var commands = [];
 
         if (input.length > 0) {
-            this.links.forEach(function (a) {
-                if (a.innerText.indexOf(input.toLowerCase()) > -1) {
+            this.links.forEach(function (a, i) {
+                if (a.innerText.toLowerCase().indexOf(input.toLowerCase()) > -1) {
                     commands.push({
-                        id: 'LINKS',
+                        id: 'LINKS' + i,
                         icon: 'link',
                         title: a.innerText,
                         url: a.href,
                         description: a.href,
                         action: 'Follow Link',
                         run: function () {
-                            chrome.tabs.create({ url: this.url });
+                            var newUrl = this.url;
+                            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                                chrome.tabs.update(tabs[0].id, {url: newUrl });
+                                window.close();
+                            });
                         }
                     });
                 }

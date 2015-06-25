@@ -39,7 +39,7 @@ function getAllLinks() {
     Array.prototype.forEach.call(document.getElementsByTagName('a'), function (a) {
         if (a.innerText.length > 0) {
             links.push({
-                innerText: a.innerText.toLowerCase(),
+                innerText: a.innerText,
                 href: a.href
             });
         }
