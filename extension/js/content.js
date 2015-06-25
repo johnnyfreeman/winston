@@ -33,3 +33,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         insertTextAtCursor(request.data);
     }
 });
+
+function getAllLinks() {
+    var links = [];
+    Array.prototype.forEach.call(document.getElementsByTagName('a'), function (a) {
+        if (a.innerText.length > 0) {
+            links.push({
+                innerText: a.innerText.toLowerCase(),
+                href: a.href
+            });
+        }
+    });
+    return links;
+}
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log('request: ', request);
+    console.log('sender: ', sender);
+    if (request.getAllLinks) {
+        return sendResponse(getAllLinks());
+    }
+});
