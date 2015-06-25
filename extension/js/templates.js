@@ -96,7 +96,7 @@ var App = React.createClass({displayName: "App",
         this.inputHandlers = null;
 
         // enable packages
-        var packages = ['Calculator', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'History', 'StackOverflow', 'Google'];
+        var packages = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'History', 'StackOverflow', 'Google'];
 
         chrome.storage.local.get(packages, function(options) {
             packages.forEach(function (name) {

@@ -20,6 +20,7 @@ var paths = {
             './src/js/pkg/core.js',
             './src/js/pkg/longwait.js',
             './src/js/pkg/bookmarks.js',
+            './src/js/pkg/links.js',
             './src/js/pkg/history/history.js',
             './src/js/pkg/tabs.js',
             './src/js/pkg/calculator.js',
