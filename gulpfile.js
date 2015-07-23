@@ -40,6 +40,17 @@ var paths = {
         static: [
             './src/*.html',
             './src/manifest.json'
+        ],
+        staticjs: [
+            './src/js/options.js',
+            './src/js/popup.js',
+            './src/js/content.js'
+        ],
+        eventjs: [
+            './src/js/winston.js', 
+            './src/js/storage.js', 
+            './src/js/pkg/history/events.js', 
+            './src/js/pkg/clipboard/events.js'
         ]
     },
     vendor: {
@@ -95,12 +106,12 @@ gulp.task('static', function() {
 });
 
 gulp.task('staticjs', function() {
-  return gulp.src(['./src/js/options.js','./src/js/popup.js','./src/js/content.js'])
+  return gulp.src(paths.app.staticjs)
     .pipe(gulp.dest('./extension/js'));
 });
 
 gulp.task('eventsjs', function() {
-  return gulp.src(['./src/js/winston.js', './src/js/storage.js', './src/js/pkg/history/events.js', './src/js/pkg/clipboard/events.js'])
+  return gulp.src(paths.app.eventjs)
     .pipe(concat('events.js'))
     .pipe(gulp.dest('./extension/js'));
 });
@@ -122,3 +133,17 @@ gulp.task('vendorfonts', function() {
 });
 
 gulp.task('default', ['appjs', 'vendorjs', 'staticjs', 'eventsjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus', 'appimg', 'static']);
+
+
+gulp.task('watch', function() {
+  gulp.watch(paths.app.styl, ['stylus']);
+  gulp.watch(paths.app.jsx, ['jsx']);
+  gulp.watch(paths.app.js, ['appjs']);
+  gulp.watch(paths.vendor.js, ['vendorjs']);
+  gulp.watch(paths.app.static, ['static']);
+  gulp.watch(paths.app.staticjs, ['staticjs']);
+  gulp.watch(paths.app.eventjs, ['eventjs']);
+  gulp.watch(paths.app.img, ['appimg']);
+  gulp.watch(paths.vendor.css, ['vendorcss']);
+  gulp.watch(paths.vendor.fonts, ['vendorfonts']);
+});
