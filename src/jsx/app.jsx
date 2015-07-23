@@ -27,7 +27,7 @@ var App = React.createClass({
 
     render: function() {
         return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
-            <Icon name="refresh" spin={this.state.loading} />
+            <Icon name="circle-o-notch" spin={this.state.loading} />
             <SearchBox changeHandler={this.triggerInputHandlers} loading={this.state.loading} ref="searchBox" />
             <ResultsList clickHandler={this.runSelected} data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;

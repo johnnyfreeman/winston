@@ -109,7 +109,7 @@ var App = React.createClass({displayName: "App",
 
     render: function() {
         return React.createElement("div", {onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler}, 
-            React.createElement(Icon, {name: "refresh", spin: this.state.loading}), 
+            React.createElement(Icon, {name: "circle-o-notch", spin: this.state.loading}), 
             React.createElement(SearchBox, {changeHandler: this.triggerInputHandlers, loading: this.state.loading, ref: "searchBox"}), 
             React.createElement(ResultsList, {clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: "resultsList"})
         );

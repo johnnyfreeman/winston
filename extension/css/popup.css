@@ -84,7 +84,7 @@ body {
 .hidden {
   display: none;
 }
-.fa.fa-refresh {
+.fa.fa-circle-o-notch {
   color: #bbb;
   display: none;
   font-size: 20px;
@@ -92,6 +92,6 @@ body {
   top: 10px;
   right: 10px;
 }
-.fa.fa-refresh.fa-spin {
+.fa.fa-circle-o-notch.fa-spin {
   display: inline-block;
 }
