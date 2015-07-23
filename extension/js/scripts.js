@@ -251,8 +251,17 @@ var Winston = function () {
     };
 
     Whine.prototype.inputHandler = function (e) {
-        throw new Error('Whine package threw this (on purpose) from it\'s inputHandler');
+        throw new WhineException();
     };
+
+    var WhineException = function () {
+        this.name = 'WhineException';
+        this.message = 'Nothing is actually wrong. Carry on.';
+    }
+
+    WhineException.prototype.toString = function () {
+        return this.message;
+    }
 
     Winston.Package.register('Whine', Whine);
 })(Winston);
