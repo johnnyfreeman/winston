@@ -19,6 +19,7 @@ var paths = {
             './src/js/storage.js',
             './src/js/pkg/core.js',
             './src/js/pkg/longwait.js',
+            './src/js/pkg/whine.js',
             './src/js/pkg/bookmarks.js',
             './src/js/pkg/links.js',
             './src/js/pkg/history/history.js',
