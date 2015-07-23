@@ -198,7 +198,11 @@ var App = React.createClass({displayName: "App",
         var enabledPackages = Winston.Package.enabledPackages;
         var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
         enabledPackageNames.forEach(function (name, i) {
-            promises.push(enabledPackages[name].inputHandler(e));
+            try {
+                promises.push(enabledPackages[name].inputHandler(e));
+            } catch (error) {
+                app.errorHandler(error, name);
+            }
         });
 
         // when all promises are fulfilled
@@ -228,11 +232,13 @@ var App = React.createClass({displayName: "App",
         })
 
         // error handler
-        .catch(function (error) {
-            if (error.name !== 'CancellationError') {
-                console.error(error);
-            }
-        });
+        .catch(this.errorHandler);
+    },
+
+    errorHandler: function (error) {
+        if (error.name !== 'CancellationError') {
+            console.error(error);
+        }
     },
 
     debounce: function (func, wait, immediate) {
