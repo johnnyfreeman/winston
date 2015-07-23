@@ -116,6 +116,8 @@ var App = React.createClass({
         var enabledPackages = Winston.Package.enabledPackages;
         var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
         enabledPackageNames.forEach(function (name, i) {
+            // allow Winston to move on to other package 
+            // inputHandlers if one fails for some reason
             try {
                 promises.push(enabledPackages[name].inputHandler(e));
             } catch (error) {
