@@ -1,73 +1,73 @@
-(function (Winston) {
-    var Youtube = function () {
-        // hard keywords are stripped from the query
-        this.hardKeywords = ['video', 'youtube'];
-        this.softKeywords = ['cover', 'movie', 'music', 'trailer', 'tutorial', 'how'];
-    };
 
-    Youtube.prototype.optionChangeHandler = function (e) {
-        return Winston.Storage.set(e.target.name, e.target.checked);
-    };
+var Youtube = function () {
+    // hard keywords are stripped from the query
+    this.hardKeywords = ['video', 'youtube'];
+    this.softKeywords = ['cover', 'movie', 'music', 'trailer', 'tutorial', 'how'];
+};
 
-    Youtube.prototype.inputHandler = function (e) {
-        var input = e.target.value;
-        var commands = [];
-        var youtube = this;
+Youtube.prototype.optionChangeHandler = function (e) {
+    return Winston.Storage.set(e.target.name, e.target.checked);
+};
 
-        if (input.length > 0) {
-            this.hardKeywords.concat(this.softKeywords).forEach(function (keyword, keywordIndex) {
-                var inputWords = input.trim().split(' ');
-                var query = input;
+Youtube.prototype.inputHandler = function (e) {
+    var input = e.target.value;
+    var commands = [];
+    var youtube = this;
 
-                inputWords.forEach(function (inputWord, inputWordIndex) {
-                    var matchesKeyword = keyword.indexOf(inputWord) === 0;
+    if (input.length > 0) {
+        this.hardKeywords.concat(this.softKeywords).forEach(function (keyword, keywordIndex) {
+            var inputWords = input.trim().split(' ');
+            var query = input;
 
-                    // continue to next inputWord if this doesn't match the current keyword
-                    if (!matchesKeyword) return;
+            inputWords.forEach(function (inputWord, inputWordIndex) {
+                var matchesKeyword = keyword.indexOf(inputWord) === 0;
 
-                    // remove hard keywords
-                    if (youtube.hardKeywords.indexOf(keyword) > -1) {
-                        query = query.replace(inputWord, '').trim();
-                    }
+                // continue to next inputWord if this doesn't match the current keyword
+                if (!matchesKeyword) return;
 
-                    // replace soft keywords
-                    query = query.replace(inputWord, keyword);
+                // remove hard keywords
+                if (youtube.hardKeywords.indexOf(keyword) > -1) {
+                    query = query.replace(inputWord, '').trim();
+                }
 
-                    if (query.length > 0) {
-                        commands.push(new YoutubeSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
-                    } else {
-                        commands.push(new YoutubeHomeCommand());
-                    }
-                });
+                // replace soft keywords
+                query = query.replace(inputWord, keyword);
+
+                if (query.length > 0) {
+                    commands.push(new YoutubeSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
+                } else {
+                    commands.push(new YoutubeHomeCommand());
+                }
             });
-        }
+        });
+    }
 
-        return commands;
-    };
+    return commands;
+};
 
-    var YoutubeHomeCommand = function () {
-        this.id = 'YOUTUBEHOME';
-        this.icon = 'youtube';
-        this.action = 'Open Site';
-        this.title = 'YouTube.com';
-        this.description = 'YouTube: Open YouTube.com';
-    };
+var YoutubeHomeCommand = function () {
+    this.id = 'YOUTUBEHOME';
+    this.icon = 'youtube';
+    this.action = 'Open Site';
+    this.title = 'YouTube.com';
+    this.description = 'YouTube: Open YouTube.com';
+};
 
-    YoutubeHomeCommand.prototype.run = function () {
-        chrome.tabs.create({ url: 'https://www.youtube.com/' });
-    };
+YoutubeHomeCommand.prototype.run = function () {
+    chrome.tabs.create({ url: 'https://www.youtube.com/' });
+};
 
-    var YoutubeSearchCommand = function (query, i) {
-        this.id = 'YOUTUBE' + i;
-        this.query = query;
-        this.icon = 'youtube';
-        this.action = 'Search YouTube';
-        this.title = 'YouTube "' + this.query + '"';
-        this.description = 'YouTube: Open YouTube search results';
-    };
+var YoutubeSearchCommand = function (query, i) {
+    this.id = 'YOUTUBE' + i;
+    this.query = query;
+    this.icon = 'youtube';
+    this.action = 'Search YouTube';
+    this.title = 'YouTube "' + this.query + '"';
+    this.description = 'YouTube: Open YouTube search results';
+};
 
-    YoutubeSearchCommand.prototype.run = function () {
-        chrome.tabs.create({ url: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(this.query) });
-    };
-    Winston.Package.register('YouTube', Youtube);
-})(Winston);
+YoutubeSearchCommand.prototype.run = function () {
+    chrome.tabs.create({ url: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(this.query) });
+};
+
+module.exports = Youtube;

@@ -1,40 +1,30 @@
-(function (Winston) {
-    var Storage = {};
+var Bluebird = require('bluebird');
 
-    Storage.set = function (key, value) {
-        return new Promise(function (resolve, reject) {
-            option = {};
+module.exports = {
+
+    set: function (key, value) {
+        return new Bluebird(function (resolve, reject) {
+            var option = {};
             option[key] = value;
             chrome.storage.local.set(option, resolve);
         });
-    };
+    },
 
-    Storage.get = function (key) {
-        return new Promise(function (resolve, reject) {
-            chrome.storage.local.get(key, function (options) {
-                resolve(options[key]);
-            });
+    get: function (key) {
+        return new Bluebird(function (resolve, reject) {
+            chrome.storage.local.get(key, resolve);
         });
-    };
+    },
 
-
-    Storage.getAll = function () {
-        return new Promise(function (resolve, reject) {
-            chrome.storage.local.get(null, resolve);
-        });
-    };
-
-    Storage.remove = function (key) {
-        return new Promise(function (resolve, reject) {
+    remove: function (key) {
+        return new Bluebird(function (resolve, reject) {
             chrome.storage.local.remove(key, resolve);
         });
-    };
+    },
 
-    Storage.removeAll = function (key) {
-        return new Promise(function (resolve, reject) {
+    removeAll: function (key) {
+        return new Bluebird(function (resolve, reject) {
             chrome.storage.local.clear(resolve);
         });
-    };
-
-    Winston.Storage = Storage;
-})(Winston);
+    }
+};

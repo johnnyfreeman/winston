@@ -1,1 +1,3 @@
-var winston = new Winston();
+var Winston = require('./winston.js');
+
+new Winston();

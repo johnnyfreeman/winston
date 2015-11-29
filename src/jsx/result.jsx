@@ -1,4 +1,8 @@
-var Result = React.createClass({
+var React = require('react'),
+    classNames = require('classnames'),
+    Icon = require('./icon.jsx');
+
+module.exports =  React.createClass({
 
     propTypes: {
         title: React.PropTypes.string,
@@ -10,7 +14,7 @@ var Result = React.createClass({
 
     render: function() {
 
-        var classes = React.addons.classSet({
+        var classes = classNames({
             result: true,
             selected: this.props.selected
         });

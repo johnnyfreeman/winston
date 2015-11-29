@@ -1,7 +1,27 @@
+var PackageManager = require('./package-manager.js');
+var Storage = require('./storage.js');
+
+
+// register packages
+PackageManager.register('Core', require('./pkg/core.js'));
+PackageManager.register('Bookmarks', require('./pkg/bookmarks.js'));
+PackageManager.register('Calculator', require('./pkg/calculator.js'));
+PackageManager.register('Google', require('./pkg/google.js'));
+PackageManager.register('Links', require('./pkg/links.js'));
+PackageManager.register('Longwait', require('./pkg/longwait.js'));
+PackageManager.register('Pinterest', require('./pkg/pinterest.js'));
+PackageManager.register('Salesforce', require('./pkg/salesforce.js'));
+PackageManager.register('StackOverflow', require('./pkg/stackoverflow.js'));
+PackageManager.register('Tabs', require('./pkg/tabs.js'));
+PackageManager.register('Whine', require('./pkg/whine.js'));
+PackageManager.register('YouTube', require('./pkg/youtube.js'));
+PackageManager.register('History', require('./pkg/history/history.js'));
+
+
 var forEach = Array.prototype.forEach;
 
 function saveOption(e) {
-    return Winston.Package.instantiate(e.target.name).optionChangeHandler(e);
+    return PackageManager.instantiate(e.target.name).optionChangeHandler(e);
 }
 
 forEach.call(document.getElementsByClassName('option'), function (option) {
@@ -11,7 +31,7 @@ forEach.call(document.getElementsByClassName('option'), function (option) {
 function restore_options() {
     var elements = document.getElementsByClassName('option');
 
-    Winston.Storage.getAll().then(function (options) {
+    Storage.get(null).then(function (options) {
         forEach.call(elements, function (el) {
             var name = el.name;
             el.checked = options[name];
@@ -29,36 +49,36 @@ var accessTokenEl = document.getElementById('accessToken');
 var historyItemsCountEl = document.getElementById('historyItemsCount');
 
 getAccessTokenEl.addEventListener('click', function (e) {
-    Winston.Package.registeredPackages['Salesforce'].getAccessToken(subdomainEl.value);
+    PackageManager.registeredPackages['Salesforce'].getAccessToken(subdomainEl.value);
 });
 
 fetchDataEl.addEventListener('click', function (e) {
-    Winston.Package.registeredPackages['Salesforce'].fetchData();
+    PackageManager.registeredPackages['Salesforce'].fetchData();
 });
 
 fetchHistoryDataEl.addEventListener('click', function (e) {
-    Winston.Package.registeredPackages['History'].fetchData();
+    PackageManager.registeredPackages['History'].fetchData();
 });
 
 subdomainEl.addEventListener('change', function (e) {
-    Winston.Storage.set('sf-subdomain', e.target.value);
+    Storage.set('sf-subdomain', e.target.value);
 });
 
 historyItemsCountEl.addEventListener('change', function (e) {
-    Winston.Storage.set('history-items-count', e.target.value);
+    Storage.set('history-items-count', e.target.value);
 });
 
 document.addEventListener('DOMContentLoaded', function (e) {
-    Winston.Storage.get('sf-subdomain').then(function (val) {
-        subdomainEl.value = val;
+    Storage.get('sf-subdomain').then(function (options) {
+        subdomainEl.value = options['sf-subdomain'];
     });
 
-    Winston.Storage.get('sf-access-token').then(function (accessToken) {
-        accessTokenEl.textContent = accessToken;
-        accessTokenEl.title = accessToken;
+    Storage.get('sf-access-token').then(function (options) {
+        accessTokenEl.textContent = options['sf-access-token'];
+        accessTokenEl.title = options['sf-access-token'];
     });
 
-    Winston.Storage.get('history-items-count').then(function (count) {
-        historyItemsCountEl.value = count;
+    Storage.get('history-items-count').then(function (options) {
+        historyItemsCountEl.value = options['history-items-count'];
     });
 });

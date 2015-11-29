@@ -1,74 +1,73 @@
-(function (Winston) {
-    var StackOverflow = function () {
-        // hard keywords are stripped from the query
-        this.hardKeywords = ['stackoverflow'];
-        this.softKeywords = ['issue', 'exception', 'error'];
-    };
 
-    StackOverflow.prototype.optionChangeHandler = function (e) {
-        return Winston.Storage.set(e.target.name, e.target.checked);
-    };
+var StackOverflow = function () {
+    // hard keywords are stripped from the query
+    this.hardKeywords = ['stackoverflow'];
+    this.softKeywords = ['issue', 'exception', 'error'];
+};
 
-    StackOverflow.prototype.inputHandler = function (e) {
-        var input = e.target.value;
-        var commands = [];
-        var so = this;
+StackOverflow.prototype.optionChangeHandler = function (e) {
+    return Winston.Storage.set(e.target.name, e.target.checked);
+};
 
-        if (input.length > 0) {
-            so.hardKeywords.concat(so.softKeywords).forEach(function (keyword, keywordIndex) {
-                var inputWords = input.trim().split(' ');
-                var query = input;
+StackOverflow.prototype.inputHandler = function (e) {
+    var input = e.target.value;
+    var commands = [];
+    var so = this;
 
-                inputWords.forEach(function (inputWord, inputWordIndex) {
-                    var matchesKeyword = keyword.indexOf(inputWord) === 0;
+    if (input.length > 0) {
+        so.hardKeywords.concat(so.softKeywords).forEach(function (keyword, keywordIndex) {
+            var inputWords = input.trim().split(' ');
+            var query = input;
 
-                    // continue to next inputWord if this doesn't match the current keyword
-                    if (!matchesKeyword) return;
+            inputWords.forEach(function (inputWord, inputWordIndex) {
+                var matchesKeyword = keyword.indexOf(inputWord) === 0;
 
-                    // remove hard keywords
-                    if (so.hardKeywords.indexOf(keyword) > -1) {
-                        query = query.replace(inputWord, '').trim();
-                    }
+                // continue to next inputWord if this doesn't match the current keyword
+                if (!matchesKeyword) return;
 
-                    // replace soft keywords
-                    query = query.replace(inputWord, keyword);
+                // remove hard keywords
+                if (so.hardKeywords.indexOf(keyword) > -1) {
+                    query = query.replace(inputWord, '').trim();
+                }
 
-                    if (query.length > 0) {
-                        commands.push(new StackOverflowSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
-                    } else {
-                        commands.push(new StackOverflowHomeCommand());
-                    }
-                });
+                // replace soft keywords
+                query = query.replace(inputWord, keyword);
+
+                if (query.length > 0) {
+                    commands.push(new StackOverflowSearchCommand(query, keywordIndex.toString() + inputWordIndex.toString()));
+                } else {
+                    commands.push(new StackOverflowHomeCommand());
+                }
             });
-        }
+        });
+    }
 
-        return commands;
-    };
+    return commands;
+};
 
-    var StackOverflowHomeCommand = function () {
-        this.id = 'SOHOME';
-        this.icon = 'stack-overflow';
-        this.action = 'Open Site';
-        this.title = 'StackOverflow.com';
-        this.description = 'StackOverflow: Open StackOverflow.com';
-    };
+var StackOverflowHomeCommand = function () {
+    this.id = 'SOHOME';
+    this.icon = 'stack-overflow';
+    this.action = 'Open Site';
+    this.title = 'StackOverflow.com';
+    this.description = 'StackOverflow: Open StackOverflow.com';
+};
 
-    StackOverflowHomeCommand.prototype.run = function () {
-        chrome.tabs.create({ url: 'https://stackoverflow.com/' });
-    };
+StackOverflowHomeCommand.prototype.run = function () {
+    chrome.tabs.create({ url: 'https://stackoverflow.com/' });
+};
 
-    var StackOverflowSearchCommand = function (query, i) {
-        this.id = 'SO' + i;
-        this.query = query;
-        this.icon = 'stack-overflow';
-        this.action = 'Search StackOverflow';
-        this.title = 'StackOverflow "' + this.query + '"';
-        this.description = 'StackOverflow: Open StackOverflow search results';
-    };
+var StackOverflowSearchCommand = function (query, i) {
+    this.id = 'SO' + i;
+    this.query = query;
+    this.icon = 'stack-overflow';
+    this.action = 'Search StackOverflow';
+    this.title = 'StackOverflow "' + this.query + '"';
+    this.description = 'StackOverflow: Open StackOverflow search results';
+};
 
-    StackOverflowSearchCommand.prototype.run = function () {
-        chrome.tabs.create({ url: 'https://stackoverflow.com/search?q=' + encodeURIComponent(this.query) });
-    };
+StackOverflowSearchCommand.prototype.run = function () {
+    chrome.tabs.create({ url: 'https://stackoverflow.com/search?q=' + encodeURIComponent(this.query) });
+};
 
-    Winston.Package.register('StackOverflow', StackOverflow);
-})(Winston);
+module.exports = StackOverflow;

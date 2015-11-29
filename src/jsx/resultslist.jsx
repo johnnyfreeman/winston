@@ -1,4 +1,7 @@
-var ResultsList = React.createClass({
+var React = require('react'),
+    Result = require('./result.jsx');
+
+module.exports =  React.createClass({
 
     propTypes: {
         data: React.PropTypes.array,

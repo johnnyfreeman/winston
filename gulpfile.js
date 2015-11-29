@@ -1,36 +1,18 @@
+'use strict';
+
 var gulp = require('gulp');
-var react = require('gulp-react');
+var browserify = require('browserify');
+var babelify = require("babelify");
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var uglify = require('gulp-uglify');
+var sourcemaps = require('gulp-sourcemaps');
+var gutil = require('gulp-util');
 var stylus = require('gulp-stylus');
 var concat = require('gulp-concat');
 
 var paths = {
     app: {
-        jsx: [
-            './src/jsx/icon.jsx',
-            './src/jsx/result.jsx',
-            './src/jsx/resultslist.jsx',
-            './src/jsx/searchbox.jsx',
-            './src/jsx/app.jsx',
-            './src/jsx/popup.jsx'
-        ],
-        js: [
-            './src/js/winston.js',
-            './src/js/package.js',
-            './src/js/storage.js',
-            './src/js/pkg/core.js',
-            './src/js/pkg/longwait.js',
-            './src/js/pkg/whine.js',
-            './src/js/pkg/bookmarks.js',
-            './src/js/pkg/links.js',
-            './src/js/pkg/history/history.js',
-            './src/js/pkg/tabs.js',
-            './src/js/pkg/calculator.js',
-            './src/js/pkg/youtube.js',
-            './src/js/pkg/pinterest.js',
-            './src/js/pkg/salesforce.js',
-            './src/js/pkg/stackoverflow.js',
-            './src/js/pkg/google.js'
-        ],
         img: [
             './src/img/**/*.png'
         ],
@@ -41,11 +23,6 @@ var paths = {
             './src/*.html',
             './src/manifest.json'
         ],
-        staticjs: [
-            './src/js/options.js',
-            './src/js/popup.js',
-            './src/js/content.js'
-        ],
         eventjs: [
             './src/js/winston.js', 
             './src/js/storage.js', 
@@ -54,23 +31,16 @@ var paths = {
         ]
     },
     vendor: {
-        js: [
-            './bower_components/bluebird/js/browser/bluebird.js',
-            './bower_components/react/react-with-addons.js',
-            './bower_components/fuse.js/src/fuse.js',
-            './bower_components/reqwest/reqwest.js',
-            './bower_components/mathjs/dist/math.js'
-        ],
         css: [
-            './bower_components/fontawesome/css/font-awesome.min.css'
+            './node_modules/font-awesome/css/font-awesome.min.css'
         ],
         fonts: [
-            './bower_components/fontawesome/fonts/fontawesome-webfont.eot',
-            './bower_components/fontawesome/fonts/fontawesome-webfont.svg',
-            './bower_components/fontawesome/fonts/fontawesome-webfont.ttf',
-            './bower_components/fontawesome/fonts/fontawesome-webfont.woff',
-            './bower_components/fontawesome/fonts/fontawesome-webfont.woff2',
-            './bower_components/fontawesome/fonts/FontAwesome.otf'
+            './node_modules/font-awesome/fonts/fontawesome-webfont.eot',
+            './node_modules/font-awesome/fonts/fontawesome-webfont.svg',
+            './node_modules/font-awesome/fonts/fontawesome-webfont.ttf',
+            './node_modules/font-awesome/fonts/fontawesome-webfont.woff',
+            './node_modules/font-awesome/fonts/fontawesome-webfont.woff2',
+            './node_modules/font-awesome/fonts/FontAwesome.otf'
         ]
     }
 };
@@ -81,33 +51,69 @@ gulp.task('stylus', function () {
     .pipe(gulp.dest('./extension/css'));
 });
 
-gulp.task('jsx', function () {
-    return gulp.src(paths.app.jsx)
-        .pipe(react({harmony: true}))
-        .pipe(concat('templates.js'))
-        .pipe(gulp.dest('./extension/js'));
+gulp.task('popupjs', function () {
+  return browserify({
+      entries: './src/js/popup.js',
+      debug: true
+    })
+    .transform(babelify, {presets: ['es2015', 'react']})
+    .bundle()
+    .pipe(source('popup.js'))
+
+    // because some gulp plugins don't support streams,
+    // but do support buffers
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+        // Add transformation tasks to the pipeline here.
+        // .pipe(uglify())
+        .on('error', gutil.log)
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./extension/js/'));
 });
 
-gulp.task('appjs', function() {
-  return gulp.src(paths.app.js)
-    .pipe(concat('scripts.js'))
-    .pipe(gulp.dest('./extension/js'));
+gulp.task('optionsjs', function () {
+  return browserify({
+      entries: './src/js/options.js',
+      debug: true
+    })
+    .transform(babelify, {presets: ['es2015', 'react']})
+    .bundle()
+    .pipe(source('options.js'))
+
+    // because some gulp plugins don't support streams,
+    // but do support buffers
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+        // Add transformation tasks to the pipeline here.
+        // .pipe(uglify())
+        .on('error', gutil.log)
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./extension/js/'));
 });
 
-gulp.task('vendorjs', function() {
-  return gulp.src(paths.vendor.js)
-    .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('./extension/js'));
+gulp.task('contentjs', function () {
+  return browserify({
+      entries: './src/js/content.js',
+      debug: true
+    })
+    .transform(babelify, {presets: ['es2015', 'react']})
+    .bundle()
+    .pipe(source('content.js'))
+
+    // because some gulp plugins don't support streams,
+    // but do support buffers
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+        // Add transformation tasks to the pipeline here.
+        // .pipe(uglify())
+        .on('error', gutil.log)
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./extension/js/'));
 });
 
 gulp.task('static', function() {
   return gulp.src(paths.app.static)
     .pipe(gulp.dest('./extension'));
-});
-
-gulp.task('staticjs', function() {
-  return gulp.src(paths.app.staticjs)
-    .pipe(gulp.dest('./extension/js'));
 });
 
 gulp.task('eventsjs', function() {
@@ -127,23 +133,20 @@ gulp.task('vendorcss', function() {
     .pipe(gulp.dest('./extension/css'));
 });
 
-gulp.task('vendorfonts', function() {
+gulp.task('fonts', function() {
   return gulp.src(paths.vendor.fonts)
     .pipe(gulp.dest('./extension/fonts'));
 });
 
-gulp.task('default', ['appjs', 'vendorjs', 'staticjs', 'eventsjs', 'vendorcss', 'vendorfonts', 'jsx', 'stylus', 'appimg', 'static']);
+gulp.task('default', ['popupjs', 'optionsjs', 'contentjs', 'eventsjs', 'vendorcss', 'fonts', 'stylus', 'appimg', 'static']);
 
 
 gulp.task('watch', function() {
   gulp.watch(paths.app.styl, ['stylus']);
-  gulp.watch(paths.app.jsx, ['jsx']);
-  gulp.watch(paths.app.js, ['appjs']);
   gulp.watch(paths.vendor.js, ['vendorjs']);
   gulp.watch(paths.app.static, ['static']);
-  gulp.watch(paths.app.staticjs, ['staticjs']);
   gulp.watch(paths.app.eventjs, ['eventjs']);
   gulp.watch(paths.app.img, ['appimg']);
   gulp.watch(paths.vendor.css, ['vendorcss']);
-  gulp.watch(paths.vendor.fonts, ['vendorfonts']);
+  gulp.watch(paths.vendor.fonts, ['fonts']);
 });

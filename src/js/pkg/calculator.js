@@ -1,36 +1,37 @@
-(function (Winston) {
-    var Calculator = function () {};
+var math = require('mathjs');
 
-    Calculator.prototype.optionChangeHandler = function (e) {
-        return Winston.Storage.set(e.target.name, e.target.checked);
-    };
+var Calculator = function () {};
 
-    Calculator.prototype.inputHandler = function (e) {
-        var commands = [];
-        var input = e.target.value;
-        var result;
+Calculator.prototype.optionChangeHandler = function (e) {
+    return Winston.Storage.set(e.target.name, e.target.checked);
+};
 
-        try {
-            result = math.format(math.eval(input), 2);
-            if (result !== 'undefined' && result !== 'function') {
-                commands.push({
-                    id: 'CALCULATOR1',
-                    title: result,
-                    description: "Copy '" + result + "' to your clipboard",
-                    action: 'Copy To Clipboard',
-                    icon: 'calculator',
-                    run: function () {
-                        chrome.runtime.getBackgroundPage(function (bgPage) {
-                            bgPage.copyToClipboard(result);
-                        });
-                        window.close();
-                    }
-                });
-            }
-        } catch(e) {}
+Calculator.prototype.inputHandler = function (e) {
+    var commands = [];
+    var input = e.target.value;
+    var result;
 
-        return commands;
-    };
+    try {
+        result = math.format(math.eval(input), 2);
+        console.log(result);
+        if (result !== 'undefined' && result !== 'function') {
+            commands.push({
+                id: 'CALCULATOR1',
+                title: result,
+                description: "Copy '" + result + "' to your clipboard",
+                action: 'Copy To Clipboard',
+                icon: 'calculator',
+                run: function () {
+                    chrome.runtime.getBackgroundPage(function (bgPage) {
+                        bgPage.copyToClipboard(result);
+                    });
+                    window.close();
+                }
+            });
+        }
+    } catch(e) {}
 
-    Winston.Package.register('Calculator', Calculator);
-})(Winston);
+    return commands;
+};
+
+module.exports = Calculator;

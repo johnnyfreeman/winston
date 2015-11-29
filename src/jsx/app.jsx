@@ -1,4 +1,21 @@
-var App = React.createClass({
+var React = require('react'),
+    ReactDOM = require('react-dom'),
+    Icon = require('./icon.jsx'),
+    SearchBox = require('./searchbox.jsx'),
+    ResultsList = require('./resultslist.jsx'),
+    PackageManager = require('../js/package-manager.js'),
+    Bluebird = require('bluebird');
+
+Bluebird.config({
+    // Enable warnings.
+    warnings: true,
+    // Enable long stack traces.
+    longStackTraces: true,
+    // Enable cancellation.
+    cancellation: true
+});
+
+module.exports = React.createClass({
 
     getInitialState: function() {
         return {
@@ -10,19 +27,7 @@ var App = React.createClass({
 
     componentDidMount: function() {
         var app = this;
-        var searchInput = this.refs.searchBox.getDOMNode();
         this.inputHandlers = null;
-
-        // enable packages
-        var packages = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'History', 'StackOverflow', 'Google'];
-
-        chrome.storage.local.get(packages, function(options) {
-            packages.forEach(function (name) {
-                if (options[name] == true) {
-                    Winston.Package.enable(name, searchInput);
-                }
-            });
-        });
     },
 
     render: function() {
@@ -76,7 +81,7 @@ var App = React.createClass({
             i = i + 1;
             this.setState({ selectedIndex: i });
             // update scroll position of resultsList
-            this.refs.resultsList.getDOMNode().childNodes[i].scrollIntoViewIfNeeded(false);
+            ReactDOM.findDOMNode(this.refs.resultsList).childNodes[i].scrollIntoViewIfNeeded(false);
         }
     },
 
@@ -87,7 +92,7 @@ var App = React.createClass({
             i = i - 1;
             this.setState({ selectedIndex: i });
             // update scroll position of resultsList
-            var resultsNode = this.refs.resultsList.getDOMNode();
+            var resultsNode = ReactDOM.findDOMNode(this.refs.resultsList);
             var selectedNode = resultsNode.childNodes[i];
             if (resultsNode.scrollTop > selectedNode.offsetTop)
                 resultsNode.scrollTop = selectedNode.offsetTop;
@@ -113,8 +118,8 @@ var App = React.createClass({
         // execute all package inputHandlers side by side
         // and build array of the returned promises
         var promises = [];
-        var enabledPackages = Winston.Package.enabledPackages;
-        var enabledPackageNames = Object.keys(Winston.Package.enabledPackages);
+        var enabledPackages = PackageManager.enabledPackages;
+        var enabledPackageNames = Object.keys(PackageManager.enabledPackages);
         enabledPackageNames.forEach(function (name, i) {
             // allow Winston to move on to other package 
             // inputHandlers if one fails for some reason
@@ -126,15 +131,14 @@ var App = React.createClass({
         });
 
         // when all promises are fulfilled
-        this.inputHandlers = Promise.settle(promises)
-
-        // mark as cancellable
-        .cancellable()
+        this.inputHandlers = Bluebird.all(promises)
 
         // combine package commands together
         .then(function (results) {
             var commands = [];
             results.forEach(function (result) {
+                // normalize each return result as a promise
+                var result = Bluebird.resolve(result);
                 if (result.isFulfilled()) {
                     commands = commands.concat(result.value());
                 }
@@ -152,7 +156,7 @@ var App = React.createClass({
         })
 
         // error handler
-        .catch(this.errorHandler);
+        // .catch(this.errorHandler);
     },
 
     errorHandler: function (error) {

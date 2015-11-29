@@ -1,8 +1,11 @@
-var SearchBox = React.createClass({
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+module.exports =  React.createClass({
 
     // focus on input field after component mounts
     componentDidMount: function() {
-        this.refs.input.getDOMNode().focus();
+        ReactDOM.findDOMNode(this.refs.input).focus();
     },
 
     // render view

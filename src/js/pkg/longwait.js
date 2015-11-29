@@ -1,17 +1,18 @@
-(function (Winston) {
-    var LongWait = function () {};
+var Bluebird = require('bluebird'),
+    Storage = require('../storage.js');
 
-    LongWait.prototype.optionChangeHandler = function (e) {
-        return Winston.Storage.set(e.target.name, e.target.checked);
-    };
+var LongWait = function () {};
 
-    LongWait.prototype.inputHandler = function (e) {
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                resolve([]);
-            }, 1500);
-        });
-    };
+LongWait.prototype.optionChangeHandler = function (e) {
+    return Storage.set(e.target.name, e.target.checked);
+};
 
-    Winston.Package.register('LongWait', LongWait);
-})(Winston);
+LongWait.prototype.inputHandler = function (e) {
+    return new Bluebird(function (resolve, reject) {
+        setTimeout(function () {
+            resolve([]);
+        }, 1500);
+    });
+};
+
+module.exports = LongWait;
