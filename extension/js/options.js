@@ -75027,7 +75027,6 @@ Calculator.prototype.inputHandler = function (e) {
 
     try {
         result = math.format(math.eval(input), 2);
-        console.log(result);
         if (result !== 'undefined' && result !== 'function') {
             commands.push({
                 id: 'CALCULATOR1',
