@@ -1,8 +1,4 @@
 {
-  "name": "Winston",
-  "version": "0.0.8",
-  "description": "A launcher for the web.",
-  "main": "popup.html",
   "dependencies": {
     "bluebird": "^3.0.5",
     "classnames": "^2.2.1",
@@ -26,19 +22,6 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/johnnyfreeman/winston.git"
-  },
-  "keywords": [
-    "launcher"
-  ],
-  "author": "Johnny Freeman",
-  "bugs": {
-    "url": "https://github.com/johnnyfreeman/winston/issues"
-  },
-  "homepage": "https://github.com/johnnyfreeman/winston"
+  "license": "UNLICENSED",
+  "private": true
 }
