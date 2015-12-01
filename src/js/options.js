@@ -1,5 +1,6 @@
 var PackageManager = require('./package-manager.js');
 var Storage = require('./storage.js');
+var qwery = require('qwery');
 
 
 // register packages
@@ -16,6 +17,7 @@ PackageManager.register('Tabs', require('./pkg/tabs.js'));
 PackageManager.register('Whine', require('./pkg/whine.js'));
 PackageManager.register('YouTube', require('./pkg/youtube.js'));
 PackageManager.register('History', require('./pkg/history/history.js'));
+PackageManager.register('Twitch', require('./pkg/twitch.js'));
 
 
 var forEach = Array.prototype.forEach;
@@ -41,24 +43,39 @@ function restore_options() {
 
 document.addEventListener('DOMContentLoaded', restore_options);
 
-var fetchDataEl = document.getElementById('fetchData');
-var fetchHistoryDataEl = document.getElementById('fetchHistoryData');
-var subdomainEl = document.getElementById('subdomain');
-var getAccessTokenEl = document.getElementById('getAccessToken');
-var accessTokenEl = document.getElementById('accessToken');
+var salesforceEl = qwery('#salesforce')[0];
+var twitchEl = qwery('#twitch')[0];
+var historyEl = qwery('#history')[0];
+
+var handleClicksFor = function (packageName) {
+    return function (e) {
+        var target = e.target;
+        var pkg = PackageManager.registeredPackages[packageName];
+
+        // get access token
+        if (target.className.indexOf('get-access-token') > -1) {
+            pkg.getAccessToken();
+        }
+
+        // fetch data
+        if (target.className.indexOf('fetch-data') > -1) {
+            pkg.fetchData();
+        }
+    }
+}
+
+salesforceEl.addEventListener('click', handleClicksFor('Salesforce'));
+twitchEl.addEventListener('click', handleClicksFor('Twitch'));
+historyEl.addEventListener('click', handleClicksFor('History'));
+
+
+
+var subdomainEl = qwery('.subdomain', salesforceEl)[0];
+var accessTokenEl = qwery('.access-token', salesforceEl)[0];
 var historyItemsCountEl = document.getElementById('historyItemsCount');
 
-getAccessTokenEl.addEventListener('click', function (e) {
-    PackageManager.registeredPackages['Salesforce'].getAccessToken(subdomainEl.value);
-});
-
-fetchDataEl.addEventListener('click', function (e) {
-    PackageManager.registeredPackages['Salesforce'].fetchData();
-});
-
-fetchHistoryDataEl.addEventListener('click', function (e) {
-    PackageManager.registeredPackages['History'].fetchData();
-});
+window.qwery = qwery;
+window.subdomainEl = subdomainEl;
 
 subdomainEl.addEventListener('change', function (e) {
     Storage.set('sf-subdomain', e.target.value);

@@ -29,6 +29,10 @@
         #historyItemsCount {
             width: 50px;
         }
+
+        div {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -37,25 +41,25 @@
 
     <p>For the best performance, only enable the packages you care about. </p>
 
-    <p>
+    <div>
         <label>
             <input class="option" name="Bookmarks" type="checkbox" value="Bookmarks"> Bookmarks
         </label>
-    </p>
+    </div>
 
-    <p>
+    <div>
         <label>
             <input class="option" name="Calculator" type="checkbox" value="Calculator"> Calculator
         </label>
-    </p>
+    </div>
 
-    <p>
+    <div>
         <label>
             <input class="option" name="Google" type="checkbox" value="Google"> Google
         </label>
-    </p>
+    </div>
 
-    <p>
+    <div id="history">
         <label>
             <input class="option" name="History" type="checkbox" value="History"> History
         </label>
@@ -64,61 +68,73 @@
                 Most Recent: <input type="number" id="historyItemsCount" name="history-items-count" value="0">
             </li>
             <li>
-                <button id="fetchHistoryData">Fetch History</button>
+                <button class="fetch-data">Fetch History</button>
             </li>
         </ol>
-    </p>
+    </div>
 
-    <p>
+    <div>
         <label>
-            <input class="option" name="Links" type="checkbox" value="Links"> Links (experimental)
+            <input class="option" name="Links" type="checkbox" value="Links"> Links
         </label>
-    </p>
+    </div>
 
-    <p>
+    <div>
         <label>
             <input class="option" name="Pinterest" type="checkbox" value="Pinterest"> Pinterest
         </label>
-    </p>
+    </div>
 
-    <p>
+    <div id="salesforce">
         <label>
             <input class="option" name="Salesforce" type="checkbox" value="Salesforce"> Salesforce
         </label>
         <ol>
             <li>
-                <select name="subdomain" id="subdomain">
+                <select name="subdomain" class="subdomain">
                     <option value="login">Production</option>
                     <option value="test">Sandbox</option>
                 </select>
             </li>
             <li>
-                <button id="getAccessToken">Get Access Token</button>&nbsp;
-                <span id="accessToken"></span>
+                <button class="get-access-token">Get Access Token</button>&nbsp;
+                <span class="access-token"></span>
             </li>
             <li>
-                <button id="fetchData">Fetch Data</button>
+                <button class="fetch-data">Fetch Data</button>
             </li>
         </ol>
-    </p>
+    </div>
 
-    <p>
+    <div>
         <label>
             <input class="option" name="StackOverflow" type="checkbox" value="StackOverflow"> Stack Overflow
         </label>
-    </p>
+    </div>
 
-    <p>
+    <div>
         <label>
             <input class="option" name="Tabs" type="checkbox" value="Tabs"> Tabs
         </label>
-    </p>
+    </div>
 
-    <p>
+    <div id="twitch">
+        <label>
+            <input class="option" name="Twitch" type="checkbox" value="Twitch"> Twitch
+        </label>
+        <ol>
+            <li>
+                <button class="get-access-token">Get Access Token</button>&nbsp;
+                <span class="access-token"></span>
+            </li>
+        </ol>
+    </div>
+
+    <div>
         <label>
             <input class="option" name="YouTube" type="checkbox" value="YouTube"> YouTube
         </label>
-    </p>
+    </div>
 
     <script src="/js/vendor.js"></script>
     <script src="/js/scripts.js"></script>

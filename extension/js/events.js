@@ -24,9 +24,10 @@ module.exports = function () {
     PackageManager.register('Whine', require('./pkg/whine.js'));
     PackageManager.register('YouTube', require('./pkg/youtube.js'));
     PackageManager.register('History', require('./pkg/history/history.js'));
+    PackageManager.register('Twitch', require('./pkg/twitch.js'));
 
     // boot up packages that are enables in settings
-    var optionKeys = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'History', 'StackOverflow', 'Google'];
+    var optionKeys = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'Twitch', 'History', 'StackOverflow', 'Google'];
     Storage.get(optionKeys).then(function(options) {
         optionKeys.forEach(function (name) {
             if (options[name] == true) {
