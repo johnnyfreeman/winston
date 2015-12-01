@@ -109,9 +109,13 @@ class Twitch extends Package {
                         return;
                     }
                     auth = 'OAuth ' + res.body.access_token;
-                    Storage.set('twitch-authorization', auth).then(function () {
-                        alert('Authorization obtained. ' + auth);
-                    });
+                    Storage.set('twitch-authorization', auth);
+                    try {
+                        var containerEl = document.getElementById('twitch');
+                        var accessTokenEl = containerEl.getElementsByClassName('access-token')[0];
+                        accessTokenEl.textContent = auth;
+                        accessTokenEl.title = auth;
+                    } catch (e) {}
                 });
         });
     }

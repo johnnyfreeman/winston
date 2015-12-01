@@ -88741,6 +88741,12 @@ document.addEventListener('DOMContentLoaded', function (e) {
     Storage.get('history-items-count').then(function (options) {
         historyItemsCountEl.value = options['history-items-count'];
     });
+
+    Storage.get('twitch-authorization').then(function (options) {
+        var accessTokenEl = twitchEl.getElementsByClassName('access-token')[0];
+        accessTokenEl.textContent = options['twitch-authorization'];
+        accessTokenEl.title = options['twitch-authorization'];
+    });
 });
 
 },{"./package-manager.js":637,"./pkg/bookmarks.js":639,"./pkg/calculator.js":640,"./pkg/core.js":641,"./pkg/google.js":642,"./pkg/history/history.js":643,"./pkg/links.js":644,"./pkg/longwait.js":645,"./pkg/pinterest.js":646,"./pkg/salesforce.js":647,"./pkg/stackoverflow.js":649,"./pkg/tabs.js":650,"./pkg/twitch.js":651,"./pkg/whine.js":652,"./pkg/youtube.js":653,"./storage.js":654,"qwery":606}],637:[function(require,module,exports){
@@ -90122,9 +90128,13 @@ var Twitch = (function (_Package) {
                         return;
                     }
                     auth = 'OAuth ' + res.body.access_token;
-                    Storage.set('twitch-authorization', auth).then(function () {
-                        alert('Authorization obtained. ' + auth);
-                    });
+                    Storage.set('twitch-authorization', auth);
+                    try {
+                        var containerEl = document.getElementById('twitch');
+                        var accessTokenEl = containerEl.getElementsByClassName('access-token')[0];
+                        accessTokenEl.textContent = auth;
+                        accessTokenEl.title = auth;
+                    } catch (e) {}
                 });
             });
         }

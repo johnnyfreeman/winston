@@ -95,4 +95,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
     Storage.get('history-items-count').then(function (options) {
         historyItemsCountEl.value = options['history-items-count'];
     });
+
+    Storage.get('twitch-authorization').then(function (options) {
+        var accessTokenEl = twitchEl.getElementsByClassName('access-token')[0];
+        accessTokenEl.textContent = options['twitch-authorization'];
+        accessTokenEl.title = options['twitch-authorization'];
+    });
 });
