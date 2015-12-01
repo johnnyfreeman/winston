@@ -1,9 +1,23 @@
-var Command = function (title, description, handler) {
-    this.title = title;
-    this.description = description;
-    this.handler = handler;
+var _ = require('lodash');
+
+// default options
+var defaultOptions = {
+    id: _.uniqueId('COMMAND'),
+    icon: 'terminal',
+    action: 'execute',
+    handler: function () {
+        window.close(); // close popup
+    }
 };
 
-Command.prototype.run = function () {
-    return this.handler();
-};
+class Command {
+    constructor(options) {
+        _.extend(this, defaultOptions, options);
+    }
+
+    run() {
+        return this.handler();
+    }
+}
+
+module.exports = Command;
