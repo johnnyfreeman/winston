@@ -74,9 +74,6 @@ var subdomainEl = qwery('.subdomain', salesforceEl)[0];
 var accessTokenEl = qwery('.access-token', salesforceEl)[0];
 var historyItemsCountEl = document.getElementById('historyItemsCount');
 
-window.qwery = qwery;
-window.subdomainEl = subdomainEl;
-
 subdomainEl.addEventListener('change', function (e) {
     Storage.set('sf-subdomain', e.target.value);
 });
