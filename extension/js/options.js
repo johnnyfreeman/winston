@@ -76352,7 +76352,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     });
 });
 
-},{"./package-manager.js":635,"./pkg/bookmarks.js":636,"./pkg/calculator.js":637,"./pkg/core.js":638,"./pkg/google.js":639,"./pkg/history/history.js":640,"./pkg/links.js":641,"./pkg/longwait.js":642,"./pkg/pinterest.js":643,"./pkg/salesforce.js":644,"./pkg/stackoverflow.js":645,"./pkg/tabs.js":646,"./pkg/twitch.js":647,"./pkg/whine.js":648,"./pkg/youtube.js":649,"./storage.js":650,"qwery":605}],635:[function(require,module,exports){
+},{"./package-manager.js":635,"./pkg/bookmarks.js":637,"./pkg/calculator.js":638,"./pkg/core.js":639,"./pkg/google.js":640,"./pkg/history/history.js":641,"./pkg/links.js":642,"./pkg/longwait.js":643,"./pkg/pinterest.js":644,"./pkg/salesforce.js":645,"./pkg/stackoverflow.js":646,"./pkg/tabs.js":647,"./pkg/twitch.js":648,"./pkg/whine.js":649,"./pkg/youtube.js":650,"./storage.js":651,"qwery":605}],635:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -76379,6 +76379,44 @@ module.exports = {
 };
 
 },{}],636:[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Storage = require('./storage.js');
+
+var Package = (function () {
+    function Package() {
+        _classCallCheck(this, Package);
+    }
+
+    _createClass(Package, [{
+        key: 'inputHandler',
+        value: function inputHandler(e) {}
+    }, {
+        key: 'indexHandler',
+        value: function indexHandler() {}
+
+        // save option value in storage
+
+    }, {
+        key: 'optionChangeHandler',
+        value: function optionChangeHandler(e) {
+            return Storage.set(e.target.name, e.target.checked);
+        }
+    }], [{
+        key: 'getAccessToken',
+        value: function getAccessToken() {}
+    }]);
+
+    return Package;
+})();
+
+module.exports = Package;
+
+},{"./storage.js":651}],637:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -76470,7 +76508,7 @@ CreateBookmarkCommand.prototype.run = function () {
 
 module.exports = Bookmarks;
 
-},{"../storage.js":650}],637:[function(require,module,exports){
+},{"../storage.js":651}],638:[function(require,module,exports){
 'use strict';
 
 var math = require('mathjs');
@@ -76510,7 +76548,7 @@ Calculator.prototype.inputHandler = function (e) {
 
 module.exports = Calculator;
 
-},{"mathjs":99}],638:[function(require,module,exports){
+},{"mathjs":99}],639:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -76653,7 +76691,7 @@ DisablePackage.prototype.run = function () {
 
 module.exports = Core;
 
-},{"../package-manager.js":635,"../storage.js":650}],639:[function(require,module,exports){
+},{"../package-manager.js":635,"../storage.js":651}],640:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -76708,7 +76746,7 @@ GoogleLuckyCommand.prototype.run = function () {
 
 module.exports = Google;
 
-},{"../storage.js":650}],640:[function(require,module,exports){
+},{"../storage.js":651}],641:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../../storage.js');
@@ -76791,7 +76829,7 @@ AllHistoryCommand.prototype.run = function () {
 
 module.exports = History;
 
-},{"../../storage.js":650}],641:[function(require,module,exports){
+},{"../../storage.js":651}],642:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -76845,7 +76883,7 @@ Links.prototype.inputHandler = function (e) {
 
 module.exports = Links;
 
-},{"../storage.js":650}],642:[function(require,module,exports){
+},{"../storage.js":651}],643:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird'),
@@ -76867,7 +76905,7 @@ LongWait.prototype.inputHandler = function (e) {
 
 module.exports = LongWait;
 
-},{"../storage.js":650,"bluebird":16}],643:[function(require,module,exports){
+},{"../storage.js":651,"bluebird":16}],644:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -76908,7 +76946,7 @@ Pinterest.prototype.inputHandler = function (e) {
 
 module.exports = Pinterest;
 
-},{"../storage.js":650}],644:[function(require,module,exports){
+},{"../storage.js":651}],645:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -77349,7 +77387,7 @@ SalesforceDocCommand.prototype.run = function () {
 
 module.exports = Salesforce;
 
-},{"../storage.js":650}],645:[function(require,module,exports){
+},{"../storage.js":651}],646:[function(require,module,exports){
 'use strict';
 
 var StackOverflow = function StackOverflow() {
@@ -77425,7 +77463,7 @@ StackOverflowSearchCommand.prototype.run = function () {
 
 module.exports = StackOverflow;
 
-},{}],646:[function(require,module,exports){
+},{}],647:[function(require,module,exports){
 'use strict';
 
 var Tabs = function Tabs() {};
@@ -77553,150 +77591,144 @@ TabPinCommand.prototype.run = function () {
 
 module.exports = Tabs;
 
-},{}],647:[function(require,module,exports){
+},{}],648:[function(require,module,exports){
 'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Storage = require('../storage.js');
 var Bluebird = require('bluebird');
 var Superagent = require('superagent');
+var Package = require('../package.js');
 
 var domain = 'https://api.twitch.tv/kraken';
-var memeType = 'application/vnd.twitchtv.v3+json';
-var state = Math.random().toString(36).substring(7);
+var memeType = 'application/vnd.twitchtv.v3+json'; // api version to use
+var state = Math.random().toString(36).substring(7); // csrf
 
-var Twitch = function Twitch() {};
+var Twitch = (function (_Package) {
+    _inherits(Twitch, _Package);
 
-Twitch.prototype.optionChangeHandler = function (e) {
-    // save option value in storage
-    Storage.set(e.target.name, e.target.checked);
-};
+    function Twitch() {
+        _classCallCheck(this, Twitch);
 
-Twitch.getAccessToken = function () {
-
-    var clientId = '4wf6ic2a9ia2fn2z8oai7s8exwn38wx';
-    var clientSecret = 'tmlriursrqam6lpizvxqwlqt34e94kf';
-    var redirectUri = chrome.identity.getRedirectURL('provider_cb');
-    var scope = ['user_read', // Read access to non-public user information, such as email address.
-    'user_blocks_edit', // Ability to ignore or unignore on behalf of a user.
-    'user_blocks_read', // Read access to a user's list of ignored users.
-    'user_follows_edit', // Access to manage a user's followed channels.
-    'channel_read', // Read access to non-public channel information, including email address and stream key.
-    'channel_editor', // Write access to channel metadata (game, status, etc).
-    'channel_commercial', // Access to trigger commercials on channel.
-    'channel_stream', // Ability to reset a channel's stream key.
-    'channel_subscriptions', // Read access to all subscribers to your channel.
-    'user_subscriptions', // Read access to subscriptions of a user.
-    'channel_check_subscription', // Read access to check if a user is subscribed to your channel.
-    'chat_login' // Ability to log into chat and send messages.
-    ].join('+');
-
-    chrome.identity.launchWebAuthFlow({
-        url: domain + '/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope,
-        interactive: true
-    }, function (redirect_url) {
-
-        // get authorization code
-        var authCode;
-        var parser = document.createElement('a');
-        parser.href = redirect_url;
-        parser.search.substr(1).split('&').forEach(function (attribute) {
-            var pair = attribute.split('=');
-            if (pair[0] === 'code') {
-                authCode = pair[1];
-            }
-        });
-
-        // get access token
-        Superagent.post(domain + '/oauth2/token').set({
-            Accept: memeType
-        }).send({
-            code: decodeURIComponent(authCode),
-            grant_type: 'authorization_code',
-            client_id: clientId,
-            client_secret: clientSecret,
-            redirect_uri: redirectUri,
-            state: state
-        }).end(function (err, res) {
-            var auth;
-            if (err) {
-                console.error(err);
-                return;
-            }
-            auth = 'OAuth ' + res.body.access_token;
-            Storage.set('twitch-authorization', auth).then(function () {
-                alert('Authorization obtained. ' + auth);
-            });
-        });
-    });
-};
-
-Twitch.fetchData = function (e) {
-    // Storage.get('twitch-authorization').then(function (options) {
-    //     Superagent
-    //         .get(domain + '/search/streams')
-    //         .send({
-    //             query: '',
-    //             limit: 5
-    //         })
-    //         .set({
-    //             Accept: memeType,
-    //             Authorization: options['twitch-authorization'],
-    //             state: state
-    //         })
-    //         .end(function (err, res) {
-    //             if (err) {
-    //                 console.error(err);
-    //                 return;
-    //             }
-    //             console.log(res);
-    //         });
-    // });
-};
-
-Twitch.prototype.inputHandler = function (e) {
-    var commands = [];
-    var value = e.target.value;
-
-    // only make request if
-    // value 3 or greater
-    if (value.length < 3) {
-        return commands;
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Twitch).apply(this, arguments));
     }
 
-    return new Promise(function (resolve, reject) {
-        Storage.get('twitch-authorization').then(function (options) {
-            Superagent.get(domain + '/search/streams').query({
-                query: value,
-                limit: 5
-            }).set({
-                Accept: memeType,
-                Authorization: options['twitch-authorization'],
-                state: state
-            }).end(function (err, res) {
-                if (err) {
-                    reject(err);
-                }
-                res.body.streams.forEach(function (stream) {
-                    commands.push({
-                        id: 'TWITCH' + stream._id,
-                        title: stream.channel.status,
-                        description: stream.channel.display_name + ' playing ' + stream.game,
-                        action: 'Open Stream',
-                        icon: 'twitch',
-                        run: function run() {
-                            chrome.tabs.create({ url: stream.channel.url });
+    _createClass(Twitch, [{
+        key: 'inputHandler',
+        value: function inputHandler(e) {
+            var commands = [];
+            var value = e.target.value;
+
+            // only make request if
+            // value 3 or greater
+            if (value.length < 3) {
+                return commands;
+            }
+
+            return new Bluebird(function (resolve, reject) {
+                Storage.get('twitch-authorization').then(function (options) {
+                    Superagent.get(domain + '/search/streams').query({
+                        query: value,
+                        limit: 5
+                    }).set({
+                        Accept: memeType,
+                        Authorization: options['twitch-authorization'],
+                        state: state
+                    }).end(function (err, res) {
+                        if (err) {
+                            reject(err);
                         }
+                        res.body.streams.forEach(function (stream) {
+                            commands.push({
+                                id: 'TWITCH' + stream._id,
+                                title: stream.channel.status,
+                                description: stream.channel.display_name + ' playing ' + stream.game,
+                                action: 'Open Stream',
+                                icon: 'twitch',
+                                run: function run() {
+                                    chrome.tabs.create({ url: stream.channel.url });
+                                }
+                            });
+                        });
+                        resolve(commands);
                     });
                 });
-                resolve(commands);
             });
-        });
-    });
-};
+        }
+    }], [{
+        key: 'getAccessToken',
+        value: function getAccessToken() {
+            var clientId = '4wf6ic2a9ia2fn2z8oai7s8exwn38wx';
+            var clientSecret = 'tmlriursrqam6lpizvxqwlqt34e94kf';
+            var redirectUri = chrome.identity.getRedirectURL('provider_cb');
+            var scope = ['user_read', // Read access to non-public user information, such as email address.
+            'user_blocks_edit', // Ability to ignore or unignore on behalf of a user.
+            'user_blocks_read', // Read access to a user's list of ignored users.
+            'user_follows_edit', // Access to manage a user's followed channels.
+            'channel_read', // Read access to non-public channel information, including email address and stream key.
+            'channel_editor', // Write access to channel metadata (game, status, etc).
+            'channel_commercial', // Access to trigger commercials on channel.
+            'channel_stream', // Ability to reset a channel's stream key.
+            'channel_subscriptions', // Read access to all subscribers to your channel.
+            'user_subscriptions', // Read access to subscriptions of a user.
+            'channel_check_subscription', // Read access to check if a user is subscribed to your channel.
+            'chat_login' // Ability to log into chat and send messages.
+            ].join('+');
+
+            chrome.identity.launchWebAuthFlow({
+                url: domain + '/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope,
+                interactive: true
+            }, function (redirect_url) {
+
+                // get authorization code
+                var authCode;
+                var parser = document.createElement('a');
+                parser.href = redirect_url;
+                parser.search.substr(1).split('&').forEach(function (attribute) {
+                    var pair = attribute.split('=');
+                    if (pair[0] === 'code') {
+                        authCode = pair[1];
+                    }
+                });
+
+                // get access token
+                Superagent.post(domain + '/oauth2/token').set({
+                    Accept: memeType
+                }).send({
+                    code: decodeURIComponent(authCode),
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    redirect_uri: redirectUri,
+                    state: state
+                }).end(function (err, res) {
+                    var auth;
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    auth = 'OAuth ' + res.body.access_token;
+                    Storage.set('twitch-authorization', auth).then(function () {
+                        alert('Authorization obtained. ' + auth);
+                    });
+                });
+            });
+        }
+    }]);
+
+    return Twitch;
+})(Package);
 
 module.exports = Twitch;
 
-},{"../storage.js":650,"bluebird":16,"superagent":629}],648:[function(require,module,exports){
+},{"../package.js":636,"../storage.js":651,"bluebird":16,"superagent":629}],649:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -77721,7 +77753,7 @@ WhineException.prototype.toString = function () {
 
 module.exports = Whine;
 
-},{"../storage.js":650}],649:[function(require,module,exports){
+},{"../storage.js":651}],650:[function(require,module,exports){
 'use strict';
 
 var Youtube = function Youtube() {
@@ -77797,7 +77829,7 @@ YoutubeSearchCommand.prototype.run = function () {
 
 module.exports = Youtube;
 
-},{}],650:[function(require,module,exports){
+},{}],651:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird');

@@ -95222,6 +95222,44 @@ module.exports = {
 },{}],792:[function(require,module,exports){
 'use strict';
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Storage = require('./storage.js');
+
+var Package = (function () {
+    function Package() {
+        _classCallCheck(this, Package);
+    }
+
+    _createClass(Package, [{
+        key: 'inputHandler',
+        value: function inputHandler(e) {}
+    }, {
+        key: 'indexHandler',
+        value: function indexHandler() {}
+
+        // save option value in storage
+
+    }, {
+        key: 'optionChangeHandler',
+        value: function optionChangeHandler(e) {
+            return Storage.set(e.target.name, e.target.checked);
+        }
+    }], [{
+        key: 'getAccessToken',
+        value: function getAccessToken() {}
+    }]);
+
+    return Package;
+})();
+
+module.exports = Package;
+
+},{"./storage.js":808}],793:[function(require,module,exports){
+'use strict';
+
 var Storage = require('../storage.js');
 
 var Bookmarks = function Bookmarks() {
@@ -95311,7 +95349,7 @@ CreateBookmarkCommand.prototype.run = function () {
 
 module.exports = Bookmarks;
 
-},{"../storage.js":807}],793:[function(require,module,exports){
+},{"../storage.js":808}],794:[function(require,module,exports){
 'use strict';
 
 var math = require('mathjs');
@@ -95351,7 +95389,7 @@ Calculator.prototype.inputHandler = function (e) {
 
 module.exports = Calculator;
 
-},{"mathjs":127}],794:[function(require,module,exports){
+},{"mathjs":127}],795:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -95494,7 +95532,7 @@ DisablePackage.prototype.run = function () {
 
 module.exports = Core;
 
-},{"../package-manager.js":791,"../storage.js":807}],795:[function(require,module,exports){
+},{"../package-manager.js":791,"../storage.js":808}],796:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -95549,7 +95587,7 @@ GoogleLuckyCommand.prototype.run = function () {
 
 module.exports = Google;
 
-},{"../storage.js":807}],796:[function(require,module,exports){
+},{"../storage.js":808}],797:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../../storage.js');
@@ -95632,7 +95670,7 @@ AllHistoryCommand.prototype.run = function () {
 
 module.exports = History;
 
-},{"../../storage.js":807}],797:[function(require,module,exports){
+},{"../../storage.js":808}],798:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -95686,7 +95724,7 @@ Links.prototype.inputHandler = function (e) {
 
 module.exports = Links;
 
-},{"../storage.js":807}],798:[function(require,module,exports){
+},{"../storage.js":808}],799:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird'),
@@ -95708,7 +95746,7 @@ LongWait.prototype.inputHandler = function (e) {
 
 module.exports = LongWait;
 
-},{"../storage.js":807,"bluebird":16}],799:[function(require,module,exports){
+},{"../storage.js":808,"bluebird":16}],800:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -95749,7 +95787,7 @@ Pinterest.prototype.inputHandler = function (e) {
 
 module.exports = Pinterest;
 
-},{"../storage.js":807}],800:[function(require,module,exports){
+},{"../storage.js":808}],801:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -96190,7 +96228,7 @@ SalesforceDocCommand.prototype.run = function () {
 
 module.exports = Salesforce;
 
-},{"../storage.js":807}],801:[function(require,module,exports){
+},{"../storage.js":808}],802:[function(require,module,exports){
 'use strict';
 
 var StackOverflow = function StackOverflow() {
@@ -96266,7 +96304,7 @@ StackOverflowSearchCommand.prototype.run = function () {
 
 module.exports = StackOverflow;
 
-},{}],802:[function(require,module,exports){
+},{}],803:[function(require,module,exports){
 'use strict';
 
 var Tabs = function Tabs() {};
@@ -96394,150 +96432,144 @@ TabPinCommand.prototype.run = function () {
 
 module.exports = Tabs;
 
-},{}],803:[function(require,module,exports){
+},{}],804:[function(require,module,exports){
 'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Storage = require('../storage.js');
 var Bluebird = require('bluebird');
 var Superagent = require('superagent');
+var Package = require('../package.js');
 
 var domain = 'https://api.twitch.tv/kraken';
-var memeType = 'application/vnd.twitchtv.v3+json';
-var state = Math.random().toString(36).substring(7);
+var memeType = 'application/vnd.twitchtv.v3+json'; // api version to use
+var state = Math.random().toString(36).substring(7); // csrf
 
-var Twitch = function Twitch() {};
+var Twitch = (function (_Package) {
+    _inherits(Twitch, _Package);
 
-Twitch.prototype.optionChangeHandler = function (e) {
-    // save option value in storage
-    Storage.set(e.target.name, e.target.checked);
-};
+    function Twitch() {
+        _classCallCheck(this, Twitch);
 
-Twitch.getAccessToken = function () {
-
-    var clientId = '4wf6ic2a9ia2fn2z8oai7s8exwn38wx';
-    var clientSecret = 'tmlriursrqam6lpizvxqwlqt34e94kf';
-    var redirectUri = chrome.identity.getRedirectURL('provider_cb');
-    var scope = ['user_read', // Read access to non-public user information, such as email address.
-    'user_blocks_edit', // Ability to ignore or unignore on behalf of a user.
-    'user_blocks_read', // Read access to a user's list of ignored users.
-    'user_follows_edit', // Access to manage a user's followed channels.
-    'channel_read', // Read access to non-public channel information, including email address and stream key.
-    'channel_editor', // Write access to channel metadata (game, status, etc).
-    'channel_commercial', // Access to trigger commercials on channel.
-    'channel_stream', // Ability to reset a channel's stream key.
-    'channel_subscriptions', // Read access to all subscribers to your channel.
-    'user_subscriptions', // Read access to subscriptions of a user.
-    'channel_check_subscription', // Read access to check if a user is subscribed to your channel.
-    'chat_login' // Ability to log into chat and send messages.
-    ].join('+');
-
-    chrome.identity.launchWebAuthFlow({
-        url: domain + '/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope,
-        interactive: true
-    }, function (redirect_url) {
-
-        // get authorization code
-        var authCode;
-        var parser = document.createElement('a');
-        parser.href = redirect_url;
-        parser.search.substr(1).split('&').forEach(function (attribute) {
-            var pair = attribute.split('=');
-            if (pair[0] === 'code') {
-                authCode = pair[1];
-            }
-        });
-
-        // get access token
-        Superagent.post(domain + '/oauth2/token').set({
-            Accept: memeType
-        }).send({
-            code: decodeURIComponent(authCode),
-            grant_type: 'authorization_code',
-            client_id: clientId,
-            client_secret: clientSecret,
-            redirect_uri: redirectUri,
-            state: state
-        }).end(function (err, res) {
-            var auth;
-            if (err) {
-                console.error(err);
-                return;
-            }
-            auth = 'OAuth ' + res.body.access_token;
-            Storage.set('twitch-authorization', auth).then(function () {
-                alert('Authorization obtained. ' + auth);
-            });
-        });
-    });
-};
-
-Twitch.fetchData = function (e) {
-    // Storage.get('twitch-authorization').then(function (options) {
-    //     Superagent
-    //         .get(domain + '/search/streams')
-    //         .send({
-    //             query: '',
-    //             limit: 5
-    //         })
-    //         .set({
-    //             Accept: memeType,
-    //             Authorization: options['twitch-authorization'],
-    //             state: state
-    //         })
-    //         .end(function (err, res) {
-    //             if (err) {
-    //                 console.error(err);
-    //                 return;
-    //             }
-    //             console.log(res);
-    //         });
-    // });
-};
-
-Twitch.prototype.inputHandler = function (e) {
-    var commands = [];
-    var value = e.target.value;
-
-    // only make request if
-    // value 3 or greater
-    if (value.length < 3) {
-        return commands;
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Twitch).apply(this, arguments));
     }
 
-    return new Promise(function (resolve, reject) {
-        Storage.get('twitch-authorization').then(function (options) {
-            Superagent.get(domain + '/search/streams').query({
-                query: value,
-                limit: 5
-            }).set({
-                Accept: memeType,
-                Authorization: options['twitch-authorization'],
-                state: state
-            }).end(function (err, res) {
-                if (err) {
-                    reject(err);
-                }
-                res.body.streams.forEach(function (stream) {
-                    commands.push({
-                        id: 'TWITCH' + stream._id,
-                        title: stream.channel.status,
-                        description: stream.channel.display_name + ' playing ' + stream.game,
-                        action: 'Open Stream',
-                        icon: 'twitch',
-                        run: function run() {
-                            chrome.tabs.create({ url: stream.channel.url });
+    _createClass(Twitch, [{
+        key: 'inputHandler',
+        value: function inputHandler(e) {
+            var commands = [];
+            var value = e.target.value;
+
+            // only make request if
+            // value 3 or greater
+            if (value.length < 3) {
+                return commands;
+            }
+
+            return new Bluebird(function (resolve, reject) {
+                Storage.get('twitch-authorization').then(function (options) {
+                    Superagent.get(domain + '/search/streams').query({
+                        query: value,
+                        limit: 5
+                    }).set({
+                        Accept: memeType,
+                        Authorization: options['twitch-authorization'],
+                        state: state
+                    }).end(function (err, res) {
+                        if (err) {
+                            reject(err);
                         }
+                        res.body.streams.forEach(function (stream) {
+                            commands.push({
+                                id: 'TWITCH' + stream._id,
+                                title: stream.channel.status,
+                                description: stream.channel.display_name + ' playing ' + stream.game,
+                                action: 'Open Stream',
+                                icon: 'twitch',
+                                run: function run() {
+                                    chrome.tabs.create({ url: stream.channel.url });
+                                }
+                            });
+                        });
+                        resolve(commands);
                     });
                 });
-                resolve(commands);
             });
-        });
-    });
-};
+        }
+    }], [{
+        key: 'getAccessToken',
+        value: function getAccessToken() {
+            var clientId = '4wf6ic2a9ia2fn2z8oai7s8exwn38wx';
+            var clientSecret = 'tmlriursrqam6lpizvxqwlqt34e94kf';
+            var redirectUri = chrome.identity.getRedirectURL('provider_cb');
+            var scope = ['user_read', // Read access to non-public user information, such as email address.
+            'user_blocks_edit', // Ability to ignore or unignore on behalf of a user.
+            'user_blocks_read', // Read access to a user's list of ignored users.
+            'user_follows_edit', // Access to manage a user's followed channels.
+            'channel_read', // Read access to non-public channel information, including email address and stream key.
+            'channel_editor', // Write access to channel metadata (game, status, etc).
+            'channel_commercial', // Access to trigger commercials on channel.
+            'channel_stream', // Ability to reset a channel's stream key.
+            'channel_subscriptions', // Read access to all subscribers to your channel.
+            'user_subscriptions', // Read access to subscriptions of a user.
+            'channel_check_subscription', // Read access to check if a user is subscribed to your channel.
+            'chat_login' // Ability to log into chat and send messages.
+            ].join('+');
+
+            chrome.identity.launchWebAuthFlow({
+                url: domain + '/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope,
+                interactive: true
+            }, function (redirect_url) {
+
+                // get authorization code
+                var authCode;
+                var parser = document.createElement('a');
+                parser.href = redirect_url;
+                parser.search.substr(1).split('&').forEach(function (attribute) {
+                    var pair = attribute.split('=');
+                    if (pair[0] === 'code') {
+                        authCode = pair[1];
+                    }
+                });
+
+                // get access token
+                Superagent.post(domain + '/oauth2/token').set({
+                    Accept: memeType
+                }).send({
+                    code: decodeURIComponent(authCode),
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    redirect_uri: redirectUri,
+                    state: state
+                }).end(function (err, res) {
+                    var auth;
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    auth = 'OAuth ' + res.body.access_token;
+                    Storage.set('twitch-authorization', auth).then(function () {
+                        alert('Authorization obtained. ' + auth);
+                    });
+                });
+            });
+        }
+    }]);
+
+    return Twitch;
+})(Package);
 
 module.exports = Twitch;
 
-},{"../storage.js":807,"bluebird":16,"superagent":786}],804:[function(require,module,exports){
+},{"../package.js":792,"../storage.js":808,"bluebird":16,"superagent":786}],805:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -96562,7 +96594,7 @@ WhineException.prototype.toString = function () {
 
 module.exports = Whine;
 
-},{"../storage.js":807}],805:[function(require,module,exports){
+},{"../storage.js":808}],806:[function(require,module,exports){
 'use strict';
 
 var Youtube = function Youtube() {
@@ -96638,14 +96670,14 @@ YoutubeSearchCommand.prototype.run = function () {
 
 module.exports = Youtube;
 
-},{}],806:[function(require,module,exports){
+},{}],807:[function(require,module,exports){
 'use strict';
 
 var Winston = require('./winston.js');
 
 new Winston();
 
-},{"./winston.js":808}],807:[function(require,module,exports){
+},{"./winston.js":809}],808:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird');
@@ -96679,7 +96711,7 @@ module.exports = {
     }
 };
 
-},{"bluebird":16}],808:[function(require,module,exports){
+},{"bluebird":16}],809:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -96723,7 +96755,7 @@ module.exports = function () {
     ReactDOM.render(this.appComponent, document.getElementById('container'));
 };
 
-},{"../jsx/app.jsx":809,"./package-manager.js":791,"./pkg/bookmarks.js":792,"./pkg/calculator.js":793,"./pkg/core.js":794,"./pkg/google.js":795,"./pkg/history/history.js":796,"./pkg/links.js":797,"./pkg/longwait.js":798,"./pkg/pinterest.js":799,"./pkg/salesforce.js":800,"./pkg/stackoverflow.js":801,"./pkg/tabs.js":802,"./pkg/twitch.js":803,"./pkg/whine.js":804,"./pkg/youtube.js":805,"./storage.js":807,"react":763,"react-dom":634}],809:[function(require,module,exports){
+},{"../jsx/app.jsx":810,"./package-manager.js":791,"./pkg/bookmarks.js":793,"./pkg/calculator.js":794,"./pkg/core.js":795,"./pkg/google.js":796,"./pkg/history/history.js":797,"./pkg/links.js":798,"./pkg/longwait.js":799,"./pkg/pinterest.js":800,"./pkg/salesforce.js":801,"./pkg/stackoverflow.js":802,"./pkg/tabs.js":803,"./pkg/twitch.js":804,"./pkg/whine.js":805,"./pkg/youtube.js":806,"./storage.js":808,"react":763,"react-dom":634}],810:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -96912,7 +96944,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../js/package-manager.js":791,"./icon.jsx":810,"./resultslist.jsx":812,"./searchbox.jsx":813,"bluebird":16,"react":763,"react-dom":634}],810:[function(require,module,exports){
+},{"../js/package-manager.js":791,"./icon.jsx":811,"./resultslist.jsx":813,"./searchbox.jsx":814,"bluebird":16,"react":763,"react-dom":634}],811:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -96936,7 +96968,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"classnames":47,"react":763}],811:[function(require,module,exports){
+},{"classnames":47,"react":763}],812:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -96988,7 +97020,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"./icon.jsx":810,"classnames":47,"react":763}],812:[function(require,module,exports){
+},{"./icon.jsx":811,"classnames":47,"react":763}],813:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -97015,7 +97047,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"./result.jsx":811,"react":763}],813:[function(require,module,exports){
+},{"./result.jsx":812,"react":763}],814:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -97035,7 +97067,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"react":763,"react-dom":634}]},{},[806])
+},{"react":763,"react-dom":634}]},{},[807])
 
 
 //# sourceMappingURL=popup.js.map

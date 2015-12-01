@@ -1,13 +1,26 @@
-var Package = function () {
+var Storage = require('./storage.js');
 
-};
+class Package {
+    constructor() {
 
-Package.prototype.inputHandler = function (e) {
+    }
 
-};
+    inputHandler(e) {
 
-Package.prototype.indexHandler = function () {
+    }
 
-};
+    indexHandler() {
+
+    }
+
+    // save option value in storage
+    optionChangeHandler(e) {
+        return Storage.set(e.target.name, e.target.checked);
+    }
+
+    static getAccessToken() {
+
+    }
+}
 
 module.exports = Package;
