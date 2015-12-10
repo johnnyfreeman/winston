@@ -25,9 +25,10 @@ module.exports = function () {
     PackageManager.register('YouTube', require('./pkg/youtube.js'));
     PackageManager.register('History', require('./pkg/history/history.js'));
     PackageManager.register('Twitch', require('./pkg/twitch.js'));
+    PackageManager.register('Nylas', require('./pkg/nylas.js'));
 
     // boot up packages that are enables in settings
-    var optionKeys = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'Twitch', 'History', 'StackOverflow', 'Google'];
+    var optionKeys = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'Twitch', 'Nylas', 'History', 'StackOverflow', 'Google'];
     Storage.get(optionKeys).then(function(options) {
         optionKeys.forEach(function (name) {
             if (options[name] == true) {

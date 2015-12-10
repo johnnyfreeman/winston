@@ -88667,6 +88667,7 @@ PackageManager.register('Whine', require('./pkg/whine.js'));
 PackageManager.register('YouTube', require('./pkg/youtube.js'));
 PackageManager.register('History', require('./pkg/history/history.js'));
 PackageManager.register('Twitch', require('./pkg/twitch.js'));
+PackageManager.register('Nylas', require('./pkg/nylas.js'));
 
 var forEach = Array.prototype.forEach;
 
@@ -88693,6 +88694,7 @@ document.addEventListener('DOMContentLoaded', restore_options);
 
 var salesforceEl = qwery('#salesforce')[0];
 var twitchEl = qwery('#twitch')[0];
+var nylasEl = qwery('#nylas')[0];
 var historyEl = qwery('#history')[0];
 
 var handleClicksFor = function handleClicksFor(packageName) {
@@ -88714,6 +88716,7 @@ var handleClicksFor = function handleClicksFor(packageName) {
 
 salesforceEl.addEventListener('click', handleClicksFor('Salesforce'));
 twitchEl.addEventListener('click', handleClicksFor('Twitch'));
+nylasEl.addEventListener('click', handleClicksFor('Nylas'));
 historyEl.addEventListener('click', handleClicksFor('History'));
 
 var subdomainEl = qwery('.subdomain', salesforceEl)[0];
@@ -88747,9 +88750,15 @@ document.addEventListener('DOMContentLoaded', function (e) {
         accessTokenEl.textContent = options['twitch-authorization'];
         accessTokenEl.title = options['twitch-authorization'];
     });
+
+    Storage.get('nylas-access-token').then(function (options) {
+        var accessTokenEl = nylasEl.getElementsByClassName('access-token')[0];
+        accessTokenEl.textContent = options['nylas-access-token'];
+        accessTokenEl.title = options['nylas-access-token'];
+    });
 });
 
-},{"./package-manager.js":637,"./pkg/bookmarks.js":639,"./pkg/calculator.js":640,"./pkg/core.js":641,"./pkg/google.js":642,"./pkg/history/history.js":643,"./pkg/links.js":644,"./pkg/longwait.js":645,"./pkg/pinterest.js":646,"./pkg/salesforce.js":647,"./pkg/stackoverflow.js":649,"./pkg/tabs.js":650,"./pkg/twitch.js":651,"./pkg/whine.js":652,"./pkg/youtube.js":653,"./storage.js":654,"qwery":606}],637:[function(require,module,exports){
+},{"./package-manager.js":637,"./pkg/bookmarks.js":639,"./pkg/calculator.js":640,"./pkg/core.js":641,"./pkg/google.js":642,"./pkg/history/history.js":643,"./pkg/links.js":644,"./pkg/longwait.js":645,"./pkg/nylas.js":646,"./pkg/pinterest.js":647,"./pkg/salesforce.js":648,"./pkg/stackoverflow.js":650,"./pkg/tabs.js":651,"./pkg/twitch.js":652,"./pkg/whine.js":653,"./pkg/youtube.js":654,"./storage.js":655,"qwery":606}],637:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -88813,7 +88822,7 @@ var Package = (function () {
 
 module.exports = Package;
 
-},{"./storage.js":654}],639:[function(require,module,exports){
+},{"./storage.js":655}],639:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -88905,7 +88914,7 @@ CreateBookmarkCommand.prototype.run = function () {
 
 module.exports = Bookmarks;
 
-},{"../storage.js":654}],640:[function(require,module,exports){
+},{"../storage.js":655}],640:[function(require,module,exports){
 'use strict';
 
 var math = require('mathjs');
@@ -89088,7 +89097,7 @@ DisablePackage.prototype.run = function () {
 
 module.exports = Core;
 
-},{"../package-manager.js":637,"../storage.js":654}],642:[function(require,module,exports){
+},{"../package-manager.js":637,"../storage.js":655}],642:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -89143,7 +89152,7 @@ GoogleLuckyCommand.prototype.run = function () {
 
 module.exports = Google;
 
-},{"../storage.js":654}],643:[function(require,module,exports){
+},{"../storage.js":655}],643:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../../storage.js');
@@ -89226,7 +89235,7 @@ AllHistoryCommand.prototype.run = function () {
 
 module.exports = History;
 
-},{"../../storage.js":654}],644:[function(require,module,exports){
+},{"../../storage.js":655}],644:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -89280,7 +89289,7 @@ Links.prototype.inputHandler = function (e) {
 
 module.exports = Links;
 
-},{"../storage.js":654}],645:[function(require,module,exports){
+},{"../storage.js":655}],645:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird'),
@@ -89302,7 +89311,129 @@ LongWait.prototype.inputHandler = function (e) {
 
 module.exports = LongWait;
 
-},{"../storage.js":654,"bluebird":16}],646:[function(require,module,exports){
+},{"../storage.js":655,"bluebird":16}],646:[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Storage = require('../storage.js');
+var Bluebird = require('bluebird');
+var Superagent = require('superagent');
+var Package = require('../package.js');
+
+var domain = 'https://api.nylas.com';
+var state = Math.random().toString(36).substring(7); // csrf
+var clientId = 'dpoh5cgx93rqyca7un6jkv0fb';
+var clientSecret = '3wk3197s65i276ds80dznetfz';
+var redirectUri = chrome.identity.getRedirectURL('provider_cb');
+var scope = 'email';
+
+var Nylas = (function (_Package) {
+    _inherits(Nylas, _Package);
+
+    function Nylas() {
+        _classCallCheck(this, Nylas);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Nylas).apply(this, arguments));
+    }
+
+    _createClass(Nylas, [{
+        key: 'inputHandler',
+        value: function inputHandler(e) {
+            var commands = [];
+            var value = e.target.value;
+
+            return new Bluebird(function (resolve, reject) {
+                Storage.get('nylas-access-token').then(function (options) {
+                    console.log(options['nylas-access-token']);
+                    Superagent.get(domain + '/messages').query({
+                        unread: true
+                    }).auth(options['nylas-access-token'], '').end(function (err, res) {
+                        if (err) {
+                            reject(err);
+                        }
+                        console.log(err, res);
+                        // res.body.streams.forEach(function (stream) {
+                        //     commands.push({
+                        //         id: 'NYLAS' + stream._id,
+                        //         title: stream.channel.status,
+                        //         description: stream.channel.display_name + ' playing ' + stream.game,
+                        //         action: 'Open Stream',
+                        //         icon: 'eye-slash',
+                        //         run: function () {
+                        //             chrome.tabs.create({ url: stream.channel.url });
+                        //         }
+                        //     });
+                        // });
+                        resolve(commands);
+                    });
+                });
+            });
+        }
+    }], [{
+        key: 'getAuthorization',
+        value: function getAuthorization() {
+            return new Bluebird(function (resolve, reject) {
+                try {
+                    chrome.identity.launchWebAuthFlow({
+                        url: domain + '/oauth/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope,
+                        interactive: true
+                    }, function (redirect_url) {
+                        var authCode;
+                        var parser = document.createElement('a');
+                        parser.href = redirect_url;
+                        parser.search.substr(1).split('&').forEach(function (attribute) {
+                            var pair = attribute.split('=');
+                            if (pair[0] === 'code') {
+                                resolve(pair[1]);
+                            }
+                        });
+                    });
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }, {
+        key: 'getAccessToken',
+        value: function getAccessToken() {
+            return Nylas.getAuthorization().then(function (authCode) {
+                Superagent.post(domain + '/oauth/token').send({
+                    code: decodeURIComponent(authCode),
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret
+                }).end(function (err, res) {
+                    var auth;
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    auth = res.body.access_token;
+                    Storage.set('nylas-access-token', auth);
+                    try {
+                        var containerEl = document.getElementById('nylas');
+                        var accessTokenEl = containerEl.getElementsByClassName('access-token')[0];
+                        accessTokenEl.textContent = auth;
+                        accessTokenEl.title = auth;
+                    } catch (e) {}
+                });
+            });
+        }
+    }]);
+
+    return Nylas;
+})(Package);
+
+module.exports = Nylas;
+
+},{"../package.js":638,"../storage.js":655,"bluebird":16,"superagent":630}],647:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -89343,7 +89474,7 @@ Pinterest.prototype.inputHandler = function (e) {
 
 module.exports = Pinterest;
 
-},{"../storage.js":654}],647:[function(require,module,exports){
+},{"../storage.js":655}],648:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -89616,7 +89747,7 @@ var Salesforce = (function (_Package) {
 
 module.exports = Salesforce;
 
-},{"../command.js":635,"../package.js":638,"../storage.js":654,"./salesforce/documentation-links.js":648}],648:[function(require,module,exports){
+},{"../command.js":635,"../package.js":638,"../storage.js":655,"./salesforce/documentation-links.js":649}],649:[function(require,module,exports){
 'use strict';
 
 var links = {
@@ -89800,7 +89931,7 @@ var links = {
 
 module.exports = links;
 
-},{}],649:[function(require,module,exports){
+},{}],650:[function(require,module,exports){
 'use strict';
 
 var StackOverflow = function StackOverflow() {
@@ -89876,7 +90007,7 @@ StackOverflowSearchCommand.prototype.run = function () {
 
 module.exports = StackOverflow;
 
-},{}],650:[function(require,module,exports){
+},{}],651:[function(require,module,exports){
 'use strict';
 
 var Tabs = function Tabs() {};
@@ -90004,7 +90135,7 @@ TabPinCommand.prototype.run = function () {
 
 module.exports = Tabs;
 
-},{}],651:[function(require,module,exports){
+},{}],652:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -90145,7 +90276,7 @@ var Twitch = (function (_Package) {
 
 module.exports = Twitch;
 
-},{"../package.js":638,"../storage.js":654,"bluebird":16,"superagent":630}],652:[function(require,module,exports){
+},{"../package.js":638,"../storage.js":655,"bluebird":16,"superagent":630}],653:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -90170,7 +90301,7 @@ WhineException.prototype.toString = function () {
 
 module.exports = Whine;
 
-},{"../storage.js":654}],653:[function(require,module,exports){
+},{"../storage.js":655}],654:[function(require,module,exports){
 'use strict';
 
 var Youtube = function Youtube() {
@@ -90246,7 +90377,7 @@ YoutubeSearchCommand.prototype.run = function () {
 
 module.exports = Youtube;
 
-},{}],654:[function(require,module,exports){
+},{}],655:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird');

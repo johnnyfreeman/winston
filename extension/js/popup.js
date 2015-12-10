@@ -107651,7 +107651,7 @@ var Package = (function () {
 
 module.exports = Package;
 
-},{"./storage.js":811}],795:[function(require,module,exports){
+},{"./storage.js":812}],795:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -107743,7 +107743,7 @@ CreateBookmarkCommand.prototype.run = function () {
 
 module.exports = Bookmarks;
 
-},{"../storage.js":811}],796:[function(require,module,exports){
+},{"../storage.js":812}],796:[function(require,module,exports){
 'use strict';
 
 var math = require('mathjs');
@@ -107926,7 +107926,7 @@ DisablePackage.prototype.run = function () {
 
 module.exports = Core;
 
-},{"../package-manager.js":793,"../storage.js":811}],798:[function(require,module,exports){
+},{"../package-manager.js":793,"../storage.js":812}],798:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -107981,7 +107981,7 @@ GoogleLuckyCommand.prototype.run = function () {
 
 module.exports = Google;
 
-},{"../storage.js":811}],799:[function(require,module,exports){
+},{"../storage.js":812}],799:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../../storage.js');
@@ -108064,7 +108064,7 @@ AllHistoryCommand.prototype.run = function () {
 
 module.exports = History;
 
-},{"../../storage.js":811}],800:[function(require,module,exports){
+},{"../../storage.js":812}],800:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -108118,7 +108118,7 @@ Links.prototype.inputHandler = function (e) {
 
 module.exports = Links;
 
-},{"../storage.js":811}],801:[function(require,module,exports){
+},{"../storage.js":812}],801:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird'),
@@ -108140,7 +108140,137 @@ LongWait.prototype.inputHandler = function (e) {
 
 module.exports = LongWait;
 
-},{"../storage.js":811,"bluebird":16}],802:[function(require,module,exports){
+},{"../storage.js":812,"bluebird":16}],802:[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Storage = require('../storage.js');
+var Bluebird = require('bluebird');
+var Superagent = require('superagent');
+var Package = require('../package.js');
+
+var domain = 'https://api.nylas.com';
+var state = Math.random().toString(36).substring(7); // csrf
+var clientId = 'dpoh5cgx93rqyca7un6jkv0fb';
+var clientSecret = '3wk3197s65i276ds80dznetfz';
+var redirectUri = chrome.identity.getRedirectURL('provider_cb');
+var scope = 'email';
+
+var Nylas = (function (_Package) {
+    _inherits(Nylas, _Package);
+
+    function Nylas() {
+        _classCallCheck(this, Nylas);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Nylas).apply(this, arguments));
+    }
+
+    _createClass(Nylas, [{
+        key: 'inputHandler',
+        value: function inputHandler(e) {
+            var commands = [];
+            var value = e.target.value;
+            if ('mark'.indexOf(value) > -1 || 'read'.indexOf(value) > -1) {
+                commands.push({
+                    id: 'NYLAS',
+                    title: 'Mark all email as read',
+                    description: 'Mark all email messages as read',
+                    action: 'Mark Read',
+                    icon: 'eye-slash',
+                    run: function run() {
+                        Storage.get('nylas-access-token').then(function (options) {
+                            console.log(options['nylas-access-token']);
+                            Superagent.get(domain + '/messages').query({
+                                unread: true
+                            }).auth(options['nylas-access-token'], '').end(function (err, res) {
+                                if (err) {
+                                    console.error(err);
+                                }
+                                console.log('Unread: ', res);
+
+                                res.body.forEach(function (message) {
+                                    Superagent.put(domain + '/messages/' + message.id).send({ unread: false }).auth(options['nylas-access-token'], '').end(function (err, res) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        console.log('Marked: ', res);
+                                    });
+                                });
+
+                                alert('All message marked as read. See console for response(s).');
+                            });
+                        });
+                    }
+                });
+            }
+
+            return commands;
+        }
+    }], [{
+        key: 'getAuthorization',
+        value: function getAuthorization() {
+            return new Bluebird(function (resolve, reject) {
+                try {
+                    chrome.identity.launchWebAuthFlow({
+                        url: domain + '/oauth/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope,
+                        interactive: true
+                    }, function (redirect_url) {
+                        var authCode;
+                        var parser = document.createElement('a');
+                        parser.href = redirect_url;
+                        parser.search.substr(1).split('&').forEach(function (attribute) {
+                            var pair = attribute.split('=');
+                            if (pair[0] === 'code') {
+                                resolve(pair[1]);
+                            }
+                        });
+                    });
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }, {
+        key: 'getAccessToken',
+        value: function getAccessToken() {
+            return Nylas.getAuthorization().then(function (authCode) {
+                Superagent.post(domain + '/oauth/token').send({
+                    code: decodeURIComponent(authCode),
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret
+                }).end(function (err, res) {
+                    var auth;
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    auth = res.body.access_token;
+                    Storage.set('nylas-access-token', auth);
+                    try {
+                        var containerEl = document.getElementById('nylas');
+                        var accessTokenEl = containerEl.getElementsByClassName('access-token')[0];
+                        accessTokenEl.textContent = auth;
+                        accessTokenEl.title = auth;
+                    } catch (e) {}
+                });
+            });
+        }
+    }]);
+
+    return Nylas;
+})(Package);
+
+module.exports = Nylas;
+
+},{"../package.js":794,"../storage.js":812,"bluebird":16,"superagent":787}],803:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -108181,7 +108311,7 @@ Pinterest.prototype.inputHandler = function (e) {
 
 module.exports = Pinterest;
 
-},{"../storage.js":811}],803:[function(require,module,exports){
+},{"../storage.js":812}],804:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -108454,7 +108584,7 @@ var Salesforce = (function (_Package) {
 
 module.exports = Salesforce;
 
-},{"../command.js":792,"../package.js":794,"../storage.js":811,"./salesforce/documentation-links.js":804}],804:[function(require,module,exports){
+},{"../command.js":792,"../package.js":794,"../storage.js":812,"./salesforce/documentation-links.js":805}],805:[function(require,module,exports){
 'use strict';
 
 var links = {
@@ -108638,7 +108768,7 @@ var links = {
 
 module.exports = links;
 
-},{}],805:[function(require,module,exports){
+},{}],806:[function(require,module,exports){
 'use strict';
 
 var StackOverflow = function StackOverflow() {
@@ -108714,7 +108844,7 @@ StackOverflowSearchCommand.prototype.run = function () {
 
 module.exports = StackOverflow;
 
-},{}],806:[function(require,module,exports){
+},{}],807:[function(require,module,exports){
 'use strict';
 
 var Tabs = function Tabs() {};
@@ -108842,7 +108972,7 @@ TabPinCommand.prototype.run = function () {
 
 module.exports = Tabs;
 
-},{}],807:[function(require,module,exports){
+},{}],808:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -108983,7 +109113,7 @@ var Twitch = (function (_Package) {
 
 module.exports = Twitch;
 
-},{"../package.js":794,"../storage.js":811,"bluebird":16,"superagent":787}],808:[function(require,module,exports){
+},{"../package.js":794,"../storage.js":812,"bluebird":16,"superagent":787}],809:[function(require,module,exports){
 'use strict';
 
 var Storage = require('../storage.js');
@@ -109008,7 +109138,7 @@ WhineException.prototype.toString = function () {
 
 module.exports = Whine;
 
-},{"../storage.js":811}],809:[function(require,module,exports){
+},{"../storage.js":812}],810:[function(require,module,exports){
 'use strict';
 
 var Youtube = function Youtube() {
@@ -109084,14 +109214,14 @@ YoutubeSearchCommand.prototype.run = function () {
 
 module.exports = Youtube;
 
-},{}],810:[function(require,module,exports){
+},{}],811:[function(require,module,exports){
 'use strict';
 
 var Winston = require('./winston.js');
 
 new Winston();
 
-},{"./winston.js":812}],811:[function(require,module,exports){
+},{"./winston.js":813}],812:[function(require,module,exports){
 'use strict';
 
 var Bluebird = require('bluebird');
@@ -109125,7 +109255,7 @@ module.exports = {
     }
 };
 
-},{"bluebird":16}],812:[function(require,module,exports){
+},{"bluebird":16}],813:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -109155,9 +109285,10 @@ module.exports = function () {
     PackageManager.register('YouTube', require('./pkg/youtube.js'));
     PackageManager.register('History', require('./pkg/history/history.js'));
     PackageManager.register('Twitch', require('./pkg/twitch.js'));
+    PackageManager.register('Nylas', require('./pkg/nylas.js'));
 
     // boot up packages that are enables in settings
-    var optionKeys = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'Twitch', 'History', 'StackOverflow', 'Google'];
+    var optionKeys = ['Calculator', 'Links', 'Tabs', 'Bookmarks', 'Pinterest', 'Salesforce', 'YouTube', 'Twitch', 'Nylas', 'History', 'StackOverflow', 'Google'];
     Storage.get(optionKeys).then(function (options) {
         optionKeys.forEach(function (name) {
             if (options[name] == true) {
@@ -109169,7 +109300,7 @@ module.exports = function () {
     ReactDOM.render(this.appComponent, document.getElementById('container'));
 };
 
-},{"../jsx/app.jsx":813,"./package-manager.js":793,"./pkg/bookmarks.js":795,"./pkg/calculator.js":796,"./pkg/core.js":797,"./pkg/google.js":798,"./pkg/history/history.js":799,"./pkg/links.js":800,"./pkg/longwait.js":801,"./pkg/pinterest.js":802,"./pkg/salesforce.js":803,"./pkg/stackoverflow.js":805,"./pkg/tabs.js":806,"./pkg/twitch.js":807,"./pkg/whine.js":808,"./pkg/youtube.js":809,"./storage.js":811,"react":764,"react-dom":635}],813:[function(require,module,exports){
+},{"../jsx/app.jsx":814,"./package-manager.js":793,"./pkg/bookmarks.js":795,"./pkg/calculator.js":796,"./pkg/core.js":797,"./pkg/google.js":798,"./pkg/history/history.js":799,"./pkg/links.js":800,"./pkg/longwait.js":801,"./pkg/nylas.js":802,"./pkg/pinterest.js":803,"./pkg/salesforce.js":804,"./pkg/stackoverflow.js":806,"./pkg/tabs.js":807,"./pkg/twitch.js":808,"./pkg/whine.js":809,"./pkg/youtube.js":810,"./storage.js":812,"react":764,"react-dom":635}],814:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -109358,7 +109489,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../js/package-manager.js":793,"./icon.jsx":814,"./resultslist.jsx":816,"./searchbox.jsx":817,"bluebird":16,"react":764,"react-dom":635}],814:[function(require,module,exports){
+},{"../js/package-manager.js":793,"./icon.jsx":815,"./resultslist.jsx":817,"./searchbox.jsx":818,"bluebird":16,"react":764,"react-dom":635}],815:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -109382,7 +109513,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"classnames":47,"react":764}],815:[function(require,module,exports){
+},{"classnames":47,"react":764}],816:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -109434,7 +109565,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"./icon.jsx":814,"classnames":47,"react":764}],816:[function(require,module,exports){
+},{"./icon.jsx":815,"classnames":47,"react":764}],817:[function(require,module,exports){
 'use strict';
 
 var React = require('react'),
@@ -109461,7 +109592,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"./result.jsx":815,"react":764}],817:[function(require,module,exports){
+},{"./result.jsx":816,"react":764}],818:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -109481,7 +109612,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"react":764,"react-dom":635}]},{},[810])
+},{"react":764,"react-dom":635}]},{},[811])
 
 
 //# sourceMappingURL=popup.js.map

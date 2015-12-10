@@ -18,6 +18,7 @@ PackageManager.register('Whine', require('./pkg/whine.js'));
 PackageManager.register('YouTube', require('./pkg/youtube.js'));
 PackageManager.register('History', require('./pkg/history/history.js'));
 PackageManager.register('Twitch', require('./pkg/twitch.js'));
+PackageManager.register('Nylas', require('./pkg/nylas.js'));
 
 
 var forEach = Array.prototype.forEach;
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', restore_options);
 
 var salesforceEl = qwery('#salesforce')[0];
 var twitchEl = qwery('#twitch')[0];
+var nylasEl = qwery('#nylas')[0];
 var historyEl = qwery('#history')[0];
 
 var handleClicksFor = function (packageName) {
@@ -66,6 +68,7 @@ var handleClicksFor = function (packageName) {
 
 salesforceEl.addEventListener('click', handleClicksFor('Salesforce'));
 twitchEl.addEventListener('click', handleClicksFor('Twitch'));
+nylasEl.addEventListener('click', handleClicksFor('Nylas'));
 historyEl.addEventListener('click', handleClicksFor('History'));
 
 
@@ -100,5 +103,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
         var accessTokenEl = twitchEl.getElementsByClassName('access-token')[0];
         accessTokenEl.textContent = options['twitch-authorization'];
         accessTokenEl.title = options['twitch-authorization'];
+    });
+
+    Storage.get('nylas-access-token').then(function (options) {
+        var accessTokenEl = nylasEl.getElementsByClassName('access-token')[0];
+        accessTokenEl.textContent = options['nylas-access-token'];
+        accessTokenEl.title = options['nylas-access-token'];
     });
 });
