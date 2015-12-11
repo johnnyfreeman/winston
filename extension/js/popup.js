@@ -108177,25 +108177,28 @@ var Nylas = (function (_Package) {
         value: function inputHandler(e) {
             var commands = [];
             var value = e.target.value;
-            if ('mark'.indexOf(value) > -1 || 'read'.indexOf(value) > -1) {
-                commands.push({
-                    id: 'NYLAS',
-                    title: 'Mark all email as read',
-                    description: 'Mark all email messages as read',
-                    action: 'Mark Read',
-                    icon: 'eye-slash',
-                    run: function run() {
-                        return Storage.get('nylas-access-token').then(function (options) {
-                            return Nylas.getUnreadMessages(options['nylas-access-token']).then(function (res) {
-                                var tasks = [];
-                                res.body.forEach(function (message) {
-                                    tasks.push(Nylas.markAsRead(message.id));
+
+            if (value.length > 0) {
+                if ('mark'.indexOf(value) > -1 || 'read'.indexOf(value) > -1) {
+                    commands.push({
+                        id: 'NYLAS',
+                        title: 'Mark all email as read',
+                        description: 'Mark all email messages as read',
+                        action: 'Mark Read',
+                        icon: 'eye-slash',
+                        run: function run() {
+                            return Storage.get('nylas-access-token').then(function (options) {
+                                return Nylas.getUnreadMessages(options['nylas-access-token']).then(function (res) {
+                                    var tasks = [];
+                                    res.body.forEach(function (message) {
+                                        tasks.push(Nylas.markAsRead(message.id));
+                                    });
+                                    return Bluebird.all(tasks);
                                 });
-                                return Bluebird.all(tasks);
                             });
-                        });
-                    }
-                });
+                        }
+                    });
+                }
             }
 
             return commands;
