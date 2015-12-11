@@ -21,7 +21,8 @@ module.exports = React.createClass({
         return {
             results: [],
             selectedIndex: 0,
-            loading: false
+            loading: false,
+            searchQuery: ''
         };
     },
 
@@ -33,7 +34,7 @@ module.exports = React.createClass({
     render: function() {
         return <div onKeyDown={this.keyDownHandler} onMouseOver={this.hoverHandler}>
             <Icon name="circle-o-notch" spin={this.state.loading} />
-            <SearchBox changeHandler={this.triggerInputHandlers} loading={this.state.loading} ref="searchBox" />
+            <SearchBox onChange={this.triggerInputHandlers} loading={this.state.loading} ref="searchBox" query={this.state.searchQuery} />
             <ResultsList clickHandler={this.runSelected} data={this.state.results} selectedIndex={this.state.selectedIndex} ref="resultsList" />
         </div>;
     },
@@ -101,7 +102,9 @@ module.exports = React.createClass({
 
     runSelected: function () {
         var selectedCommand = this.state.results[this.state.selectedIndex];
-        return selectedCommand.run();
+        this.setState({loading: true});
+        var resetState = this.setState.bind(this, this.getInitialState());
+        Bluebird.resolve(selectedCommand.run()).then(resetState);
     },
 
     triggerInputHandlers: function (e) {
@@ -113,7 +116,7 @@ module.exports = React.createClass({
         }
 
         // loading
-        app.setState({loading: true});
+        app.setState({loading: true, searchQuery: e.target.value});
 
         // execute all package inputHandlers side by side
         // and build array of the returned promises

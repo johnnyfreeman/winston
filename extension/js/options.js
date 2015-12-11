@@ -89348,35 +89348,58 @@ var Nylas = (function (_Package) {
         value: function inputHandler(e) {
             var commands = [];
             var value = e.target.value;
+            if ('mark'.indexOf(value) > -1 || 'read'.indexOf(value) > -1) {
+                commands.push({
+                    id: 'NYLAS',
+                    title: 'Mark all email as read',
+                    description: 'Mark all email messages as read',
+                    action: 'Mark Read',
+                    icon: 'eye-slash',
+                    run: function run() {
+                        return Storage.get('nylas-access-token').then(function (options) {
+                            return Nylas.getUnreadMessages(options['nylas-access-token']).then(function (res) {
+                                var tasks = [];
+                                res.body.forEach(function (message) {
+                                    tasks.push(Nylas.markAsRead(message.id));
+                                });
+                                return Bluebird.all(tasks);
+                            });
+                        });
+                    }
+                });
+            }
 
+            return commands;
+        }
+    }], [{
+        key: 'getUnreadMessages',
+        value: function getUnreadMessages(accessToken) {
             return new Bluebird(function (resolve, reject) {
-                Storage.get('nylas-access-token').then(function (options) {
-                    console.log(options['nylas-access-token']);
-                    Superagent.get(domain + '/messages').query({
-                        unread: true
-                    }).auth(options['nylas-access-token'], '').end(function (err, res) {
-                        if (err) {
-                            reject(err);
-                        }
-                        console.log(err, res);
-                        // res.body.streams.forEach(function (stream) {
-                        //     commands.push({
-                        //         id: 'NYLAS' + stream._id,
-                        //         title: stream.channel.status,
-                        //         description: stream.channel.display_name + ' playing ' + stream.game,
-                        //         action: 'Open Stream',
-                        //         icon: 'eye-slash',
-                        //         run: function () {
-                        //             chrome.tabs.create({ url: stream.channel.url });
-                        //         }
-                        //     });
-                        // });
-                        resolve(commands);
-                    });
+                Superagent.get(domain + '/messages').query({
+                    unread: true
+                }).auth(accessToken, '').end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log('Unread: ', res);
+                    resolve(res);
                 });
             });
         }
-    }], [{
+    }, {
+        key: 'markAsRead',
+        value: function markAsRead(id) {
+            return new Bluebird(function (resolve, reject) {
+                Superagent.put(domain + '/messages/' + message.id).send({ unread: false }).auth(options['nylas-access-token'], '').end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log('Marked as read: ', res);
+                    resolve(res);
+                });
+            });
+        }
+    }, {
         key: 'getAuthorization',
         value: function getAuthorization() {
             return new Bluebird(function (resolve, reject) {

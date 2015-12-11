@@ -22,41 +22,54 @@ class Nylas extends Package {
                 action: 'Mark Read',
                 icon: 'eye-slash',
                 run: function () {
-                    Storage.get('nylas-access-token').then(function (options) {
-                        console.log(options['nylas-access-token']);
-                        Superagent
-                            .get(domain + '/messages')
-                            .query({
-                                unread: true
-                            })
-                            .auth(options['nylas-access-token'], '')
-                            .end(function (err, res) {
-                                if (err) {
-                                    console.error(err);
-                                }
-                                console.log('Unread: ', res);
-                                
-                                res.body.forEach((message) => {
-                                    Superagent
-                                        .put(domain + '/messages/' + message.id)
-                                        .send({unread: false})
-                                        .auth(options['nylas-access-token'], '')
-                                        .end(function (err, res) {
-                                            if (err) {
-                                                console.error(err);
-                                            }
-                                            console.log('Marked: ', res);
-                                        });
-                                });
-
-                                alert('All message marked as read. See console for response(s).');
+                    return Storage.get('nylas-access-token').then(function (options) {
+                        return Nylas.getUnreadMessages(options['nylas-access-token']).then(function (res) {
+                            var tasks = [];
+                            res.body.forEach((message) => {
+                                tasks.push(Nylas.markAsRead(message.id));
                             });
+                            return Bluebird.all(tasks);
+                        });
                     });
                 }
             });
         }
 
         return commands;
+    }
+
+    static getUnreadMessages(accessToken) {
+        return new Bluebird(function (resolve, reject) {
+            Superagent
+            .get(domain + '/messages')
+            .query({
+                unread: true
+            })
+            .auth(accessToken, '')
+            .end(function (err, res) {
+                if (err) {
+                    reject(err);
+                }
+                console.log('Unread: ', res);
+                resolve(res);
+            });
+        });
+    }
+
+    static markAsRead(id) {
+        return new Bluebird(function (resolve, reject) {
+            Superagent
+                .put(domain + '/messages/' + message.id)
+                .send({unread: false})
+                .auth(options['nylas-access-token'], '')
+                .end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log('Marked as read: ', res);
+                    resolve(res);
+                });
+        });
     }
 
     static getAuthorization() {

@@ -108185,26 +108185,13 @@ var Nylas = (function (_Package) {
                     action: 'Mark Read',
                     icon: 'eye-slash',
                     run: function run() {
-                        Storage.get('nylas-access-token').then(function (options) {
-                            console.log(options['nylas-access-token']);
-                            Superagent.get(domain + '/messages').query({
-                                unread: true
-                            }).auth(options['nylas-access-token'], '').end(function (err, res) {
-                                if (err) {
-                                    console.error(err);
-                                }
-                                console.log('Unread: ', res);
-
+                        return Storage.get('nylas-access-token').then(function (options) {
+                            return Nylas.getUnreadMessages(options['nylas-access-token']).then(function (res) {
+                                var tasks = [];
                                 res.body.forEach(function (message) {
-                                    Superagent.put(domain + '/messages/' + message.id).send({ unread: false }).auth(options['nylas-access-token'], '').end(function (err, res) {
-                                        if (err) {
-                                            console.error(err);
-                                        }
-                                        console.log('Marked: ', res);
-                                    });
+                                    tasks.push(Nylas.markAsRead(message.id));
                                 });
-
-                                alert('All message marked as read. See console for response(s).');
+                                return Bluebird.all(tasks);
                             });
                         });
                     }
@@ -108214,6 +108201,34 @@ var Nylas = (function (_Package) {
             return commands;
         }
     }], [{
+        key: 'getUnreadMessages',
+        value: function getUnreadMessages(accessToken) {
+            return new Bluebird(function (resolve, reject) {
+                Superagent.get(domain + '/messages').query({
+                    unread: true
+                }).auth(accessToken, '').end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log('Unread: ', res);
+                    resolve(res);
+                });
+            });
+        }
+    }, {
+        key: 'markAsRead',
+        value: function markAsRead(id) {
+            return new Bluebird(function (resolve, reject) {
+                Superagent.put(domain + '/messages/' + message.id).send({ unread: false }).auth(options['nylas-access-token'], '').end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log('Marked as read: ', res);
+                    resolve(res);
+                });
+            });
+        }
+    }, {
         key: 'getAuthorization',
         value: function getAuthorization() {
             return new Bluebird(function (resolve, reject) {
@@ -109327,7 +109342,8 @@ module.exports = React.createClass({
         return {
             results: [],
             selectedIndex: 0,
-            loading: false
+            loading: false,
+            searchQuery: ''
         };
     },
 
@@ -109341,7 +109357,7 @@ module.exports = React.createClass({
             'div',
             { onKeyDown: this.keyDownHandler, onMouseOver: this.hoverHandler },
             React.createElement(Icon, { name: 'circle-o-notch', spin: this.state.loading }),
-            React.createElement(SearchBox, { changeHandler: this.triggerInputHandlers, loading: this.state.loading, ref: 'searchBox' }),
+            React.createElement(SearchBox, { onChange: this.triggerInputHandlers, loading: this.state.loading, ref: 'searchBox', query: this.state.searchQuery }),
             React.createElement(ResultsList, { clickHandler: this.runSelected, data: this.state.results, selectedIndex: this.state.selectedIndex, ref: 'resultsList' })
         );
     },
@@ -109408,7 +109424,9 @@ module.exports = React.createClass({
 
     runSelected: function runSelected() {
         var selectedCommand = this.state.results[this.state.selectedIndex];
-        return selectedCommand.run();
+        this.setState({ loading: true });
+        var resetState = this.setState.bind(this, this.getInitialState());
+        Bluebird.resolve(selectedCommand.run()).then(resetState);
     },
 
     triggerInputHandlers: function triggerInputHandlers(e) {
@@ -109420,7 +109438,7 @@ module.exports = React.createClass({
         }
 
         // loading
-        app.setState({ loading: true });
+        app.setState({ loading: true, searchQuery: e.target.value });
 
         // execute all package inputHandlers side by side
         // and build array of the returned promises
@@ -109601,6 +109619,17 @@ var ReactDOM = require('react-dom');
 module.exports = React.createClass({
     displayName: 'exports',
 
+    propTypes: {
+        query: React.PropTypes.string,
+        onChange: React.PropTypes.func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+        return {
+            searchQuery: ''
+        };
+    },
+
     // focus on input field after component mounts
     componentDidMount: function componentDidMount() {
         ReactDOM.findDOMNode(this.refs.input).focus();
@@ -109608,7 +109637,7 @@ module.exports = React.createClass({
 
     // render view
     render: function render() {
-        return React.createElement('input', { autoFocus: 'true', id: 'searchBox', onChange: this.props.changeHandler, placeholder: 'How may I assist you?', ref: 'input' });
+        return React.createElement('input', { autoFocus: 'true', id: 'searchBox', onChange: this.props.onChange, placeholder: 'How may I assist you?', ref: 'input', value: this.props.query });
     }
 });
 
