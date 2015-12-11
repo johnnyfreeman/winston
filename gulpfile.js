@@ -169,7 +169,7 @@ gulp.task('fonts', function() {
 		.pipe(gulp.dest('./extension/fonts'));
 });
 
-gulp.task('default', ['popupjs', 'optionsjs', 'contentjs', 'eventsjs', 'vendorcss', 'fonts', 'stylus', 'appimg', 'static', 'prerender']);
+gulp.task('default', ['popupjs', 'optionsjs', 'contentjs', 'eventsjs', 'vendorcss', 'fonts', 'stylus', 'appimg', 'static']);
 
 
 gulp.task('watch', function() {
